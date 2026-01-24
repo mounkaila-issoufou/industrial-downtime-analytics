@@ -1,151 +1,197 @@
-# Data Model
+# 📐 Data Model – Industrial Production & Downtime Analytics
 
-Ce document décrit le **modèle de données conceptuel et analytique** du projet *Industrial Downtime Analytics*.
+## 🎯 Objectif du modèle
+Ce modèle de données vise à analyser la performance industrielle à partir :
+- de la production horaire réelle,
+- des arrêts machines détaillés,
+- du contexte humain (opérateurs, chefs d’équipe),
+- du contexte temporel (shifts).
 
-L’objectif n’est pas de présenter un schéma technique exhaustif, mais d’expliquer **comment les données métiers sont structurées et exploitées** pour analyser la performance industrielle et les temps de non-production.
-
----
-## 🎯 Objectifs du modèle de données
-
-Le modèle de données doit permettre de :
-- suivre la production **heure par heure**,
-- analyser les **arrêts de ligne par cause technique ou organisationnelle**,
-- comparer les performances entre **usines, ateliers, lignes et machines**,
-- disposer d’une base robuste pour des analyses transverses (équipes, périodes, équipements).
-
-Le modèle est volontairement :
-- **événementiel** (event-based),
-- **orienté performance industrielle**,
-- **agnostique des outils BI**.
+Il permet d’expliquer **pourquoi** la production s’écarte du théorique, et pas seulement **combien**.
 
 ---
-## 🧱 Principes de modélisation
 
-### 1. Séparation structure / événement
-Le modèle distingue clairement :
-- les entités **structurelles et stables** (usines, ateliers, machines, personnes),
-- les entités **dynamiques** liées à l’activité (production horaire, événements).
+## 🧱 Vue d’ensemble conceptuelle
 
-### 2. Granularité horaire
-La **brique centrale** de l’analyse est l’heure de production.
-Toutes les analyses de performance et de non-production sont ramenées à cette granularité.
+Factory
+└── Workshop
+└── Production_Line
+└── Shift_Supervision
+├── Shift_Operator_Assignment
+└── Hourly_Production
+└── Production_Events
 
-### 3. Calcul de la non-production
-Le temps de non-production n’est pas saisi directement.
-Il est **calculé** à partir de la production réelle mesurée par le compteur emballeuse et de la capacité théorique.
 
----
-## 🏭 Entités structurelles
-
-### Factories
-Représente les sites industriels.
-
-### Workshops
-Représente les ateliers au sein d’une usine.
-
-### Production Lines
-Représente les lignes de conditionnement.
-
-### Machines
-Représente les équipements physiques d’une ligne.
-
-### Machine Organs
-Représente les sous-ensembles fonctionnels d’une machine.
-
-### Machine Elements
-Représente les éléments techniques précis pouvant provoquer un arrêt.
-
-Ces entités forment la **hiérarchie industrielle** du modèle.
+Le modèle est :
+- relationnel
+- orienté faits
+- historisable
+- compatible BI (Power BI / SQL / Python)
 
 ---
-## 👥 Entités organisationnelles
 
-### Operators
-Opérateurs de production (anonymisés).
+## 🏭 Dimensions de structure
 
-### Team Leads
-Chefs d’équipe assurant l’encadrement opérationnel.
+### `factory`
+Représente un site industriel.
 
-### Workshop Managers
-Responsables d’atelier.
-
-### Shifts
-Plages horaires de travail (matin, soir, nuit).
-
-Ces entités permettent des analyses par **organisation du travail**, sans logique d’évaluation individuelle.
+| Champ | Description |
+|---|---|
+| factory_id (PK) | Identifiant usine |
+| factory_name | Nom du site |
+| city | Ville |
+| country | Pays |
 
 ---
-## ⏱️ Entités événementielles
 
-### Hourly Production
-Table centrale de mesure de la production.
+### `workshop`
+Atelier de production au sein d’une usine.
 
-Elle contient pour chaque heure :
-- le compteur réel de fromages emballés,
-- la capacité théorique,
-- le temps de non-production calculé.
-
-Cette table sert de **base factuelle principale**.
-
-### Production Events
-Représente les événements consignés sur les feuilles de marche :
-- arrêts techniques,
-- arrêts maintenance,
-- changements de série,
-- nettoyage,
-- pauses et échauffements.
-
-Chaque événement est décrit par :
-- une catégorie,
-- un libellé,
-- une durée estimée,
-- un commentaire libre.
+| Champ | Description |
+|---|---|
+| workshop_id (PK) | Identifiant atelier |
+| workshop_name | Ovale, Camembert, Portion, Entier |
+| factory_id (FK) | Usine de rattachement |
 
 ---
-## 🕒 Dimension temps
 
-### Calendars
-La dimension temps permet d’analyser les données selon :
-- jours,
-- semaines,
-- mois,
-- années,
-- dates de shift.
+### `production_line`
+Ligne ou machine de conditionnement.
 
-Elle facilite les comparaisons temporelles et les analyses de tendances.
-
----
-## 🔗 Logique d’association (conceptuelle)
-
-Sans entrer dans le détail technique des clés, le modèle suit la logique suivante :
-
-- une **heure de production** est associée à :
-  - une ligne,
-  - un atelier,
-  - une usine,
-  - un shift,
-- un **événement** est rattaché à :
-  - une heure,
-  - une machine,
-  - un organe,
-  - un élément,
-- les acteurs (opérateurs, chefs d’équipe) sont associés au contexte horaire.
-
-Cette approche permet de **croiser librement les axes d’analyse**.
+| Champ | Description |
+|---|---|
+| line_id (PK) | Identifiant ligne |
+| machine_name | ms, es50, ENT1, ALPA1… |
+| workshop_id (FK) | Atelier |
+| theoretical_capacity_per_hour | Capacité théorique (ex: 4800) |
+| reliability_target | Objectif de fiabilité (%) |
 
 ---
-## 📊 Cas d’usage analytiques couverts
 
-Le modèle permet de répondre à des questions telles que :
-- Quels sont les principaux contributeurs au temps de non-production ?
-- Quels éléments techniques génèrent le plus d’arrêts ?
-- Quelles différences de performance entre ateliers ou lignes ?
-- Quels types d’événements impactent le plus la cadence ?
-- Comment la performance évolue dans le temps ?
+## 👥 Dimensions humaines
+
+### `operator`
+Opérateur de conduite machine.
+
+| Champ | Description |
+|---|---|
+| operator_id (PK) | Identifiant opérateur |
+| experience_years | Ancienneté |
+| status | Actif / Intérim |
 
 ---
+
+### `team_lead`
+Chef d’équipe.
+
+| Champ | Description |
+|---|---|
+| team_lead_id (PK) | Identifiant chef |
+| scope | Ligne / Atelier |
+
+---
+
+## ⏱️ Tables de contexte (Shifts)
+
+### `shift_supervision`
+Décrit le **contexte managérial d’un service**.
+
+| Champ | Description |
+|---|---|
+| shift_supervision_id (PK) | Identifiant du shift |
+| date | Date |
+| session | MATIN / SOIR / NUIT / SD |
+| start_time | Heure de début |
+| end_time | Heure de fin |
+| factory_id (FK) | Usine |
+| workshop_id (FK) | Atelier |
+| line_id (FK) | Ligne |
+| team_lead_id (FK) | Chef d’équipe |
+
+---
+
+### `shift_operator_assignment`
+Décrit quel opérateur travaille pendant un shift.
+
+| Champ | Description |
+|---|---|
+| shift_operator_assignment_id (PK) | Affectation |
+| shift_supervision_id (FK) | Shift |
+| operator_id (FK) | Opérateur |
+| role | Conduite / Assistance |
+
+---
+
+## 📊 Tables de faits (Production)
+
+### `hourly_production`
+Table de faits principale – production agrégée à l’heure.
+
+| Champ | Description |
+|---|---|
+| hourly_prod_id (PK) | Identifiant production horaire |
+| shift_supervision_id (FK) | Contexte du shift |
+| operator_id (FK) | Opérateur |
+| team_lead_id (FK) | Chef d’équipe |
+| line_id (FK) | Ligne |
+| hour_timestamp | Heure de référence |
+| theoretical_production | Production théorique |
+| actual_production | Production réelle |
+| non_production_minutes | Temps de non-production |
+
+---
+
+### `production_events`
+Détail des événements expliquant la non-production.
+
+| Champ | Description |
+|---|---|
+| event_id (PK) | Identifiant événement |
+| hourly_prod_id (FK) | Heure concernée |
+| event_type | Défaut / Pause / Nettoyage / Maintenance |
+| organ | Empileur / Emballeuse / Encaisseuse |
+| element | Trainard, Porte, Delta… |
+| duration_minutes | Durée |
+| operator_action | Action réalisée |
+| escalation | Chef / Maintenance |
+| comment | Commentaire libre |
+
+---
+
+## 🔗 Cardinalités principales
+
+- 1 `factory` → N `workshop`
+- 1 `workshop` → N `production_line`
+- 1 `shift_supervision` → N `hourly_production`
+- 1 `hourly_production` → N `production_events`
+- 1 `shift_supervision` → N `shift_operator_assignment`
+
+---
+
+## 🧠 Principes de conception
+
+- séparation **faits / dimensions**
+- granularité **horaire réaliste**
+- traçabilité terrain → analytique
+- relations explicites mais non contraignantes (CSV-friendly)
+- extensible (qualité, maintenance, TRS)
+
+---
+
+## 📌 Cas d’analyse rendus possibles
+
+- Fiabilité par ligne, atelier, site
+- Analyse des arrêts par organe / élément
+- Comparaison des performances par shift
+- Impact des chefs d’équipe
+- Pareto des causes de non-production
+
+---
+
 ## ⚠️ Hypothèses et limites
-
+- Un opérateur est affecté à un seul shift à la fois
+- Les événements expliquent la non-production d’une heure donnée
+- Les objectifs de fiabilité sont définis par ligne
 - Les durées d’intervention sont estimées manuellement.
 - Les micro-arrêts peuvent ne pas être tracés.
 - La qualité des analyses dépend de la rigueur de saisie terrain.
@@ -161,4 +207,3 @@ Il est adapté à :
 - un contexte multi-usines,
 - un usage analytique avancé,
 - une démarche d’amélioration continue pilotée par la donnée.
-
