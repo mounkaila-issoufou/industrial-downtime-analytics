@@ -1,4 +1,4 @@
-# Analyse globale des performances de conditionnement industriel
+# Analyse globale des performances du service conditionnement d'une société fromagère industriel
 
 ## 🎯 Objectif du projet
 Ce projet vise à mettre en place une **analyse globale, transverse et structurée** de la performance des ateliers de conditionnement industriel, en s’appuyant sur les **feuilles de marche opérateur** et les **compteurs de production**.
