@@ -17,7 +17,7 @@ Le projet transforme une donnée terrain **manuelle, locale et opérationnelle**
 - **Secteur** : industrie agroalimentaire (conditionnement fromager)
 - **Ateliers** : ovales, camembert, portions
 - **Équipements** : empileur / dépileur, emballeuse, encaisseuse
-- **Organisation** : équipes matin / soir / nuit
+- **Organisation** : équipes matin / soir / nuit / SD (samedi, dimanche)
 
 Chaque ligne fonctionne avec une **cadence théorique optimale** de :
 - **80 fromages par minute**
@@ -56,8 +56,7 @@ Il est **calculé** à partir de l’écart entre la production théorique et la
 
 Pour chaque heure :
 
-Temps de non-production (minutes)
-= (4 800 – compteur emballeuse) / 80
+**Temps de non-production (minutes) = (4 800 – compteur emballeuse) / 80**
 
 
 Ce temps peut être expliqué par :
@@ -128,5 +127,6 @@ Ces limites sont **documentées et prises en compte** dans l’interprétation d
 ---
 
 ## 👤 Auteur
-Projet de portfolio **Data Analyst senior** –  
-Orientation **industrie**, **performance opérationnelle** et **pilotage data-driven**
+Projet de portfolio **Data Analyst senior** – Orientation **industrie**, **performance opérationnelle** et **pilotage data-driven**.  
+Basé sur mon expérience en tant que **pilote de ligne de production**, appliquée à ma vision du métier de Data Analyst.
+
