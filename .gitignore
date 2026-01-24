@@ -1,0 +1,10 @@
+src/__pycache__/
+src/core/__pycache__/
+src/ingestion/__pycache__/
+src/utils/__pycache__/
+src/config/__pycache__/
+.vscode/
+.ipynb_checkpoints/
+outputs/
+notebooks/__pycache__/
+notebooks/.ipynb_checkpoints/
