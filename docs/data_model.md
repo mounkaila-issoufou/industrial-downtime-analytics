@@ -13,6 +13,7 @@ Il permet d’expliquer **pourquoi** la production s’écarte du théorique, et
 
 ## 🧱 Vue d’ensemble conceptuelle
 
+```text
 Factory
 └── Workshop
 └── Production_Line
@@ -20,7 +21,7 @@ Factory
 ├── Shift_Operator_Assignment
 └── Hourly_Production
 └── Production_Events
-
+```
 
 Le modèle est :
 - relationnel
