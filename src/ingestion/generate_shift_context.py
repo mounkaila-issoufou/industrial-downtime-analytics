@@ -3,11 +3,13 @@ from src.core.ids import generate_id
 from src.core.calendar import iter_shifts
 from src.config.settings import FACTORY_ID, WORKSHOP_ID, LINE_ID, OPERATORS, TEAM_LEADS
 
+
 def generate_shift_context():
     op_idx, tl_idx = 0, 0
 
     for shift in iter_shifts():
         shift_id = generate_id("SS")
+
         team_lead_id = TEAM_LEADS[tl_idx % len(TEAM_LEADS)]
         operator_id = OPERATORS[op_idx % len(OPERATORS)]
 
@@ -27,6 +29,7 @@ def generate_shift_context():
             "shift_operator_assignment_id": generate_id("SOA"),
             "shift_supervision_id": shift_id,
             "operator_id": operator_id,
+            "line_id": LINE_ID,
             "date": shift["date"],
             "session": shift["session"]
         })
