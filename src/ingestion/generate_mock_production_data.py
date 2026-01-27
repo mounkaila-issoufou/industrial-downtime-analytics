@@ -1,3 +1,4 @@
+from asyncio import events
 import random
 from src.core.ids import generate_id
 from src.core.context_store import context
@@ -85,7 +86,12 @@ def generate_events_for_hour(
 
     # --- Technical downtime ---
     while remaining_downtime > 0:
-        duration = random.randint(3, min(remaining_downtime, 20))
+
+        if remaining_downtime <= 3:
+            duration = remaining_downtime
+        else:
+            duration = random.randint(3, min(remaining_downtime, 20))
+
         remaining_downtime -= duration
 
         events.append({
@@ -96,7 +102,6 @@ def generate_events_for_hour(
             "duration_minutes": duration,
             "comment": "Operator intervention on machine element"
         })
-
     return events
 
 
