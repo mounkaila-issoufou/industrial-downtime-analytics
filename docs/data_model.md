@@ -109,6 +109,20 @@ Décrit le **contexte managérial d’un service**.
 | line_id (FK) | Ligne |
 | team_lead_id (FK) | Chef d’équipe |
 
+## ⏱️ `shift_supervision` — Dimension de contexte managérial
+
+`shift_supervision` est une **dimension de contexte**, et non une table de faits.
+
+Elle décrit :
+- le cadre temporel du service (date, session, horaires),
+- le périmètre industriel (usine, atelier, ligne),
+- le responsable du shift (chef d’équipe).
+
+Elle permet de :
+- relier la production horaire au contexte managérial,
+- analyser la performance par shift, atelier, ligne et encadrement,
+- contextualiser les événements sans porter elle-même de mesures.
+
 ---
 
 ### `shift_operator_assignment`
@@ -169,15 +183,35 @@ Détail des événements expliquant la non-production.
 
 ---
 
-## 🧠 Principes de conception
+## 🧠 Principes analytiques supplémentaires
 
-- séparation **faits / dimensions**
-- granularité **horaire réaliste**
-- traçabilité terrain → analytique
-- relations explicites mais non contraignantes (CSV-friendly)
-- extensible (qualité, maintenance, TRS)
+- séparation claire entre modèle opérationnel et modèle analytique,
+- agrégation horaire comme grain principal,
+- traçabilité entre production et événements,
+- compatibilité native avec Power BI / Tableau / SQL,
+- évolutivité vers TRS (OEE), qualité et maintenance prédictive.
+
 
 ---
+## 🧠 Couche analytique cible (BI-friendly)
+
+Au-dessus du modèle opérationnel, une couche analytique en schéma en étoile est construite pour les usages BI.
+
+### Dimensions
+- dim_machine  
+- dim_time  
+- dim_team  
+- dim_organe_element  
+
+### Fait principal
+- fact_hourly_performance  
+
+Cette couche permet :
+- analyses rapides en SQL,
+- modèles Power BI performants,
+- comparaisons transverses (atelier, ligne, équipe, période).
+
+
 
 ## 📌 Cas d’analyse rendus possibles
 

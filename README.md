@@ -93,6 +93,65 @@ L’objectif n’est pas l’évaluation individuelle, mais la **compréhension 
 7. Restitution via indicateurs et dashboards décisionnels
 
 ---
+## 🏗️ Couche analytique (Data Warehouse)
+
+En complément du modèle opérationnel (ingestion / métier), une couche analytique dédiée est construite pour faciliter l’analyse et la BI.
+
+### Dimensions analytiques
+- **dim_machine**
+  - machine_key  
+  - line_id  
+  - workshop_id  
+  - factory_id  
+  - machine_name  
+  - theoretical_capacity_per_hour  
+  - reliability_target  
+
+- **dim_time**
+  - date  
+  - hour  
+  - session (MATIN / SOIR / NUIT / SD)  
+  - week  
+  - month  
+
+- **dim_team**
+  - team_lead_id  
+  - scope  
+
+- **dim_organe_element**
+  - organ  
+  - element  
+
+### Table de faits analytique
+- **fact_hourly_performance**
+  - time_key  
+  - machine_key  
+  - team_lead_id  
+  - total_actual_production  
+  - total_theoretical_production  
+  - total_non_production_minutes  
+  - explained_minutes  
+  - unexplained_minutes  
+
+
+
+## 📊 KPIs industriels clés
+
+### 1️⃣ Fiabilité opérationnelle  
+\`\`\`
+Fiabilité (%) = Actual Production / Theoretical Production
+\`\`\`
+
+### 2️⃣ Taux d’explication des pertes  
+\`\`\`
+Taux expliqué (%) = Minutes expliquées / Minutes de non-production
+\`\`\`
+
+Ces indicateurs permettent :
+- d’évaluer la performance réelle des lignes,
+- de mesurer la qualité de la traçabilité des événements terrain.
+
+
 
 ## 📂 Organisation du repository
 

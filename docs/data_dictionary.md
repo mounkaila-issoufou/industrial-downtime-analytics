@@ -38,6 +38,7 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | workshop_id | string | Atelier |
 | theoretical_capacity_per_hour | integer | Capacité théorique horaire (ex: 4800 fromages) |
 | reliability_target | float | Objectif de fiabilité (%) |
+| line_status | string | Actif / Maintenance / Arrêt planifié |
 
 ---
 
@@ -102,6 +103,8 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | theoretical_production | integer | Production théorique |
 | actual_production | integer | Production réelle |
 | non_production_minutes | integer | Minutes de non-production |
+| explained_non_production_minutes | integer | Minutes de non-production expliquées par des événements |
+| unexplained_non_production_minutes | integer | Minutes de non-production sans cause enregistrée |
 
 ---
 
@@ -118,6 +121,7 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | operator_action | string | Action opérateur |
 | escalation | string | Intervention chef / maintenance |
 | comment | string | Description libre |
+| cause_category | string | Technique, Organisationnelle, Maintenance, Opération |
 
 ---
 
