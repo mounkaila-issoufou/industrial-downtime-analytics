@@ -93,6 +93,21 @@ L’objectif n’est pas l’évaluation individuelle, mais la **compréhension 
 7. Restitution via indicateurs et dashboards décisionnels
 
 ---
+## 🏗️ Approche données
+
+Le projet distingue deux niveaux d’usage des données :
+
+1) **Modèle opérationnel structurant**  
+   - décrit fidèlement le fonctionnement industriel  
+   - relie usines, ateliers, lignes, shifts, production et événements  
+   - garantit traçabilité et cohérence des analyses  
+
+2) **Tables analytiques pour la BI**  
+   - issues du modèle opérationnel  
+   - agrégées et simplifiées pour les besoins métiers  
+   - prêtes à être consommées par Power BI / Tableau  
+   - sans complexité technique pour les équipes terrain et management  
+
 ## 🏗️ Couche analytique (Data Warehouse)
 
 En complément du modèle opérationnel (ingestion / métier), une couche analytique dédiée est construite pour faciliter l’analyse et la BI.

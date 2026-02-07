@@ -22,7 +22,37 @@ Factory
 └── Hourly_Production
 └── Production_Events
 ```
+## SCHÉMA 1 — MODÈLE OPÉRATIONNEL
+```text
+FACTORY
+   │
+   └── WORKSHOP
+         │
+         └── PRODUCTION_LINE
+               │
+               └── SHIFT_SUPERVISION  (DIMENSION DE CONTEXTE)
+                       │
+       ┌──────────────┼───────────────────────┐
+       │                              │
+SHIFT_OPERATOR_ASSIGNMENT      HOURLY_PRODUCTION  (FAIT)
+                                      │
+                                      └── PRODUCTION_EVENTS (FAIT)
 
+```
+
+## SCHÉMA 2 — MODÈLE ANALYTIQUE
+```text
+              DIM_TIME
+                  │
+DIM_MACHINE ─── FACT_HOURLY_PERFORMANCE   (pilotage global)
+                  │
+                  │
+         FACT_PRODUCTION_EVENTS (diagnostic détaillé)
+                  │
+          DIM_ORGANE_ELEMENT
+
+
+```
 Le modèle est :
 - relationnel
 - orienté faits
@@ -109,19 +139,6 @@ Décrit le **contexte managérial d’un service**.
 | line_id (FK) | Ligne |
 | team_lead_id (FK) | Chef d’équipe |
 
-## ⏱️ `shift_supervision` — Dimension de contexte managérial
-
-`shift_supervision` est une **dimension de contexte**, et non une table de faits.
-
-Elle décrit :
-- le cadre temporel du service (date, session, horaires),
-- le périmètre industriel (usine, atelier, ligne),
-- le responsable du shift (chef d’équipe).
-
-Elle permet de :
-- relier la production horaire au contexte managérial,
-- analyser la performance par shift, atelier, ligne et encadrement,
-- contextualiser les événements sans porter elle-même de mesures.
 
 ---
 
