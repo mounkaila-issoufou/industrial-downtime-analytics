@@ -1,137 +1,229 @@
-event_id,hourly_prod_id,event_type,duration_minutes,comment
-EV_12195d01,HP_14333719,machine_stop,12,Défaut trainard entrée
-EV_48e263bd,HP_cc9cb397,machine_stop,25,Défaut trainard entrée
-EV_b87b0f92,HP_76d3de73,machine_stop,28,Défaut trainard entrée
-EV_2c39572c,HP_e946f6b5,machine_stop,9,Défaut trainard entrée
-EV_0660261e,HP_74ae086b,machine_stop,21,Défaut trainard entrée
-EV_1b70ca5a,HP_496d30c3,machine_stop,22,Défaut trainard entrée
-EV_fadadbca,HP_87533bbb,machine_stop,23,Défaut trainard entrée
-EV_21644303,HP_41974eaa,machine_stop,25,Défaut trainard entrée
-EV_1043a097,HP_6b93073f,machine_stop,9,Défaut trainard entrée
-EV_bdfe065d,HP_c49c0b68,machine_stop,26,Défaut trainard entrée
-EV_6479154f,HP_15b3eed7,machine_stop,11,Défaut trainard entrée
-EV_842d036c,HP_cacd8068,machine_stop,9,Défaut trainard entrée
-EV_d9b9cb82,HP_160db419,machine_stop,14,Défaut trainard entrée
-EV_a45d89a9,HP_ee7cfd21,machine_stop,26,Défaut trainard entrée
-EV_a61fdb40,HP_8f14990b,machine_stop,13,Défaut trainard entrée
-EV_b4f7535d,HP_b4bd5894,machine_stop,17,Défaut trainard entrée
-EV_94562cc8,HP_f4c01e82,machine_stop,27,Défaut trainard entrée
-EV_2c7100ef,HP_ddf23aa4,machine_stop,27,Défaut trainard entrée
-EV_00b081c7,HP_2a32bdbc,machine_stop,26,Défaut trainard entrée
-EV_f2c9c43b,HP_0897c03c,machine_stop,23,Défaut trainard entrée
-EV_a1af4333,HP_4513facd,machine_stop,22,Défaut trainard entrée
-EV_5d2904df,HP_06a8697d,machine_stop,15,Défaut trainard entrée
-EV_b970f935,HP_8a777e85,machine_stop,13,Défaut trainard entrée
-EV_69020e5d,HP_1fcfa682,machine_stop,28,Défaut trainard entrée
-EV_b43a65d7,HP_09c21698,machine_stop,14,Défaut trainard entrée
-EV_e213733a,HP_8d1c7ab6,machine_stop,23,Défaut trainard entrée
-EV_19910795,HP_011b5089,machine_stop,10,Défaut trainard entrée
-EV_39891e68,HP_8d2a4ed6,machine_stop,12,Défaut trainard entrée
-EV_f8aa1924,HP_b4b3e152,machine_stop,10,Défaut trainard entrée
-EV_f8a66679,HP_b683bcb5,machine_stop,14,Défaut trainard entrée
-EV_a460099e,HP_dbaa1add,machine_stop,18,Défaut trainard entrée
-EV_c4ca6b41,HP_39db4fd5,machine_stop,23,Défaut trainard entrée
-EV_5c8fe4fd,HP_e65e7006,machine_stop,17,Défaut trainard entrée
-EV_11f4a2d4,HP_d30a1266,machine_stop,13,Défaut trainard entrée
-EV_a867309c,HP_5091f025,machine_stop,21,Défaut trainard entrée
-EV_102cc58d,HP_0afda662,machine_stop,8,Défaut trainard entrée
-EV_3508c2aa,HP_57c1c3d8,machine_stop,28,Défaut trainard entrée
-EV_4475e34f,HP_ad4f5d94,machine_stop,9,Défaut trainard entrée
-EV_ec923c74,HP_6b47f14b,machine_stop,8,Défaut trainard entrée
-EV_4340c2bc,HP_7493e860,machine_stop,24,Défaut trainard entrée
-EV_64fe4b36,HP_793f2a9f,machine_stop,10,Défaut trainard entrée
-EV_ae427f38,HP_570d6dd3,machine_stop,17,Défaut trainard entrée
-EV_dbf3e298,HP_510bd8f2,machine_stop,20,Défaut trainard entrée
-EV_b8ca6b5f,HP_7521a8ec,machine_stop,21,Défaut trainard entrée
-EV_c568eae9,HP_767974c8,machine_stop,24,Défaut trainard entrée
-EV_8f508b63,HP_1ceb997e,machine_stop,23,Défaut trainard entrée
-EV_758dbc3f,HP_bc416379,machine_stop,9,Défaut trainard entrée
-EV_c27968cb,HP_11b76b73,machine_stop,20,Défaut trainard entrée
-EV_38fe9d98,HP_a3cf19c9,machine_stop,26,Défaut trainard entrée
-EV_6595099b,HP_0e93a64c,machine_stop,26,Défaut trainard entrée
-EV_0a487b14,HP_9bda9cac,machine_stop,19,Défaut trainard entrée
-EV_8f37d36a,HP_a7fd9e43,machine_stop,26,Défaut trainard entrée
-EV_1dcc7f5f,HP_4f2ea94c,machine_stop,19,Défaut trainard entrée
-EV_7df2e0e1,HP_167627b4,machine_stop,19,Défaut trainard entrée
-EV_6a886f8e,HP_58039bf0,machine_stop,13,Défaut trainard entrée
-EV_50dd5343,HP_0271306d,machine_stop,21,Défaut trainard entrée
-EV_fb357d0c,HP_1207ea87,machine_stop,8,Défaut trainard entrée
-EV_03303995,HP_dcc482d2,machine_stop,27,Défaut trainard entrée
-EV_98c87be2,HP_a98ce0bb,machine_stop,10,Défaut trainard entrée
-EV_c90a5a34,HP_aa2acaa6,machine_stop,17,Défaut trainard entrée
-EV_f3629af9,HP_3249b55b,machine_stop,15,Défaut trainard entrée
-EV_534d23e1,HP_7879ebf4,machine_stop,25,Défaut trainard entrée
-EV_02a58e22,HP_9d836114,machine_stop,19,Défaut trainard entrée
-EV_cec63a77,HP_ed6312aa,machine_stop,26,Défaut trainard entrée
-EV_8374db74,HP_dce3c6f1,machine_stop,14,Défaut trainard entrée
-EV_99f6593c,HP_7e025d58,machine_stop,21,Défaut trainard entrée
-EV_21dfd678,HP_9cfd9e9a,machine_stop,7,Défaut trainard entrée
-EV_719de740,HP_ab97b78e,machine_stop,12,Défaut trainard entrée
-EV_fa1b8fb2,HP_97cfe49f,machine_stop,12,Défaut trainard entrée
-EV_7fb8a822,HP_a99ce22e,machine_stop,19,Défaut trainard entrée
-EV_6451cc48,HP_286be600,machine_stop,13,Défaut trainard entrée
-EV_4a708bee,HP_f57a7958,machine_stop,23,Défaut trainard entrée
-EV_c13783c8,HP_43d68e4c,machine_stop,10,Défaut trainard entrée
-EV_301fb4f1,HP_dc19983d,machine_stop,26,Défaut trainard entrée
-EV_91b98ce3,HP_0fbcfed6,machine_stop,27,Défaut trainard entrée
-EV_4b75b71e,HP_10c4edf5,machine_stop,11,Défaut trainard entrée
-EV_e9284e57,HP_c522d820,machine_stop,22,Défaut trainard entrée
-EV_713ab211,HP_7cd01a22,machine_stop,8,Défaut trainard entrée
-EV_8a543ae2,HP_6ce8a6c7,machine_stop,21,Défaut trainard entrée
-EV_9de50542,HP_3ec68fd5,machine_stop,26,Défaut trainard entrée
-EV_24f73057,HP_63865de0,machine_stop,22,Défaut trainard entrée
-EV_d57ccccb,HP_263fb4bb,machine_stop,26,Défaut trainard entrée
-EV_70a68100,HP_b29d22e6,machine_stop,19,Défaut trainard entrée
-EV_07aba6c5,HP_d7e19423,machine_stop,21,Défaut trainard entrée
-EV_f7569026,HP_9e721f55,machine_stop,17,Défaut trainard entrée
-EV_54aed066,HP_3978c991,machine_stop,12,Défaut trainard entrée
-EV_0526bf83,HP_7b850ee5,machine_stop,19,Défaut trainard entrée
-EV_b1b79539,HP_5a65ccbc,machine_stop,24,Défaut trainard entrée
-EV_ebe08de1,HP_177c0cdb,machine_stop,19,Défaut trainard entrée
-EV_e69193b1,HP_95162288,machine_stop,19,Défaut trainard entrée
-EV_ff61a30a,HP_f5a1e4eb,machine_stop,23,Défaut trainard entrée
-EV_7c10f76c,HP_cfce0dd2,machine_stop,11,Défaut trainard entrée
-EV_7045bef6,HP_592abdac,machine_stop,21,Défaut trainard entrée
-EV_c87ef631,HP_7eb8499b,machine_stop,10,Défaut trainard entrée
-EV_b018815b,HP_8cfd8801,machine_stop,11,Défaut trainard entrée
-EV_da030644,HP_e95ce244,machine_stop,12,Défaut trainard entrée
-EV_51f2ebdc,HP_31e61a71,machine_stop,26,Défaut trainard entrée
-EV_62a192fd,HP_8b0f3749,machine_stop,13,Défaut trainard entrée
-EV_52cf7891,HP_1f86ce27,machine_stop,12,Défaut trainard entrée
-EV_2017dce1,HP_4b9b8697,machine_stop,24,Défaut trainard entrée
-EV_96a1232c,HP_5d4c2fc5,machine_stop,15,Défaut trainard entrée
-EV_2e975f84,HP_43402e2c,machine_stop,10,Défaut trainard entrée
-EV_852e9c53,HP_c13b4dab,machine_stop,22,Défaut trainard entrée
-EV_7bc241a6,HP_334edacd,machine_stop,24,Défaut trainard entrée
-EV_c388881d,HP_f55af0a1,machine_stop,16,Défaut trainard entrée
-EV_eef4a15e,HP_2f51e873,machine_stop,19,Défaut trainard entrée
-EV_d18746da,HP_8c639f17,machine_stop,21,Défaut trainard entrée
-EV_1ed37c84,HP_0268a2d8,machine_stop,12,Défaut trainard entrée
-EV_1170e9f3,HP_40667dbe,machine_stop,11,Défaut trainard entrée
-EV_e96e9b23,HP_62e2e9d6,machine_stop,14,Défaut trainard entrée
-EV_88421baf,HP_69e2720d,machine_stop,23,Défaut trainard entrée
-EV_615228b2,HP_92c79a1a,machine_stop,11,Défaut trainard entrée
-EV_4764ea35,HP_830ae671,machine_stop,20,Défaut trainard entrée
-EV_9e716ce7,HP_ed660db6,machine_stop,9,Défaut trainard entrée
-EV_d0170144,HP_9bffdf6f,machine_stop,8,Défaut trainard entrée
-EV_b599c179,HP_a2706363,machine_stop,27,Défaut trainard entrée
-EV_ec6003c7,HP_613b0aaa,machine_stop,22,Défaut trainard entrée
-EV_54d4852f,HP_9730994f,machine_stop,7,Défaut trainard entrée
-EV_e1f79594,HP_8c489afb,machine_stop,27,Défaut trainard entrée
-EV_97febf88,HP_9f11a669,machine_stop,8,Défaut trainard entrée
-EV_593d2727,HP_3641c873,machine_stop,20,Défaut trainard entrée
-EV_371e084f,HP_6d83ac1e,machine_stop,18,Défaut trainard entrée
-EV_f9d4df03,HP_e57fcb42,machine_stop,21,Défaut trainard entrée
-EV_2ab46ab7,HP_e8123a8b,machine_stop,27,Défaut trainard entrée
-EV_42767d33,HP_a2780a94,machine_stop,23,Défaut trainard entrée
-EV_a753fff6,HP_4f66e67e,machine_stop,14,Défaut trainard entrée
-EV_7ceb61ec,HP_17c8174e,machine_stop,10,Défaut trainard entrée
-EV_5b3c9121,HP_30b211b9,machine_stop,20,Défaut trainard entrée
-EV_edbdd628,HP_2a8a0dae,machine_stop,23,Défaut trainard entrée
-EV_9b14d65f,HP_d2040934,machine_stop,11,Défaut trainard entrée
-EV_e1bc93cc,HP_7ded2d2f,machine_stop,15,Défaut trainard entrée
-EV_2418252b,HP_f2ee9aa1,machine_stop,18,Défaut trainard entrée
-EV_95601340,HP_40fff169,machine_stop,12,Défaut trainard entrée
-EV_e9500e43,HP_d3b80cd3,machine_stop,17,Défaut trainard entrée
-EV_1b42426a,HP_11cfef50,machine_stop,25,Défaut trainard entrée
-EV_c9b25a0d,HP_b995bab8,machine_stop,21,Défaut trainard entrée
+event_id,hourly_prod_id,event_type,event_category,duration_minutes,comment
+EV_ddbf68a1,HP_9b57913e,outfeed_conveyor_failure,technical,3,Operator intervention on machine element
+EV_bedca7e0,HP_9b57913e,missing_film_imprint,technical,5,Operator intervention on machine element
+EV_e6e4ac24,HP_040eb26a,stacker_jam,technical,10,Operator intervention on machine element
+EV_7ecd6962,HP_040eb26a,machine_warmup,technical,6,Operator intervention on machine element
+EV_1394a56b,HP_040eb26a,meeting,technical,4,Operator intervention on machine element
+EV_12f8441a,HP_040eb26a,door_safety_fault,technical,6,Operator intervention on machine element
+EV_25079fa2,HP_040eb26a,outfeed_conveyor_failure,technical,2,Operator intervention on machine element
+EV_8dc31900,HP_0681cf4b,sticker_application_fault,technical,9,Operator intervention on machine element
+EV_9c132479,HP_0681cf4b,planned_maintenance,technical,19,Operator intervention on machine element
+EV_fb641913,HP_0681cf4b,shift_handover,technical,3,Operator intervention on machine element
+EV_953604f2,HP_0681cf4b,other,technical,3,Operator intervention on machine element
+EV_f4570c08,HP_0681cf4b,machine_warmup,technical,2,Operator intervention on machine element
+EV_356a1fb1,HP_57694c0e,sticker_roll_change,technical,10,Operator intervention on machine element
+EV_0f39c8ea,HP_57694c0e,missing_film_imprint,technical,7,Operator intervention on machine element
+EV_6984dbb5,HP_57694c0e,infeed_conveyor_failure,technical,2,Operator intervention on machine element
+EV_fd933fa4,HP_2fde4d93,material_shortage,technical,16,Operator intervention on machine element
+EV_fe3cebf7,HP_2fde4d93,destacker_jam,technical,7,Operator intervention on machine element
+EV_57f2a25a,HP_2fde4d93,material_shortage,technical,6,Operator intervention on machine element
+EV_bc9e0ab0,HP_2fde4d93,base_plate_transfer_fault,technical,3,Operator intervention on machine element
+EV_c1ccb361,HP_2fde4d93,label_ribbon_replacement,technical,1,Operator intervention on machine element
+EV_ab96ad67,HP_83a66db6,poor_material_supply,technical,14,Operator intervention on machine element
+EV_6011eb3d,HP_83a66db6,door_safety_fault,technical,11,Operator intervention on machine element
+EV_5afc05e7,HP_83a66db6,machine_warmup,technical,10,Operator intervention on machine element
+EV_11c0bc13,HP_83a66db6,product_detachment_fault,technical,1,Operator intervention on machine element
+EV_76aa8bc6,HP_1ae6a502,shift_handover,technical,5,Operator intervention on machine element
+EV_bf2d4514,HP_1ae6a502,unknown_event,technical,7,Operator intervention on machine element
+EV_be3a8473,HP_1ae6a502,small_product_output,technical,7,Operator intervention on machine element
+EV_080b1ef7,HP_1ae6a502,operator_break,technical,2,Operator intervention on machine element
+EV_f54243ea,HP_d7e24ee0,door_safety_fault,technical,5,Operator intervention on machine element
+EV_0c894520,HP_d7e24ee0,product_length_out_of_range,technical,10,Operator intervention on machine element
+EV_a7757b8a,HP_d7e24ee0,sticker_application_fault,technical,4,Operator intervention on machine element
+EV_ee37ac3b,HP_d7e24ee0,label_ribbon_replacement,technical,4,Operator intervention on machine element
+EV_66b68c76,HP_d7e24ee0,article_code_change,technical,5,Operator intervention on machine element
+EV_4d1bb744,HP_d7e24ee0,unknown_event,technical,3,Operator intervention on machine element
+EV_1bdf9d8f,HP_e51f2706,short_break,planned,10,Alternating daily break
+EV_3147c002,HP_e51f2706,small_product_output,technical,5,Operator intervention on machine element
+EV_5343cc05,HP_e51f2706,photoelectric_sensor_fault,technical,5,Operator intervention on machine element
+EV_f4170a54,HP_e51f2706,missing_film_imprint,technical,2,Operator intervention on machine element
+EV_7b791e6d,HP_8e8ef670,short_break,planned,8,Alternating daily break
+EV_cf2d9d12,HP_9c04cf92,short_break,planned,10,Alternating daily break
+EV_f69cfb3f,HP_9c04cf92,machine_warmup,technical,8,Operator intervention on machine element
+EV_9d97c871,HP_9c04cf92,empty_tray_before_stacker,technical,10,Operator intervention on machine element
+EV_da33f4e7,HP_9c04cf92,label_ribbon_replacement,technical,6,Operator intervention on machine element
+EV_ee402caf,HP_9c04cf92,missing_film_imprint,technical,3,Operator intervention on machine element
+EV_8394246c,HP_62ab2177,short_break,planned,8,Alternating daily break
+EV_cfa5a439,HP_90a74426,short_break,planned,10,Alternating daily break
+EV_cde7069b,HP_90a74426,sticker_application_fault,technical,2,Operator intervention on machine element
+EV_b4f9be89,HP_e0842f68,short_break,planned,10,Alternating daily break
+EV_cef7a0d8,HP_e0842f68,sticker_application_fault,technical,3,Operator intervention on machine element
+EV_7bf0e225,HP_e0842f68,conveyor_output_jam,technical,3,Operator intervention on machine element
+EV_621d5915,HP_e0842f68,missing_film_imprint,technical,6,Operator intervention on machine element
+EV_1719b10a,HP_e0842f68,delta_sensor_fault_2,technical,2,Operator intervention on machine element
+EV_060d03b3,HP_3da04935,short_break,planned,10,Alternating daily break
+EV_f67e9cb5,HP_3da04935,photoelectric_sensor_fault,technical,13,Operator intervention on machine element
+EV_644df14b,HP_3da04935,ink_ribbon_replacement,technical,6,Operator intervention on machine element
+EV_4b219862,HP_3da04935,other,technical,1,Operator intervention on machine element
+EV_1bfc61d8,HP_37ddfc92,short_break,planned,10,Alternating daily break
+EV_b980856d,HP_37ddfc92,film_retake,technical,4,Operator intervention on machine element
+EV_04875892,HP_37ddfc92,stacker_jam,technical,3,Operator intervention on machine element
+EV_e17c700c,HP_836fa938,machine_warmup,technical,20,Operator intervention on machine element
+EV_a71240f6,HP_836fa938,meeting,technical,5,Operator intervention on machine element
+EV_13b3f009,HP_836fa938,paper_roll_change,technical,3,Operator intervention on machine element
+EV_a97eba54,HP_3ce23138,small_product_output,technical,9,Operator intervention on machine element
+EV_56bfe359,HP_3ce23138,sticker_application_fault,technical,2,Operator intervention on machine element
+EV_0bd727f5,HP_8bf1774c,weigher_tank_change,technical,19,Operator intervention on machine element
+EV_80499be9,HP_8bf1774c,delta_sensor_fault_1,technical,4,Operator intervention on machine element
+EV_31645d01,HP_8bf1774c,destacker_jam,technical,4,Operator intervention on machine element
+EV_348c3198,HP_8bf1774c,paper_roll_change,technical,4,Operator intervention on machine element
+EV_3f593005,HP_8bf1774c,planned_maintenance,technical,3,Operator intervention on machine element
+EV_d67e5909,HP_d131d3bc,label_ribbon_replacement,technical,15,Operator intervention on machine element
+EV_c6dd78a6,HP_d131d3bc,cleaning,technical,17,Operator intervention on machine element
+EV_526b0983,HP_d131d3bc,shift_handover,technical,5,Operator intervention on machine element
+EV_97913af8,HP_d131d3bc,infeed_conveyor_failure,technical,1,Operator intervention on machine element
+EV_837dfeb4,HP_b4ea27dd,missing_film_imprint,technical,20,Operator intervention on machine element
+EV_f35114b7,HP_b4ea27dd,other,technical,15,Operator intervention on machine element
+EV_f2b144e5,HP_e5060577,product_length_out_of_range,technical,6,Operator intervention on machine element
+EV_c6d1666d,HP_e5060577,empty_tray_before_stacker,technical,9,Operator intervention on machine element
+EV_da7cb006,HP_e5060577,infeed_conveyor_failure,technical,6,Operator intervention on machine element
+EV_e4e6c323,HP_e5060577,film_retake,technical,2,Operator intervention on machine element
+EV_142c30da,HP_7c900872,tray_blocked_in_stacker,technical,15,Operator intervention on machine element
+EV_2507b423,HP_64bb3cb3,unknown_event,technical,4,Operator intervention on machine element
+EV_59e4b767,HP_64bb3cb3,unknown_event,technical,7,Operator intervention on machine element
+EV_f83beb9f,HP_64bb3cb3,destacker_jam,technical,3,Operator intervention on machine element
+EV_9509f481,HP_64bb3cb3,small_product_output,technical,1,Operator intervention on machine element
+EV_627d557d,HP_27eee3d2,cleaning,technical,20,Operator intervention on machine element
+EV_74b70c43,HP_27eee3d2,planned_maintenance,technical,3,Operator intervention on machine element
+EV_c2be8ed6,HP_27eee3d2,weigher_tank_change,technical,5,Operator intervention on machine element
+EV_dd78b59f,HP_27eee3d2,product_detachment_fault,technical,3,Operator intervention on machine element
+EV_17ae5326,HP_27eee3d2,small_product_output,technical,1,Operator intervention on machine element
+EV_970a8c1a,HP_4a465657,delta_sensor_fault_1,technical,10,Operator intervention on machine element
+EV_1c9e7b30,HP_4a465657,operator_break,technical,6,Operator intervention on machine element
+EV_7398b3c9,HP_4a465657,base_plate_transfer_fault,technical,3,Operator intervention on machine element
+EV_439a63ae,HP_4a465657,delta_sensor_fault_2,technical,6,Operator intervention on machine element
+EV_7188766b,HP_2874e74a,stacker_jam,technical,5,Operator intervention on machine element
+EV_a1f5053e,HP_2874e74a,date_marking_change,technical,8,Operator intervention on machine element
+EV_65f390f0,HP_279450cb,film_retake,technical,5,Operator intervention on machine element
+EV_50760c5c,HP_279450cb,planned_maintenance,technical,7,Operator intervention on machine element
+EV_cf283bd4,HP_279450cb,paper_roll_change,technical,1,Operator intervention on machine element
+EV_f6b9b687,HP_af90c77e,axis_collision,technical,20,Operator intervention on machine element
+EV_f845420b,HP_af90c77e,ink_ribbon_replacement,technical,7,Operator intervention on machine element
+EV_4d644f81,HP_af90c77e,other,technical,3,Operator intervention on machine element
+EV_84f732a7,HP_7934eef8,cleaning,technical,17,Operator intervention on machine element
+EV_a86386b3,HP_7934eef8,product_detachment_fault,technical,4,Operator intervention on machine element
+EV_e82af479,HP_7934eef8,sticker_rewinder_belt_break,technical,1,Operator intervention on machine element
+EV_5cd7e68a,HP_a02015ff,material_shortage,technical,5,Operator intervention on machine element
+EV_b120c2c1,HP_a02015ff,meeting,technical,3,Operator intervention on machine element
+EV_3bcef33d,HP_a02015ff,sticker_application_fault,technical,20,Operator intervention on machine element
+EV_e0f5e999,HP_a02015ff,meeting,technical,1,Operator intervention on machine element
+EV_938f5db5,HP_1c04662e,delta_sensor_fault_2,technical,3,Operator intervention on machine element
+EV_b78c2d43,HP_1c04662e,sticker_application_fault,technical,4,Operator intervention on machine element
+EV_0b3e35c0,HP_1c04662e,door_safety_fault,technical,5,Operator intervention on machine element
+EV_6d6f3a0e,HP_1c04662e,material_shortage,technical,16,Operator intervention on machine element
+EV_c948b521,HP_1c04662e,delta_sensor_fault_2,technical,1,Operator intervention on machine element
+EV_0d201e95,HP_4dc593f2,missing_film_imprint,technical,6,Operator intervention on machine element
+EV_5435e1b8,HP_4dc593f2,weigher_tank_change,technical,8,Operator intervention on machine element
+EV_b08b3acf,HP_57f280fe,stacker_jam,technical,20,Operator intervention on machine element
+EV_5d610d72,HP_57f280fe,sticker_rewinder_belt_break,technical,10,Operator intervention on machine element
+EV_7c2563ab,HP_4d394d6a,intermediate_changeover,technical,15,Operator intervention on machine element
+EV_f52765be,HP_4d394d6a,axis_collision,technical,2,Operator intervention on machine element
+EV_7ee07f17,HP_8f28d04f,paper_roll_change,technical,6,Operator intervention on machine element
+EV_d49e2355,HP_8f28d04f,paper_roll_change,technical,14,Operator intervention on machine element
+EV_bc77eb9e,HP_8f28d04f,article_code_change,technical,9,Operator intervention on machine element
+EV_2efe5b24,HP_8f28d04f,other,technical,3,Operator intervention on machine element
+EV_b8a14b9c,HP_8f28d04f,delta_sensor_fault_1,technical,3,Operator intervention on machine element
+EV_352a6099,HP_8f28d04f,ink_ribbon_replacement,technical,1,Operator intervention on machine element
+EV_a1b7e5c9,HP_6643eabd,sticker_rewinder_belt_break,technical,6,Operator intervention on machine element
+EV_9babcaa0,HP_6643eabd,axis_collision,technical,6,Operator intervention on machine element
+EV_f52c4f5b,HP_6643eabd,sticker_roll_change,technical,11,Operator intervention on machine element
+EV_a526b1ed,HP_084548dc,tray_blocked_in_stacker,technical,16,Operator intervention on machine element
+EV_f14816e4,HP_084548dc,article_code_change,technical,11,Operator intervention on machine element
+EV_651a47ec,HP_084548dc,delta_sensor_fault_2,technical,4,Operator intervention on machine element
+EV_3b1942aa,HP_084548dc,sticker_roll_change,technical,3,Operator intervention on machine element
+EV_afbfe95e,HP_ef72b017,delta_sensor_fault_1,technical,4,Operator intervention on machine element
+EV_802cf36e,HP_ef72b017,machine_warmup,technical,8,Operator intervention on machine element
+EV_e183dc6c,HP_ef72b017,infeed_conveyor_failure,technical,1,Operator intervention on machine element
+EV_8faf4f79,HP_c8be9fdf,empty_tray_before_stacker,technical,10,Operator intervention on machine element
+EV_7e335ab7,HP_c8be9fdf,weigher_tank_change,technical,16,Operator intervention on machine element
+EV_59a96a88,HP_c8be9fdf,photoelectric_sensor_fault,technical,10,Operator intervention on machine element
+EV_84ff8e95,HP_b1300ba4,short_break,planned,10,Alternating daily break
+EV_4ef2c9ec,HP_b1300ba4,empty_tray_before_stacker,technical,3,Operator intervention on machine element
+EV_407eb653,HP_b1300ba4,infeed_conveyor_failure,technical,6,Operator intervention on machine element
+EV_c7099bdb,HP_b1300ba4,label_ribbon_replacement,technical,1,Operator intervention on machine element
+EV_3d692306,HP_f911d2f3,short_break,planned,10,Alternating daily break
+EV_bcd90893,HP_f911d2f3,article_code_change,technical,17,Operator intervention on machine element
+EV_ecae5cf4,HP_188714fb,short_break,planned,10,Alternating daily break
+EV_3fbe9d11,HP_188714fb,shift_handover,technical,9,Operator intervention on machine element
+EV_8664b122,HP_188714fb,destacker_jam,technical,6,Operator intervention on machine element
+EV_c1adc69b,HP_188714fb,axis_collision,technical,1,Operator intervention on machine element
+EV_d5870470,HP_ba56629e,short_break,planned,10,Alternating daily break
+EV_512970fd,HP_ba56629e,delta_sensor_fault_1,technical,6,Operator intervention on machine element
+EV_402895e0,HP_ba56629e,conveyor_output_jam,technical,3,Operator intervention on machine element
+EV_8d29a55d,HP_ba56629e,delta_sensor_fault_1,technical,3,Operator intervention on machine element
+EV_6ade861c,HP_ba56629e,case_packer_format_change,technical,4,Operator intervention on machine element
+EV_24177e18,HP_ddc9d81c,short_break,planned,10,Alternating daily break
+EV_3cbe8742,HP_ddc9d81c,delta_sensor_fault_1,technical,3,Operator intervention on machine element
+EV_9db2775c,HP_ddc9d81c,case_packer_format_change,technical,1,Operator intervention on machine element
+EV_eeeb03c0,HP_18575189,short_break,planned,10,Alternating daily break
+EV_de1e0942,HP_18575189,delta_sensor_fault_2,technical,8,Operator intervention on machine element
+EV_d46fc585,HP_18575189,sticker_rewinder_belt_break,technical,5,Operator intervention on machine element
+EV_08082758,HP_18575189,product_detachment_fault,technical,9,Operator intervention on machine element
+EV_7930a97f,HP_18575189,sticker_rewinder_belt_break,technical,5,Operator intervention on machine element
+EV_ac2c50a9,HP_b923d30d,short_break,planned,10,Alternating daily break
+EV_5c897ee5,HP_b923d30d,planned_maintenance,technical,1,Operator intervention on machine element
+EV_76c5bbe9,HP_3cc98f17,short_break,planned,10,Alternating daily break
+EV_0ca4b956,HP_3cc98f17,intermediate_changeover,technical,5,Operator intervention on machine element
+EV_08dde976,HP_3cc98f17,conveyor_output_jam,technical,19,Operator intervention on machine element
+EV_c174f92d,HP_3cc98f17,photoelectric_sensor_fault,technical,4,Operator intervention on machine element
+EV_a7963f8a,HP_3cc98f17,conveyor_output_jam,technical,1,Operator intervention on machine element
+EV_4576ff59,HP_8d968940,short_break,planned,10,Alternating daily break
+EV_21f54360,HP_8d968940,ink_ribbon_replacement,technical,11,Operator intervention on machine element
+EV_c70012d2,HP_8d968940,other,technical,4,Operator intervention on machine element
+EV_867c2b76,HP_8d968940,article_code_change,technical,4,Operator intervention on machine element
+EV_6bfbb4ff,HP_099657eb,short_break,planned,10,Alternating daily break
+EV_62f68b9d,HP_099657eb,delta_sensor_fault_2,technical,15,Operator intervention on machine element
+EV_bcb77f1c,HP_8b61f5f7,short_break,planned,10,Alternating daily break
+EV_fa5a2083,HP_8b61f5f7,unplanned_maintenance,technical,17,Operator intervention on machine element
+EV_73c2fb5e,HP_8b61f5f7,base_plate_position_fault,technical,12,Operator intervention on machine element
+EV_769e361a,HP_8b61f5f7,delta_sensor_fault_2,technical,1,Operator intervention on machine element
+EV_0a24eca7,HP_4b4b8375,short_break,planned,10,Alternating daily break
+EV_86b8ed22,HP_4b4b8375,photoelectric_sensor_fault,technical,3,Operator intervention on machine element
+EV_eaf98f23,HP_ebe6b756,short_break,planned,10,Alternating daily break
+EV_02c5aca7,HP_ebe6b756,stacker_jam,technical,4,Operator intervention on machine element
+EV_0ecb8fea,HP_ebe6b756,poor_material_supply,technical,1,Operator intervention on machine element
+EV_d8da2c2a,HP_ebd13e20,short_break,planned,10,Alternating daily break
+EV_9b72ddda,HP_ebd13e20,small_product_output,technical,10,Operator intervention on machine element
+EV_384e6ec2,HP_ebd13e20,empty_tray_before_stacker,technical,7,Operator intervention on machine element
+EV_517c4e39,HP_ebd13e20,machine_warmup,technical,10,Operator intervention on machine element
+EV_16c85b6e,HP_00f9d30e,short_break,planned,10,Alternating daily break
+EV_089a01ae,HP_00f9d30e,other,technical,12,Operator intervention on machine element
+EV_8f13c9da,HP_00f9d30e,cleaning,technical,3,Operator intervention on machine element
+EV_057a68df,HP_f0ba5608,short_break,planned,10,Alternating daily break
+EV_8ce45576,HP_f0ba5608,cassette_sticker_adjustment,technical,20,Operator intervention on machine element
+EV_ad00a5cd,HP_f0ba5608,stacker_jam,technical,4,Operator intervention on machine element
+EV_d5101f84,HP_f0ba5608,product_detachment_fault,technical,5,Operator intervention on machine element
+EV_c3536196,HP_f0ba5608,base_plate_position_fault,technical,1,Operator intervention on machine element
+EV_0c86a94d,HP_03657aba,short_break,planned,10,Alternating daily break
+EV_6d508f3e,HP_03657aba,destacker_jam,technical,2,Operator intervention on machine element
+EV_6599cefc,HP_19a5730a,short_break,planned,10,Alternating daily break
+EV_914a601a,HP_19a5730a,planned_maintenance,technical,7,Operator intervention on machine element
+EV_30fb258f,HP_19a5730a,material_shortage,technical,6,Operator intervention on machine element
+EV_f92eedcc,HP_19a5730a,unknown_event,technical,3,Operator intervention on machine element
+EV_a3d29800,HP_19a5730a,film_retake,technical,1,Operator intervention on machine element
+EV_d5ad7298,HP_452bec38,short_break,planned,10,Alternating daily break
+EV_8cf1c393,HP_452bec38,film_retake,technical,4,Operator intervention on machine element
+EV_2b46fef2,HP_452bec38,delta_sensor_fault_1,technical,1,Operator intervention on machine element
+EV_cadce6a4,HP_6693de21,short_break,planned,10,Alternating daily break
+EV_64da7852,HP_6693de21,missing_film_imprint,technical,16,Operator intervention on machine element
+EV_267f10e0,HP_6693de21,infeed_conveyor_failure,technical,3,Operator intervention on machine element
+EV_bcf7410c,HP_6693de21,stacker_jam,technical,5,Operator intervention on machine element
+EV_9d21c693,HP_6693de21,unknown_event,technical,2,Operator intervention on machine element
+EV_dedd56c5,HP_c35e0c20,short_break,planned,10,Alternating daily break
+EV_65ce5ad6,HP_c35e0c20,sticker_roll_change,technical,5,Operator intervention on machine element
+EV_9c9f1bcf,HP_c35e0c20,paper_roll_change,technical,11,Operator intervention on machine element
+EV_4818e971,HP_c35e0c20,shift_handover,technical,1,Operator intervention on machine element
+EV_b9c4931c,HP_36a73512,short_break,planned,10,Alternating daily break
+EV_4d764389,HP_36a73512,delta_sensor_fault_2,technical,6,Operator intervention on machine element
+EV_994acadb,HP_36a73512,machine_warmup,technical,7,Operator intervention on machine element
+EV_b2f19b09,HP_36a73512,small_product_output,technical,3,Operator intervention on machine element
+EV_dbbc2319,HP_36a73512,shift_handover,technical,12,Operator intervention on machine element
+EV_64237263,HP_36a73512,destacker_jam,technical,2,Operator intervention on machine element
+EV_f4100d91,HP_d6920f52,short_break,planned,10,Alternating daily break
+EV_af526e9a,HP_d6920f52,door_safety_fault,technical,4,Operator intervention on machine element
+EV_ac7b7b10,HP_d6920f52,small_product_output,technical,4,Operator intervention on machine element
+EV_5b9b1bdb,HP_d6920f52,door_safety_fault,technical,1,Operator intervention on machine element
+EV_a7898a40,HP_ec7ecf31,short_break,planned,10,Alternating daily break
+EV_da19fd9e,HP_ec7ecf31,sticker_rewinder_belt_break,technical,6,Operator intervention on machine element
+EV_c1bd6aa2,HP_ec7ecf31,poor_material_supply,technical,3,Operator intervention on machine element
+EV_029316d9,HP_ec7ecf31,shift_handover,technical,3,Operator intervention on machine element
