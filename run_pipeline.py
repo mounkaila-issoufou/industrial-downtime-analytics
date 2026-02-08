@@ -1,6 +1,6 @@
 from pathlib import Path
 from src.utils.logger import logger
-
+from src.config.config import RAW_DATA_DIR
 
 
 # =========================
@@ -51,7 +51,24 @@ def main():
     # 3. LOAD STAGING
     # =========================
     logger.info("▶ Loading staging tables")
+    run_sql_file(
+                SQL_DIR / "dml/01_load_stg_shift_supervision.sql",
+                RAW_DATA_DIR / "shift_supervision.csv"
+            )
+    run_sql_file(
+                SQL_DIR / "dml/02_load_stg_shift_operator_assignment.sql",
+                RAW_DATA_DIR / "shift_operator_assignment.csv"
+            )
 
+    run_sql_file(
+                SQL_DIR / "dml/04_load_stg_production_events.sql",
+                RAW_DATA_DIR / "production_events.csv"
+            )
+
+    run_sql_file(
+                SQL_DIR / "dml/03_load_stg_hourly_production.sql",
+                RAW_DATA_DIR / "hourly_production.csv"
+            )
     logger.info("✔ Staging loaded")
 
     # =========================

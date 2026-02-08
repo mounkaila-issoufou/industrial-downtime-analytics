@@ -1,22 +1,30 @@
 import random
+
 from src.config.settings import RANDOM_SEED
 from src.ingestion.generate_shift_context import generate_shift_context
 from src.ingestion.generate_mock_production_data import generate_production
 from src.utils.export import export_csv
 from src.core.context_store import context
 
+
 def main():
     random.seed(RANDOM_SEED)
 
+    # 1) Génération du contexte shifts
     generate_shift_context()
-    hourly_prod, events = generate_production()
 
+    # 2) Génération des faits production
+    hourly_prod, events = generate_production()
+    print(f"✔ Génération de {len(hourly_prod)} enregistrements de production horaire")
+    print(hourly_prod[:2])  # Affiche les 2 premiers enregistrements pour vérification
+    # 3) Export en CSV (couche raw / staging)
     export_csv(context.shifts, "shift_supervision.csv")
     export_csv(context.operator_assignments, "shift_operator_assignment.csv")
     export_csv(hourly_prod, "hourly_production.csv")
     export_csv(events, "production_events.csv")
 
     print("✔ Génération cohérente terminée")
+
 
 if __name__ == "__main__":
     main()
