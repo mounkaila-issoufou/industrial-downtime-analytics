@@ -8,3 +8,9 @@ src/config/__pycache__/
 outputs/
 notebooks/__pycache__/
 notebooks/.ipynb_checkpoints/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+src/config/__pycache__/
+src/db/__pycache__/
