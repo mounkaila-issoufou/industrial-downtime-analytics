@@ -15,7 +15,8 @@ def main():
 
     # 2) Génération des faits production
     hourly_prod, events = generate_production()
-
+    print(f"✔ Génération de {len(hourly_prod)} enregistrements de production horaire")
+    print(hourly_prod[:2])  # Affiche les 2 premiers enregistrements pour vérification
     # 3) Export en CSV (couche raw / staging)
     export_csv(context.shifts, "shift_supervision.csv")
     export_csv(context.operator_assignments, "shift_operator_assignment.csv")
