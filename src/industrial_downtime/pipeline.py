@@ -1,12 +1,12 @@
 from pathlib import Path
-from src.utils.logger import logger
-from src.config.config import RAW_DATA_DIR
-from src.ingestion.run_generation import run_data_generation_pipeline
+from industrial_downtime.utils.logger import logger
+from industrial_downtime.config.config import RAW_DATA_DIR
+from industrial_downtime.ingestion.run_generation import run_data_generation_pipeline
 
 # =========================
 # Database pipeline
 # =========================
-from src.db.run_sql import run_sql_file
+from industrial_downtime.db.run_sql import run_sql_file
 
 
 SQL_DIR = Path("sql")
@@ -107,13 +107,6 @@ def main():
     run_sql_file(SQL_DIR / "dml/19_load_fact_production_events.sql")
 
 
-
-
-
-
     logger.info("✔ Data warehouse load completed")
     logger.info("✅ END-TO-END PIPELINE COMPLETED SUCCESSFULLY")
 
-
-if __name__ == "__main__":
-    main()

@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy import create_engine
 
-from src.config.config import DB_CONFIG
+from industrial_downtime.config.config import DB_CONFIG
 
 
 def get_connection():

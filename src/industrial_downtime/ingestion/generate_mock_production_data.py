@@ -1,9 +1,9 @@
 import random
 from datetime import datetime, date
 
-from src.core.ids import generate_id
-from src.core.context_store import context
-from src.config.constants import (
+from industrial_downtime.core.ids import generate_id
+from industrial_downtime.core.context_store import context
+from industrial_downtime.config.constants import (
     PAUSE_RULES,
     EVENT_CLASSIFICATION,
 )

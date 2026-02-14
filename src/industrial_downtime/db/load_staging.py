@@ -1,4 +1,4 @@
-from src.db.loader import load_parquet_to_staging
+from industrial_downtime.db.loader import load_parquet_to_staging
 
 def load_all_staging():
     mapping = {
