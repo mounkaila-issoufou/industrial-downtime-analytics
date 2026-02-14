@@ -1,8 +1,8 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-from src.db.connection import get_sqlalchemy_engine
-from src.config import PROCESSED_DATA_DIR
+from industrial_downtime.db.connection import get_sqlalchemy_engine
+from industrial_downtime.config import PROCESSED_DATA_DIR
 
 
 def load_parquet_to_staging(table_name: str, parquet_file: str):

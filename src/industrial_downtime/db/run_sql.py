@@ -1,6 +1,6 @@
 from pathlib import Path
-from src.db.connection import get_connection
-from src.utils.logger import logger
+from industrial_downtime.db.connection import get_connection
+from industrial_downtime.utils.logger import logger
 
 
 def run_sql_file(sql_path: Path, data_path: Path | None = None):

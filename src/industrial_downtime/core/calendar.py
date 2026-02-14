@@ -1,6 +1,6 @@
 from datetime import timedelta
-from src.config.settings import START_DATE, END_DATE
-from src.config.constants import SHIFTS
+from industrial_downtime.config.settings import START_DATE, END_DATE
+from industrial_downtime.config.constants import SHIFTS
 
 
 def iter_dates():

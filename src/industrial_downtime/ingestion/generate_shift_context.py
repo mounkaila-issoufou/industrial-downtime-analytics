@@ -1,7 +1,7 @@
-from src.core.context_store import context
-from src.core.ids import generate_id
-from src.core.calendar import iter_shifts
-from src.config.settings import (
+from industrial_downtime.core.context_store import context
+from industrial_downtime.core.ids import generate_id
+from industrial_downtime.core.calendar import iter_shifts
+from industrial_downtime.config.settings import (
     FACTORY_ID,
     WORKSHOPS,
     LINES,
