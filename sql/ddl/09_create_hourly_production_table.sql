@@ -19,6 +19,12 @@ CREATE TABLE ops.hourly_production (
    theoretical_production INTEGER NOT NULL,
    actual_production INTEGER NOT NULL,
    non_production_minutes INTEGER NOT NULL,
+   explained_minutes INTEGER NOT NULL,
+   unexplained_minutes INTEGER NOT NULL,
+   reliability_rate NUMERIC(5,2) NOT NULL,
+   explained_ratio NUMERIC(5,2) NOT NULL,
+   unexplained_ratio NUMERIC(5,2) NOT NULL,
+
 
    FOREIGN KEY (shift_supervision_id) REFERENCES ops.shift_supervision(shift_supervision_id),
    FOREIGN KEY (operator_id) REFERENCES ops.operator(operator_id),

@@ -12,10 +12,6 @@ CREATE TABLE IF NOT EXISTS dw.dim_team (
     team_lead_id TEXT NOT NULL,           -- vient de ops.team_lead
     shift_supervision_id TEXT NOT NULL,   -- vient de ops.shift_supervision
 
-    -- Descriptifs métier aplatis pour la BI
-    team_lead_name TEXT NOT NULL,
-    senior_manager_id TEXT,               -- si tu veux analyser junior vs senior
-    senior_manager_name TEXT,
 
     -- Contexte du shift (utile en analyse)
     session TEXT NOT NULL,                -- MATIN / SOIR / NUIT / SD
