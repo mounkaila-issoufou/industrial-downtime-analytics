@@ -19,6 +19,28 @@ L’objectif est de suivre, comparer et analyser :
 
 Le projet transforme une donnée terrain **manuelle, locale et opérationnelle** en une **vision analytique consolidée**, exploitable pour le **pilotage industriel** et l’**amélioration continue**.
 
+
+
+## Table des matières
+
+## 📚 Table des matières
+- [Objectif du projet](#objectif-du-projet)
+- [Contexte industriel](#contexte-industriel)
+- [Source et nature des données](#source-et-nature-des-données)
+- [Principe de mesure de la non-production](#principe-de-mesure-de-la-non-production)
+- [Périmètre d’analyse](#périmètre-danalyse)
+- [Démarche analytique](#démarche-analytique)
+- [Approche données](#approche-données)
+- [Couche analytique (Data Warehouse)](#couche-analytique-data-warehouse)
+- [Architecture globale](#architecture-globale)
+- [Stack technologique](#stack-technologique)
+- [KPIs industriels clés](#kpis-industriels-clés)
+- [Organisation du repository](#organisation-du-repository)
+- [Dashboards Power BI](#dashboards-power-bi)
+- [Pipeline](#le-pipeline)
+- [Installation](#installation)
+- [Organisation du projet](#structure-du-projet)
+- [Documentation](#documentation-détaillée)
 ---
 
 ## Contexte industriel
@@ -175,21 +197,6 @@ Power BI / Looker
 
 ---
 
-## Table des matières
-
-## 📚 Table des matières
-- [Objectif du projet](#objectif-du-projet)
-- [Contexte industriel](#contexte-industriel)
-- [Source et nature des données](#source-et-nature-des-données)
-- [Périmètre d’analyse](#perimetre-d-analyse)
-- [Architecture globale](#architecture-globale)
-- [Stack technologique](#stack-technologique)
-- [Modele de donnees](#modèle-de-données-star-schema)
-- [Analyses metier](#analyses-métier-couvertes)
-- [Dashboards Power BI](#dashboards-power-bi)
-- [Pipeline](#le-pipeline)
-- [Organisation du projet](#structure-du-projet)
-- [Documentation](#documentation-détaillée)
 
 ## Stack Technologique
 
