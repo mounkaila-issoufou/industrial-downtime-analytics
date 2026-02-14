@@ -1,212 +1,213 @@
-event_id,hourly_prod_id,event_type,event_category,duration_minutes,comment
-EV_f389b526,HP_b3d23bf4,missing_film_imprint,technical,3,Operator intervention on machine element
-EV_b12486cb,HP_b3d23bf4,sticker_application_fault,technical,6,Operator intervention on machine element
-EV_6109c674,HP_b3d23bf4,base_plate_position_fault,technical,3,Operator intervention on machine element
-EV_c195ff7f,HP_b3d23bf4,machine_warmup,technical,1,Operator intervention on machine element
-EV_290ee37c,HP_5644fab4,paper_roll_change,technical,12,Operator intervention on machine element
-EV_8f990020,HP_5644fab4,door_safety_fault,technical,2,Operator intervention on machine element
-EV_cb12b51b,HP_22c19f0f,photoelectric_sensor_fault,technical,4,Operator intervention on machine element
-EV_847d3889,HP_22c19f0f,case_packer_format_change,technical,6,Operator intervention on machine element
-EV_f7bd973b,HP_22c19f0f,outfeed_conveyor_failure,technical,5,Operator intervention on machine element
-EV_f60c5882,HP_584a9f50,axis_collision,technical,1,Operator intervention on machine element
-EV_1e02e160,HP_58311876,intermediate_changeover,technical,2,Operator intervention on machine element
-EV_5a133c31,HP_00877a15,meeting,technical,10,Operator intervention on machine element
-EV_8a055b42,HP_58efa88e,infeed_conveyor_failure,technical,9,Operator intervention on machine element
-EV_6c9045e8,HP_2d6a7565,short_break,planned,10,Alternating daily break
-EV_e9453767,HP_2d6a7565,paper_roll_change,technical,2,Operator intervention on machine element
-EV_3ef41721,HP_29f511f0,short_break,planned,7,Alternating daily break
-EV_75b9ac55,HP_b009698c,short_break,planned,9,Alternating daily break
-EV_310f5c16,HP_62969740,short_break,planned,10,Alternating daily break
-EV_7ca14cdb,HP_62969740,photoelectric_sensor_fault,technical,2,Operator intervention on machine element
-EV_89534a23,HP_9ffcac30,short_break,planned,7,Alternating daily break
-EV_681ce66e,HP_9d29d2ff,short_break,planned,10,Alternating daily break
-EV_f9b815be,HP_9d29d2ff,base_plate_transfer_fault,technical,3,Operator intervention on machine element
-EV_2e299120,HP_03fb95af,short_break,planned,6,Alternating daily break
-EV_a69f63e0,HP_0598f0d7,poor_material_supply,technical,8,Operator intervention on machine element
-EV_18c7d139,HP_0598f0d7,film_retake,technical,5,Operator intervention on machine element
-EV_3c6e70ea,HP_68cd00d1,article_code_change,technical,14,Operator intervention on machine element
-EV_9a1b63d6,HP_68cd00d1,machine_warmup,technical,1,Operator intervention on machine element
-EV_1ad664c3,HP_308fdb4b,base_plate_transfer_fault,technical,9,Operator intervention on machine element
-EV_05772cf2,HP_308fdb4b,unknown_event,technical,4,Operator intervention on machine element
-EV_e2010228,HP_169843aa,axis_collision,technical,7,Operator intervention on machine element
-EV_e2980e14,HP_b3c4da7f,sticker_application_fault,technical,3,Operator intervention on machine element
-EV_6bd17937,HP_b3c4da7f,base_plate_transfer_fault,technical,7,Operator intervention on machine element
-EV_282286af,HP_b3c4da7f,base_plate_position_fault,technical,3,Operator intervention on machine element
-EV_dd25a344,HP_b3c4da7f,label_ribbon_replacement,technical,1,Operator intervention on machine element
-EV_301bc6e4,HP_503ac39c,unknown_event,technical,6,Operator intervention on machine element
-EV_87cdd988,HP_503ac39c,small_product_output,technical,3,Operator intervention on machine element
-EV_d9a18068,HP_bd30ab9e,poor_material_supply,technical,8,Operator intervention on machine element
-EV_72a80ef4,HP_bd30ab9e,missing_film_imprint,technical,3,Operator intervention on machine element
-EV_52caecfd,HP_bd30ab9e,other,technical,1,Operator intervention on machine element
-EV_545d8533,HP_614b4495,unknown_event,technical,12,Operator intervention on machine element
-EV_e67c0602,HP_614b4495,empty_tray_before_stacker,technical,2,Operator intervention on machine element
-EV_980bd543,HP_b9e1e095,sticker_rewinder_belt_break,technical,2,Operator intervention on machine element
-EV_3637f275,HP_0263535a,label_ribbon_replacement,technical,10,Operator intervention on machine element
-EV_25070857,HP_0263535a,missing_film_imprint,technical,2,Operator intervention on machine element
-EV_214a9615,HP_0edada2f,sticker_application_fault,technical,2,Operator intervention on machine element
-EV_cfcaf0c5,HP_0c32bf1c,sticker_application_fault,technical,3,Operator intervention on machine element
-EV_87e4c847,HP_0c32bf1c,conveyor_output_jam,technical,3,Operator intervention on machine element
-EV_39c54b04,HP_0c32bf1c,ink_ribbon_replacement,technical,1,Operator intervention on machine element
-EV_7e113034,HP_a9e39861,photoelectric_sensor_fault,technical,3,Operator intervention on machine element
-EV_c9aafcae,HP_a9e39861,photoelectric_sensor_fault,technical,5,Operator intervention on machine element
-EV_3dc9e19e,HP_a9e39861,other,technical,1,Operator intervention on machine element
-EV_44b848be,HP_879f1129,ink_ribbon_replacement,technical,3,Operator intervention on machine element
-EV_59a66ce1,HP_00c4741f,film_retake,technical,3,Operator intervention on machine element
-EV_e4a0f17b,HP_00c4741f,stacker_jam,technical,1,Operator intervention on machine element
-EV_d50314ee,HP_ca6f9bc8,shift_handover,technical,8,Operator intervention on machine element
-EV_febc4a97,HP_ca6f9bc8,machine_warmup,technical,1,Operator intervention on machine element
-EV_9af884a3,HP_4ec7a761,meeting,technical,8,Operator intervention on machine element
-EV_d7937036,HP_4ec7a761,paper_roll_change,technical,1,Operator intervention on machine element
-EV_0dc4664b,HP_59c2d854,ink_ribbon_replacement,technical,1,Operator intervention on machine element
-EV_ffe0dedd,HP_9ae17f56,stacker_jam,technical,4,Operator intervention on machine element
-EV_d3c61970,HP_9ae17f56,case_packer_format_change,technical,2,Operator intervention on machine element
-EV_cde2a9f0,HP_b22442d0,base_plate_transfer_fault,technical,3,Operator intervention on machine element
-EV_d696fc00,HP_dae1705a,short_break,planned,10,Alternating daily break
-EV_40397f22,HP_dae1705a,destacker_jam,technical,3,Operator intervention on machine element
-EV_76637b52,HP_dae1705a,unknown_event,technical,2,Operator intervention on machine element
-EV_a26cd896,HP_31c34e03,short_break,planned,10,Alternating daily break
-EV_3cae8ebd,HP_31c34e03,paper_roll_change,technical,2,Operator intervention on machine element
-EV_ed9beded,HP_093b53bc,short_break,planned,10,Alternating daily break
-EV_251b112d,HP_093b53bc,label_ribbon_replacement,technical,4,Operator intervention on machine element
-EV_d6720f20,HP_40b46b0a,short_break,planned,1,Alternating daily break
-EV_02fe8412,HP_ed33916d,short_break,planned,4,Alternating daily break
-EV_bb3d3be8,HP_b11c6b94,short_break,planned,2,Alternating daily break
-EV_0ef3b3d2,HP_33ae9c4d,short_break,planned,9,Alternating daily break
-EV_dfbbcd22,HP_5994ccba,short_break,planned,2,Alternating daily break
-EV_bd4d0840,HP_a8bbb01f,short_break,planned,10,Alternating daily break
-EV_15beb822,HP_a8bbb01f,product_detachment_fault,technical,5,Operator intervention on machine element
-EV_10e77e56,HP_c79477f9,short_break,planned,2,Alternating daily break
-EV_e725a06a,HP_8032ab97,short_break,planned,9,Alternating daily break
-EV_e817d993,HP_885cacee,short_break,planned,7,Alternating daily break
-EV_6cf6810f,HP_2d6a32ab,short_break,planned,10,Alternating daily break
-EV_a8f25f98,HP_2d6a32ab,product_length_out_of_range,technical,3,Operator intervention on machine element
-EV_aa0445d4,HP_f2e4d037,short_break,planned,5,Alternating daily break
-EV_bbe747d9,HP_fba1a7e6,short_break,planned,10,Alternating daily break
-EV_d4f48440,HP_fba1a7e6,article_code_change,technical,2,Operator intervention on machine element
-EV_2bceb1c8,HP_ec63bb6f,short_break,planned,10,Alternating daily break
-EV_f42a43e2,HP_ec63bb6f,case_packer_format_change,technical,5,Operator intervention on machine element
-EV_36bce67d,HP_ec63bb6f,tray_blocked_in_stacker,technical,1,Operator intervention on machine element
-EV_170be789,HP_a51e43fa,short_break,planned,3,Alternating daily break
-EV_9ac475a2,HP_2898108a,short_break,planned,10,Alternating daily break
-EV_1548f691,HP_2898108a,unknown_event,technical,3,Operator intervention on machine element
-EV_85089ffd,HP_fd3561ff,short_break,planned,8,Alternating daily break
-EV_506e5d53,HP_297b0525,short_break,planned,3,Alternating daily break
-EV_637d06b1,HP_3d9317fc,small_product_output,technical,5,Operator intervention on machine element
-EV_bef5c0a2,HP_3d9317fc,machine_warmup,technical,4,Operator intervention on machine element
-EV_90889b1f,HP_3d9317fc,cleaning,technical,2,Operator intervention on machine element
-EV_1aa7fbb8,HP_f860ce1e,conveyor_output_jam,technical,12,Operator intervention on machine element
-EV_e7dfc70f,HP_f860ce1e,outfeed_conveyor_failure,technical,4,Operator intervention on machine element
-EV_ca55649e,HP_1164f78f,cassette_sticker_adjustment,technical,8,Operator intervention on machine element
-EV_574f7ae7,HP_1164f78f,delta_sensor_fault_1,technical,3,Operator intervention on machine element
-EV_7626d4c3,HP_1164f78f,sticker_rewinder_belt_break,technical,2,Operator intervention on machine element
-EV_61b574fb,HP_22dc8246,base_plate_transfer_fault,technical,1,Operator intervention on machine element
-EV_f1b019c6,HP_3849f50a,weigher_tank_change,technical,14,Operator intervention on machine element
-EV_267be0ca,HP_7b115652,stacker_jam,technical,11,Operator intervention on machine element
-EV_4fa94974,HP_7b115652,stacker_jam,technical,3,Operator intervention on machine element
-EV_7519b4d0,HP_652a9b4d,film_retake,technical,3,Operator intervention on machine element
-EV_a0468567,HP_652a9b4d,cleaning,technical,1,Operator intervention on machine element
-EV_36a8068f,HP_12aba3b1,machine_warmup,technical,3,Operator intervention on machine element
-EV_415698ee,HP_12aba3b1,axis_collision,technical,2,Operator intervention on machine element
-EV_0fd08d4a,HP_1014f302,other,technical,6,Operator intervention on machine element
-EV_1e4d750d,HP_1014f302,small_product_output,technical,2,Operator intervention on machine element
-EV_d5217045,HP_e7819c64,sticker_roll_change,technical,5,Operator intervention on machine element
-EV_2bb9fcb0,HP_a190c7ed,sticker_application_fault,technical,6,Operator intervention on machine element
-EV_53651940,HP_a190c7ed,material_shortage,technical,3,Operator intervention on machine element
-EV_cfaa924b,HP_a190c7ed,meeting,technical,3,Operator intervention on machine element
-EV_5b885d6b,HP_a190c7ed,shift_handover,technical,1,Operator intervention on machine element
-EV_d4e12000,HP_6e34a53c,infeed_conveyor_failure,technical,6,Operator intervention on machine element
-EV_6d71b75d,HP_6e34a53c,unknown_event,technical,3,Operator intervention on machine element
-EV_8d81d68b,HP_6e34a53c,delta_sensor_fault_1,technical,1,Operator intervention on machine element
-EV_d74179fe,HP_bd5d5975,door_safety_fault,technical,4,Operator intervention on machine element
-EV_62826511,HP_bd5d5975,delta_sensor_fault_2,technical,5,Operator intervention on machine element
-EV_d7e815be,HP_bd5d5975,case_packer_format_change,technical,1,Operator intervention on machine element
-EV_df2b6db2,HP_b9d6fe20,weigher_tank_change,technical,7,Operator intervention on machine element
-EV_7f8731d3,HP_b9d6fe20,photoelectric_sensor_fault,technical,3,Operator intervention on machine element
-EV_a630e2b5,HP_f013d5c2,stacker_jam,technical,2,Operator intervention on machine element
-EV_a6b2116b,HP_65c8ce10,operator_break,technical,1,Operator intervention on machine element
-EV_52789472,HP_dfd3364a,date_marking_change,technical,3,Operator intervention on machine element
-EV_ef1f9439,HP_dfd3364a,intermediate_changeover,technical,1,Operator intervention on machine element
-EV_4041e348,HP_a29ebd46,base_plate_position_fault,technical,4,Operator intervention on machine element
-EV_f47ab3f0,HP_a29ebd46,poor_material_supply,technical,6,Operator intervention on machine element
-EV_f0c45789,HP_a29ebd46,paper_roll_change,technical,1,Operator intervention on machine element
-EV_36f39bf0,HP_1ef33139,delta_sensor_fault_1,technical,4,Operator intervention on machine element
-EV_19247f67,HP_1ef33139,other,technical,1,Operator intervention on machine element
-EV_03b8dc7d,HP_928f1edb,short_break,planned,10,Alternating daily break
-EV_6880b8da,HP_928f1edb,delta_sensor_fault_1,technical,3,Operator intervention on machine element
-EV_fb30b8b0,HP_e5ef7e91,short_break,planned,5,Alternating daily break
-EV_e37c4a31,HP_ebffdc61,short_break,planned,7,Alternating daily break
-EV_5415b33d,HP_a50d7d2d,short_break,planned,10,Alternating daily break
-EV_31cfb241,HP_a50d7d2d,sticker_rewinder_belt_break,technical,3,Operator intervention on machine element
-EV_ccbb52f3,HP_85e8de7b,short_break,planned,10,Alternating daily break
-EV_b56cbfc8,HP_85e8de7b,axis_collision,technical,1,Operator intervention on machine element
-EV_20e2bf80,HP_7c46d10f,short_break,planned,2,Alternating daily break
-EV_68ed9d49,HP_c5c5ba86,short_break,planned,4,Alternating daily break
-EV_06dbe594,HP_b9c6fc32,short_break,planned,10,Alternating daily break
-EV_5cbb639c,HP_b9c6fc32,paper_roll_change,technical,2,Operator intervention on machine element
-EV_48a1def7,HP_35bc23de,short_break,planned,10,Alternating daily break
-EV_9be37fc5,HP_35bc23de,missing_film_imprint,technical,1,Operator intervention on machine element
-EV_3e89fb77,HP_ed3db391,short_break,planned,4,Alternating daily break
-EV_3326a4da,HP_1c3a92ff,short_break,planned,9,Alternating daily break
-EV_e62f81cd,HP_a037a5b7,short_break,planned,10,Alternating daily break
-EV_9f0a262d,HP_a037a5b7,shift_handover,technical,4,Operator intervention on machine element
-EV_994f68e6,HP_96185003,short_break,planned,10,Alternating daily break
-EV_fc141a4e,HP_96185003,delta_sensor_fault_1,technical,3,Operator intervention on machine element
-EV_24de3ea7,HP_cb6610c5,short_break,planned,2,Alternating daily break
-EV_c5f48f9b,HP_06342231,short_break,planned,10,Alternating daily break
-EV_72c411e1,HP_06342231,sticker_rewinder_belt_break,technical,3,Operator intervention on machine element
-EV_d0943e6b,HP_06342231,empty_tray_before_stacker,technical,2,Operator intervention on machine element
-EV_107bef9e,HP_ebfca37b,short_break,planned,5,Alternating daily break
-EV_4d1f6966,HP_1cff5a62,short_break,planned,3,Alternating daily break
-EV_0bcfc5f4,HP_fb97097f,short_break,planned,3,Alternating daily break
-EV_4898d3ab,HP_48ab074b,short_break,planned,10,Alternating daily break
-EV_757e6c40,HP_bfdff037,short_break,planned,5,Alternating daily break
-EV_135a01f6,HP_55e4b276,short_break,planned,10,Alternating daily break
-EV_8920cb82,HP_55e4b276,label_ribbon_replacement,technical,3,Operator intervention on machine element
-EV_866913b9,HP_55e4b276,infeed_conveyor_failure,technical,1,Operator intervention on machine element
-EV_16d34d11,HP_bc1998eb,article_code_change,technical,5,Operator intervention on machine element
-EV_c2a1f404,HP_bc1998eb,product_length_out_of_range,technical,1,Operator intervention on machine element
-EV_6e2b398c,HP_2ba07408,shift_handover,technical,5,Operator intervention on machine element
-EV_7ffeabc4,HP_3e63de16,destacker_jam,technical,3,Operator intervention on machine element
-EV_e920c86d,HP_9d2112e3,photoelectric_sensor_fault,technical,7,Operator intervention on machine element
-EV_8dd64165,HP_9d2112e3,meeting,technical,3,Operator intervention on machine element
-EV_bbee3784,HP_9d2112e3,machine_warmup,technical,1,Operator intervention on machine element
-EV_eb4aa784,HP_af6cae8f,conveyor_output_jam,technical,14,Operator intervention on machine element
-EV_23a5ebae,HP_f756d445,meeting,technical,3,Operator intervention on machine element
-EV_0e8be50e,HP_f756d445,case_packer_format_change,technical,10,Operator intervention on machine element
-EV_b58358a9,HP_f756d445,cleaning,technical,1,Operator intervention on machine element
-EV_8c8cde1b,HP_c17f65a6,case_packer_format_change,technical,3,Operator intervention on machine element
-EV_0e0bbb20,HP_c17f65a6,tray_blocked_in_stacker,technical,3,Operator intervention on machine element
-EV_adb06c84,HP_c17f65a6,planned_maintenance,technical,3,Operator intervention on machine element
-EV_787cd4a1,HP_c17f65a6,delta_sensor_fault_2,technical,3,Operator intervention on machine element
-EV_ae0f2669,HP_5ada40c2,product_detachment_fault,technical,9,Operator intervention on machine element
-EV_6bfa2c9c,HP_5ada40c2,operator_break,technical,1,Operator intervention on machine element
-EV_3d3922a6,HP_ee36d631,planned_maintenance,technical,7,Operator intervention on machine element
-EV_9cfd3406,HP_ee36d631,door_safety_fault,technical,2,Operator intervention on machine element
-EV_ef6e360a,HP_a1d65b0c,meeting,technical,9,Operator intervention on machine element
-EV_fe46cd5a,HP_a1d65b0c,cleaning,technical,5,Operator intervention on machine element
-EV_e2b44395,HP_b0847727,photoelectric_sensor_fault,technical,5,Operator intervention on machine element
-EV_db326a74,HP_b0847727,conveyor_output_jam,technical,3,Operator intervention on machine element
-EV_e3ff2b3c,HP_e1436e66,ink_ribbon_replacement,technical,7,Operator intervention on machine element
-EV_b7ca0b52,HP_e1436e66,stacker_jam,technical,3,Operator intervention on machine element
-EV_95845bfa,HP_f6b8cf00,conveyor_output_jam,technical,6,Operator intervention on machine element
-EV_9654a65f,HP_f6b8cf00,delta_sensor_fault_2,technical,2,Operator intervention on machine element
-EV_6663f030,HP_a3d09005,unplanned_maintenance,technical,10,Operator intervention on machine element
-EV_6cd1fe55,HP_a3d09005,delta_sensor_fault_2,technical,3,Operator intervention on machine element
-EV_e2707937,HP_a3d09005,machine_warmup,technical,3,Operator intervention on machine element
-EV_4c17ac2f,HP_358d36e5,stacker_jam,technical,7,Operator intervention on machine element
-EV_ae0525ff,HP_358d36e5,poor_material_supply,technical,3,Operator intervention on machine element
-EV_7cd5aeaf,HP_e3f3fbb8,small_product_output,technical,6,Operator intervention on machine element
-EV_78fdce02,HP_e3f3fbb8,empty_tray_before_stacker,technical,5,Operator intervention on machine element
-EV_7e7f8533,HP_e3f3fbb8,sticker_roll_change,technical,3,Operator intervention on machine element
-EV_50b36b78,HP_abea0707,cassette_sticker_adjustment,technical,2,Operator intervention on machine element
-EV_9b4f131a,HP_a2a3f2d1,infeed_conveyor_failure,technical,2,Operator intervention on machine element
-EV_2f77d107,HP_0eab4262,cassette_sticker_adjustment,technical,2,Operator intervention on machine element
-EV_b5826295,HP_8b0ed777,short_break,planned,10,Alternating daily break
-EV_202ff49a,HP_8b0ed777,stacker_jam,technical,3,Operator intervention on machine element
-EV_16ec2c88,HP_43ed95bc,short_break,planned,9,Alternating daily break
-EV_2d6764d5,HP_dfaaa9b8,short_break,planned,10,Alternating daily break
-EV_75d1c1af,HP_dfaaa9b8,base_plate_position_fault,technical,3,Operator intervention on machine element
-EV_779146df,HP_552b2669,short_break,planned,2,Alternating daily break
-EV_62217846,HP_41322d68,short_break,planned,10,Alternating daily break
-EV_e7294d72,HP_41322d68,missing_film_imprint,technical,2,Operator intervention on machine element
-EV_30a98363,HP_617464cb,short_break,planned,9,Alternating daily break
+event_id,hourly_prod_id,event_type,cause_family,duration_minutes,comment
+EV_8a4c4f37,HP_cb68aeb7,missing_film_imprint,quality,6,Generated production event
+EV_eb4bcaf7,HP_cb68aeb7,sticker_application_fault,process,4,Generated production event
+EV_7c7417ba,HP_cb68aeb7,base_plate_position_fault,mechanical,3,Generated production event
+EV_d04b280d,HP_6b50ba6e,paper_roll_change,changeover,2,Generated production event
+EV_bc496aab,HP_314e3c9a,photoelectric_sensor_fault,electrical,6,Generated production event
+EV_ea26b0a0,HP_314e3c9a,case_packer_format_change,changeover,7,Generated production event
+EV_66f8f96f,HP_314e3c9a,outfeed_conveyor_failure,mechanical,2,Generated production event
+EV_b92f6d7d,HP_643c7c8f,other,other,1,Generated production event
+EV_f5963476,HP_504bf60d,sticker_roll_change,changeover,2,Generated production event
+EV_bc859dcd,HP_d2c5350b,infeed_conveyor_failure,mechanical,1,Generated production event
+EV_18375640,HP_af917035,material_shortage,organization,7,Generated production event
+EV_5174e2dd,HP_af917035,destacker_jam,mechanical,3,Generated production event
+EV_b1d65e3c,HP_af917035,material_shortage,organization,2,Generated production event
+EV_96e2bd9c,HP_a73c4481,short_break,planned,10,Alternating daily break
+EV_7c1eb628,HP_a73c4481,base_plate_position_fault,mechanical,3,Generated production event
+EV_7e05337a,HP_ad0e1d15,short_break,planned,7,Alternating daily break
+EV_092934e4,HP_2f217947,short_break,planned,9,Alternating daily break
+EV_9341408a,HP_c2b16e07,short_break,planned,4,Alternating daily break
+EV_64862442,HP_0e4bf1ee,short_break,planned,6,Alternating daily break
+EV_dd943f61,HP_e3cb17ff,short_break,planned,8,Alternating daily break
+EV_1cbfde87,HP_249833c5,delta_sensor_fault_2,electrical,3,Generated production event
+EV_343cee2f,HP_249833c5,sticker_application_fault,process,4,Generated production event
+EV_936e14d7,HP_225831bd,base_plate_position_fault,mechanical,9,Generated production event
+EV_e332df0e,HP_225831bd,missing_film_imprint,quality,4,Generated production event
+EV_35a30e8c,HP_225831bd,unknown_event,other,1,Generated production event
+EV_de8e7d3e,HP_847aaca4,poor_material_supply,organization,4,Generated production event
+EV_711124e1,HP_847aaca4,missing_film_imprint,quality,2,Generated production event
+EV_367dfac3,HP_abcb5754,empty_tray_before_stacker,process,11,Generated production event
+EV_967c6897,HP_abcb5754,sticker_rewinder_belt_break,mechanical,3,Generated production event
+EV_bbb5711d,HP_c9898229,missing_film_imprint,quality,11,Generated production event
+EV_a05e75e0,HP_c9898229,sticker_application_fault,process,1,Generated production event
+EV_6e134a03,HP_b92386cb,delta_sensor_fault_1,electrical,4,Generated production event
+EV_11a45285,HP_b92386cb,door_safety_fault,electrical,3,Generated production event
+EV_c1c5b88f,HP_570ad054,delta_sensor_fault_2,electrical,4,Generated production event
+EV_06a0d5b5,HP_570ad054,operator_break,planned,4,Generated production event
+EV_f4f6a454,HP_6587fbff,ink_ribbon_replacement,operator,10,Generated production event
+EV_788842f0,HP_3f66db3d,sticker_rewinder_belt_break,mechanical,11,Generated production event
+EV_011acb3b,HP_3f66db3d,machine_warmup,planned,1,Generated production event
+EV_8d9b8bdd,HP_380ad048,paper_roll_change,changeover,7,Generated production event
+EV_af7fc430,HP_380ad048,ink_ribbon_replacement,operator,2,Generated production event
+EV_a624bacb,HP_9ce47f17,stacker_jam,mechanical,6,Generated production event
+EV_21e7cccb,HP_19ba6bdf,product_detachment_fault,mechanical,5,Generated production event
+EV_bf32ce35,HP_19ba6bdf,unknown_event,other,4,Generated production event
+EV_7a74e4a5,HP_19ba6bdf,paper_roll_change,changeover,3,Generated production event
+EV_3598f284,HP_19ba6bdf,label_ribbon_replacement,operator,1,Generated production event
+EV_39f3f30a,HP_2f6191c4,article_code_change,changeover,5,Generated production event
+EV_285458e9,HP_2f6191c4,shift_handover,planned,1,Generated production event
+EV_62562757,HP_7c577338,product_detachment_fault,mechanical,13,Generated production event
+EV_daa70375,HP_7c577338,machine_warmup,planned,2,Generated production event
+EV_f939f55a,HP_dbb2347b,material_shortage,organization,3,Generated production event
+EV_6937d6a4,HP_dbb2347b,product_length_out_of_range,quality,6,Generated production event
+EV_1138525a,HP_2a55ed37,film_retake,process,11,Generated production event
+EV_6f307d5b,HP_2a55ed37,tray_blocked_in_stacker,mechanical,1,Generated production event
+EV_123cf715,HP_f3fd8907,unknown_event,other,3,Generated production event
+EV_a99b64a0,HP_824e7223,case_packer_format_change,changeover,7,Generated production event
+EV_b01811f1,HP_824e7223,axis_collision,mechanical,1,Generated production event
+EV_dbce602a,HP_71233c55,empty_tray_before_stacker,process,11,Generated production event
+EV_65b24b3d,HP_71233c55,cleaning,planned,1,Generated production event
+EV_5f6f9ac6,HP_d51c8904,weigher_tank_change,changeover,3,Generated production event
+EV_80066957,HP_d51c8904,product_detachment_fault,mechanical,8,Generated production event
+EV_41462a36,HP_d51c8904,cassette_sticker_adjustment,process,3,Generated production event
+EV_0d05eca2,HP_d51c8904,delta_sensor_fault_1,electrical,2,Generated production event
+EV_d0885e42,HP_2de55294,short_break,planned,10,Alternating daily break
+EV_c9d8213a,HP_79fd8cf0,short_break,planned,10,Alternating daily break
+EV_007ee66f,HP_79fd8cf0,weigher_tank_change,changeover,3,Generated production event
+EV_a2dcdc9c,HP_79fd8cf0,machine_warmup,planned,1,Generated production event
+EV_030c7332,HP_43ca2636,short_break,planned,10,Alternating daily break
+EV_987385a6,HP_43ca2636,date_marking_change,changeover,3,Generated production event
+EV_0e56220e,HP_f1ec04ef,short_break,planned,2,Alternating daily break
+EV_95a0e245,HP_a07c5230,short_break,planned,2,Alternating daily break
+EV_f4dbbd27,HP_c7364fe1,short_break,planned,5,Alternating daily break
+EV_26ca5d84,HP_7684abde,short_break,planned,2,Alternating daily break
+EV_2b255c4c,HP_7842ae4b,short_break,planned,10,Alternating daily break
+EV_21234f7f,HP_7842ae4b,ink_ribbon_replacement,operator,1,Generated production event
+EV_f13744b6,HP_4b92dbb3,short_break,planned,6,Alternating daily break
+EV_9d95d56c,HP_f20f13c7,short_break,planned,3,Alternating daily break
+EV_ac6452ec,HP_f2b24e03,short_break,planned,9,Alternating daily break
+EV_9f29b67c,HP_758df6ea,short_break,planned,7,Alternating daily break
+EV_ad57f3d8,HP_a4e79efa,short_break,planned,2,Alternating daily break
+EV_f72dd12d,HP_92fa8393,short_break,planned,10,Alternating daily break
+EV_f60215d9,HP_5c4707fe,short_break,planned,10,Alternating daily break
+EV_4923d137,HP_5c4707fe,door_safety_fault,electrical,4,Generated production event
+EV_be01b7b2,HP_1c003ca4,short_break,planned,10,Alternating daily break
+EV_0c2fc6aa,HP_1c003ca4,missing_film_imprint,quality,4,Generated production event
+EV_6899c941,HP_09520504,short_break,planned,10,Alternating daily break
+EV_89dce7ba,HP_d52663d1,short_break,planned,1,Alternating daily break
+EV_976a13d9,HP_5ca3bddf,short_break,planned,10,Alternating daily break
+EV_5a34c527,HP_76f99187,short_break,planned,5,Alternating daily break
+EV_9fedbe0f,HP_64306f3c,poor_material_supply,organization,9,Generated production event
+EV_a3347997,HP_64306f3c,intermediate_changeover,changeover,4,Generated production event
+EV_a9dd4c00,HP_3856999a,other,other,4,Generated production event
+EV_9bd079ea,HP_3856999a,delta_sensor_fault_1,electrical,9,Generated production event
+EV_d921035c,HP_3856999a,material_shortage,organization,1,Generated production event
+EV_53661efc,HP_5d0c843c,axis_collision,mechanical,11,Generated production event
+EV_ca50ff12,HP_5d0c843c,sticker_roll_change,changeover,2,Generated production event
+EV_643f1120,HP_efe69f3b,missing_film_imprint,quality,10,Generated production event
+EV_2f8cf90c,HP_efe69f3b,sticker_rewinder_belt_break,mechanical,2,Generated production event
+EV_068a78d4,HP_732f67df,shift_handover,planned,4,Generated production event
+EV_097dcf45,HP_732f67df,delta_sensor_fault_1,electrical,3,Generated production event
+EV_d68622e3,HP_732f67df,base_plate_transfer_fault,mechanical,4,Generated production event
+EV_c62fd757,HP_732f67df,empty_tray_before_stacker,process,3,Generated production event
+EV_de1f38c8,HP_81fb76cc,photoelectric_sensor_fault,electrical,4,Generated production event
+EV_ed8f5e45,HP_81fb76cc,delta_sensor_fault_1,electrical,1,Generated production event
+EV_5ac5de08,HP_4d27191a,label_ribbon_replacement,operator,7,Generated production event
+EV_57941772,HP_4d27191a,article_code_change,changeover,4,Generated production event
+EV_fc86d35b,HP_4d27191a,paper_roll_change,changeover,1,Generated production event
+EV_84cf402f,HP_1a386c5a,weigher_tank_change,changeover,2,Generated production event
+EV_b477f736,HP_98c186a7,photoelectric_sensor_fault,electrical,3,Generated production event
+EV_28b890b0,HP_98c186a7,meeting,planned,8,Generated production event
+EV_5db43565,HP_98c186a7,machine_warmup,planned,1,Generated production event
+EV_f16f04a3,HP_c0afc1d9,delta_sensor_fault_1,electrical,3,Generated production event
+EV_44b4401b,HP_c0afc1d9,meeting,planned,10,Generated production event
+EV_143ea992,HP_c0afc1d9,case_packer_format_change,changeover,1,Generated production event
+EV_ebe8df5c,HP_37944992,case_packer_format_change,changeover,2,Generated production event
+EV_ad6db603,HP_05b5dec8,delta_sensor_fault_2,electrical,12,Generated production event
+EV_7225620a,HP_05b5dec8,delta_sensor_fault_2,electrical,2,Generated production event
+EV_ca074863,HP_e710a29b,operator_break,planned,6,Generated production event
+EV_0e57a67d,HP_e710a29b,meeting,planned,3,Generated production event
+EV_5778d2c6,HP_e710a29b,unplanned_maintenance,maintenance,1,Generated production event
+EV_50acc77b,HP_358e8c77,meeting,planned,12,Generated production event
+EV_148b2797,HP_358e8c77,cleaning,planned,2,Generated production event
+EV_afd81cf9,HP_e152cfd1,photoelectric_sensor_fault,electrical,8,Generated production event
+EV_f7f6dae5,HP_0aef8ce1,ink_ribbon_replacement,operator,4,Generated production event
+EV_3c3c6275,HP_0aef8ce1,other,other,4,Generated production event
+EV_8d828554,HP_41de4ffa,delta_sensor_fault_2,electrical,3,Generated production event
+EV_e51727fa,HP_41de4ffa,article_code_change,changeover,1,Generated production event
+EV_e6926d31,HP_4c8d637c,delta_sensor_fault_2,electrical,1,Generated production event
+EV_38a57b77,HP_46f036e5,film_retake,process,2,Generated production event
+EV_204cfe8a,HP_2fd0b418,delta_sensor_fault_2,electrical,6,Generated production event
+EV_37e37d09,HP_2fd0b418,small_product_output,process,5,Generated production event
+EV_01df276c,HP_2fd0b418,empty_tray_before_stacker,process,1,Generated production event
+EV_4c5d5cf8,HP_6d368979,short_break,planned,5,Alternating daily break
+EV_9172b055,HP_5be2458b,short_break,planned,8,Alternating daily break
+EV_6a013aed,HP_f31deed9,short_break,planned,2,Alternating daily break
+EV_3da85b33,HP_95c1479d,short_break,planned,2,Alternating daily break
+EV_4f4edc89,HP_4f492809,short_break,planned,10,Alternating daily break
+EV_596be4fc,HP_4f492809,stacker_jam,mechanical,3,Generated production event
+EV_98e08509,HP_0907943d,short_break,planned,9,Alternating daily break
+EV_cb92b550,HP_04dbb639,short_break,planned,10,Alternating daily break
+EV_c7868f4c,HP_04dbb639,destacker_jam,mechanical,3,Generated production event
+EV_aca074d8,HP_ab0d2b11,short_break,planned,9,Alternating daily break
+EV_bfcd6e8c,HP_c7b4009a,short_break,planned,10,Alternating daily break
+EV_d0e386f2,HP_dcbeada6,short_break,planned,10,Alternating daily break
+EV_fa72ed9e,HP_dcbeada6,film_retake,process,1,Generated production event
+EV_d55c14ad,HP_436892c9,short_break,planned,3,Alternating daily break
+EV_473a2cdc,HP_bd8fdc6c,short_break,planned,10,Alternating daily break
+EV_8bfb237c,HP_bd8fdc6c,paper_roll_change,changeover,4,Generated production event
+EV_b880d28c,HP_f761026c,short_break,planned,10,Alternating daily break
+EV_4c85a08b,HP_f761026c,stacker_jam,mechanical,5,Generated production event
+EV_ebd2ab0c,HP_f12dae85,short_break,planned,9,Alternating daily break
+EV_cd1c59de,HP_a75d5ba9,short_break,planned,4,Alternating daily break
+EV_f87090e2,HP_8fa8380a,short_break,planned,5,Alternating daily break
+EV_e566e26a,HP_6ee47125,short_break,planned,10,Alternating daily break
+EV_d43a8511,HP_6ee47125,destacker_jam,mechanical,3,Generated production event
+EV_860d0a0e,HP_0b62edf5,short_break,planned,2,Alternating daily break
+EV_88a19aab,HP_b2f9b416,short_break,planned,6,Alternating daily break
+EV_cc646ba4,HP_2b696766,short_break,planned,10,Alternating daily break
+EV_48e72f6f,HP_2b696766,door_safety_fault,electrical,2,Generated production event
+EV_95dfede2,HP_4f6c3fbf,short_break,planned,8,Alternating daily break
+EV_f4484d0c,HP_51e51842,photoelectric_sensor_fault,electrical,13,Generated production event
+EV_ac16e11a,HP_51e51842,sticker_rewinder_belt_break,mechanical,2,Generated production event
+EV_132136b7,HP_0f77edf8,shift_handover,planned,9,Generated production event
+EV_d9185e42,HP_0f77edf8,unplanned_maintenance,maintenance,3,Generated production event
+EV_5d5be8a0,HP_0f77edf8,sticker_rewinder_belt_break,mechanical,1,Generated production event
+EV_f8470727,HP_0cf01315,tray_blocked_in_stacker,mechanical,9,Generated production event
+EV_1dd467a0,HP_0cf01315,outfeed_conveyor_failure,mechanical,3,Generated production event
+EV_6904d1a2,HP_49ce64b0,material_shortage,organization,9,Generated production event
+EV_ce274c4b,HP_49ce64b0,sticker_rewinder_belt_break,mechanical,2,Generated production event
+EV_b3f51941,HP_bb17f39e,base_plate_position_fault,mechanical,6,Generated production event
+EV_a6d212cd,HP_bb17f39e,door_safety_fault,electrical,3,Generated production event
+EV_fa6041e7,HP_599433f6,article_code_change,changeover,4,Generated production event
+EV_45aedc7b,HP_c2187de2,sticker_application_fault,process,4,Generated production event
+EV_ce0307e6,HP_c2187de2,outfeed_conveyor_failure,mechanical,3,Generated production event
+EV_f35a2e3b,HP_c2187de2,ink_ribbon_replacement,operator,1,Generated production event
+EV_6d12e4e0,HP_8cf0127e,delta_sensor_fault_2,electrical,5,Generated production event
+EV_da6599e4,HP_8cf0127e,poor_material_supply,organization,2,Generated production event
+EV_3dd5da9d,HP_97a65a2e,machine_warmup,planned,3,Generated production event
+EV_4eb21bc5,HP_129e4ce4,product_detachment_fault,mechanical,5,Generated production event
+EV_02471dc4,HP_129e4ce4,tray_blocked_in_stacker,mechanical,2,Generated production event
+EV_317822b8,HP_88b9e7d9,film_retake,process,1,Generated production event
+EV_f17d8902,HP_8037aa5f,paper_roll_change,changeover,8,Generated production event
+EV_ef56f017,HP_8037aa5f,conveyor_output_jam,mechanical,6,Generated production event
+EV_1ec8b24b,HP_8037aa5f,planned_maintenance,maintenance,1,Generated production event
+EV_87f53979,HP_13813d7b,operator_break,planned,3,Generated production event
+EV_6aa0ac7d,HP_a3895574,paper_roll_change,changeover,3,Generated production event
+EV_929ad0a6,HP_a3895574,cleaning,planned,7,Generated production event
+EV_18d2a4f3,HP_a3895574,axis_collision,mechanical,1,Generated production event
+EV_288252e6,HP_94cd7c70,material_shortage,organization,5,Generated production event
+EV_c048cdda,HP_94cd7c70,product_detachment_fault,mechanical,1,Generated production event
+EV_4c52f783,HP_36331d37,intermediate_changeover,changeover,5,Generated production event
+EV_f5e09bb1,HP_36331d37,ink_ribbon_replacement,operator,3,Generated production event
+EV_2b1d7b3e,HP_c8016800,axis_collision,mechanical,6,Generated production event
+EV_403f6dc3,HP_c8016800,label_ribbon_replacement,operator,2,Generated production event
+EV_86148ba9,HP_d3729b60,cassette_sticker_adjustment,process,9,Generated production event
+EV_cb6f9d8a,HP_d3729b60,shift_handover,planned,2,Generated production event
+EV_a414b100,HP_d790966e,photoelectric_sensor_fault,electrical,9,Generated production event
+EV_27d1a557,HP_d790966e,meeting,planned,7,Generated production event
+EV_8a0a798e,HP_5a2486b0,sticker_roll_change,changeover,8,Generated production event
+EV_835ef978,HP_6fa9223c,empty_tray_before_stacker,process,4,Generated production event
+EV_a354405e,HP_6fa9223c,product_length_out_of_range,quality,5,Generated production event
+EV_0e9ff4f9,HP_6fa9223c,base_plate_transfer_fault,mechanical,1,Generated production event
+EV_10116992,HP_2196ff7f,short_break,planned,10,Alternating daily break
+EV_5f15c19b,HP_d2fd7908,short_break,planned,10,Alternating daily break
+EV_50bcb242,HP_beed1cd8,short_break,planned,10,Alternating daily break
+EV_4d35351f,HP_beed1cd8,sticker_rewinder_belt_break,mechanical,2,Generated production event
+EV_33dac844,HP_f554287f,short_break,planned,4,Alternating daily break
+EV_079ac39e,HP_f23be843,short_break,planned,10,Alternating daily break
+EV_740a25fe,HP_f23be843,unknown_event,other,3,Generated production event
+EV_16a560ea,HP_f23be843,label_ribbon_replacement,operator,1,Generated production event
+EV_33cf00a5,HP_fb1191df,short_break,planned,3,Alternating daily break
+EV_1becd119,HP_d228db42,short_break,planned,10,Alternating daily break
+EV_cd30e926,HP_d228db42,infeed_conveyor_failure,mechanical,2,Generated production event

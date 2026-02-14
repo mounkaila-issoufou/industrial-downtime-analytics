@@ -1,6 +1,14 @@
+[![Version](https://img.shields.io/badge/Version-1.0-0066cc?style=flat-square)](#versioning)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-F37726?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![PowerBI](https://img.shields.io/badge/Power%20BI-Analytics-F2CC8F?style=flat-square&logo=powerbi&logoColor=black)](https://www.microsoft.com/fr-fr/power-platform/products/power-bi)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#licence)
+[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#)
+
 # Analyse globale des performances du service conditionnement d'une société fromagère industriel
 
-## 🎯 Objectif du projet
+## Objectif du projet
 Ce projet vise à mettre en place une **analyse globale, transverse et structurée** de la performance des ateliers de conditionnement industriel, en s’appuyant sur les **feuilles de marche opérateur** et les **compteurs de production**.
 
 L’objectif est de suivre, comparer et analyser :
@@ -13,7 +21,7 @@ Le projet transforme une donnée terrain **manuelle, locale et opérationnelle**
 
 ---
 
-## 🏭 Contexte industriel
+## Contexte industriel
 - **Secteur** : industrie agroalimentaire (conditionnement fromager)
 - **Ateliers** : ovales, camembert, portions
 - **Équipements** : empileur / dépileur, emballeuse, encaisseuse
@@ -28,7 +36,7 @@ L’opérateur intervient directement sur la machine, puis consigne l’événem
 
 ---
 
-## 📄 Source et nature des données
+## Source et nature des données
 
 Les données analysées sont issues de **feuilles de marche opérateur**, renseignées **heure par heure**.
 
@@ -49,7 +57,7 @@ Les données présentes dans ce repository sont des **mock data réalistes**, re
 
 ---
 
-## 🧠 Principe de mesure de la non-production
+## Principe de mesure de la non-production
 
 Le temps de non-production n’est pas saisi directement.  
 Il est **calculé** à partir de l’écart entre la production théorique et la production réelle.
@@ -69,7 +77,7 @@ Les événements enregistrés permettent de **qualifier et analyser** ces pertes
 
 ---
 
-## 🧩 Périmètre d’analyse
+## Périmètre d’analyse
 
 L’analyse couvre de manière globale :
 - tous les **ateliers**,
@@ -82,7 +90,7 @@ L’objectif n’est pas l’évaluation individuelle, mais la **compréhension 
 
 ---
 
-## 🧠 Démarche analytique
+## Démarche analytique
 
 1. Compréhension du fonctionnement terrain
 2. Structuration des données issues des feuilles de marche
@@ -93,7 +101,7 @@ L’objectif n’est pas l’évaluation individuelle, mais la **compréhension 
 7. Restitution via indicateurs et dashboards décisionnels
 
 ---
-## 🏗️ Approche données
+## Approche données
 
 Le projet distingue deux niveaux d’usage des données :
 
@@ -108,7 +116,7 @@ Le projet distingue deux niveaux d’usage des données :
    - prêtes à être consommées par Power BI / Tableau  
    - sans complexité technique pour les équipes terrain et management  
 
-## 🏗️ Couche analytique (Data Warehouse)
+## Couche analytique (Data Warehouse)
 
 En complément du modèle opérationnel (ingestion / métier), une couche analytique dédiée est construite pour faciliter l’analyse et la BI.
 
@@ -148,9 +156,52 @@ En complément du modèle opérationnel (ingestion / métier), une couche analyt
   - explained_minutes  
   - unexplained_minutes  
 
+## Architecture globale
 
+```text
+Raw data (CSV)
+↓
+Python (EDA, Cleaning, Modeling)
+↓
+Parquet (processed / curated)
+↓
+PostgreSQL (staging → dimensions → facts)
+↓
+SQL Analytics (BI-ready)
+↓
+Power BI / Looker
 
-## 📊 KPIs industriels clés
+```
+
+---
+
+## Table des matières
+
+## 📚 Table des matières
+- [Objectif du projet](#objectif-du-projet)
+- [Contexte industriel](#contexte-industriel)
+- [Source et nature des données](#source-et-nature-des-données)
+- [Périmètre d’analyse](#perimetre-d-analyse)
+- [Architecture globale](#architecture-globale)
+- [Stack technologique](#stack-technologique)
+- [Modele de donnees](#modèle-de-données-star-schema)
+- [Analyses metier](#analyses-métier-couvertes)
+- [Dashboards Power BI](#dashboards-power-bi)
+- [Pipeline](#le-pipeline)
+- [Organisation du projet](#structure-du-projet)
+- [Documentation](#documentation-détaillée)
+
+## Stack Technologique
+
+| Couche | Technologies |
+|:---:|:---|
+| **Ingestion & ETL** | [![Python](https://img.shields.io/badge/Python-Data%20Processing-3776ab?style=flat&logo=python&logoColor=white)](https://www.python.org/) [![Pandas](https://img.shields.io/badge/Pandas-Data%20Transformation-150458?style=flat&logo=pandas)](https://pandas.pydata.org/) |
+| **Storage & Processing** | [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Data%20Warehouse-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![Parquet](https://img.shields.io/badge/Parquet-Columnar%20Format-2C3E50?style=flat)](https://parquet.apache.org/) |
+| **Analysis & Exploration** | [![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-F37726?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/) [![NumPy](https://img.shields.io/badge/NumPy-Scientific%20Computing-013243?style=flat&logo=numpy)](https://numpy.org/) |
+| **Visualization & BI** | [![PowerBI](https://img.shields.io/badge/Power%20BI-Business%20Intelligence-F2CC8F?style=flat&logo=powerbi&logoColor=black)](https://www.microsoft.com/power-platform/products/power-bi) [![SQL](https://img.shields.io/badge/SQL-Analytics%20Queries-CC2927?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/) |
+| **DevOps & Versioning** | [![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=flat&logo=git&logoColor=white)](https://git-scm.com/) [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat&logo=github)](https://github.com/) |
+
+## KPIs industriels clés
 
 ### 1️⃣ Fiabilité opérationnelle  
 \`\`\`
@@ -168,7 +219,7 @@ Ces indicateurs permettent :
 
 
 
-## 📂 Organisation du repository
+## Organisation du repository
 
 Le projet suit une architecture **modulaire, lisible et reproductible** :
 
@@ -180,8 +231,51 @@ Le projet suit une architecture **modulaire, lisible et reproductible** :
 - `dashboards/` : description des tableaux de bord  
 
 ---
+## Dashboards Power BI
 
-## 📊 Résultats attendus
+Les dashboards Power BI sont conçus pour offrir une **lecture claire, synthétique et orientée décision** des performances commerciales.
+
+### Emplacement des fichiers
+
+```text
+dashboards/
+└── powerbi/
+    ├── sales_performance.pbix
+    └── screenshots/
+```
+
+## Le pipeline
+
+initialise les tables SQL,
+
+charge le staging,
+
+alimente les dimensions,
+
+peuple la table de faits.
+
+
+
+## Installation
+
+```text
+python -m venv .venv
+.\.venv\Scripts\activate
+python -m pip install -e .
+
+```
+## Run pipeline
+
+```text
+python -m sales_orders.cli run 
+```
+or
+
+
+```text
+sales-orders run
+```
+## Résultats attendus
 
 - Vision consolidée de la performance industrielle
 - Identification des principaux contributeurs au temps de non-production
@@ -189,6 +283,26 @@ Le projet suit une architecture **modulaire, lisible et reproductible** :
 - Aide à la priorisation des actions d’amélioration continue
 
 ---
+
+## Documentation détaillée
+
+La documentation fonctionnelle et technique du projet est centralisée dans le dossier `docs/` :
+
+- **Architecture globale**  
+  👉 [`docs/architecture_overview.md`](docs/architecture_overview.md)
+
+- **Modèle de données (Star Schema)**  
+  👉 [`docs/data_model.md`](docs/data_model.md)
+
+- **Dictionnaire de données**  
+  👉 [`docs/data_dictionary.md`](docs/data_dictionary.md)
+
+- **Définition des KPI métier**  
+  👉 [`docs/kpi_definitions.md`](docs/kpi_definitions.md)
+
+- **Hypothèses, périmètre et limites du projet**  
+  👉 [`docs/assumptions_and_limits.md`](docs/assumptions_and_limits.md)
+
 
 ## ⚠️ Limites
 
@@ -204,3 +318,13 @@ Ces limites sont **documentées et prises en compte** dans l’interprétation d
 Projet de portfolio **Data Analyst senior** – Orientation **industrie**, **performance opérationnelle** et **pilotage data-driven**.  
 Basé sur mon expérience en tant que **pilote de ligne de production**, appliquée à ma vision du métier de Data Analyst.
 
+## Contact & Liens
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mounkaila%20Issoufou-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/abdoul-m-3a76b5214/)
+[![GitHub](https://img.shields.io/badge/GitHub-mounkaila--issoufou-181717?style=flat-square&logo=github)](https://github.com/mounkaila-issoufou)
+[![Email](https://img.shields.io/badge/Email-Contact%20Me-D14836?style=flat-square&logo=gmail)](mailto:mounkaila.issoufou025@gmail.com)
+
+
+## Licence
+
+Ce projet est sous licence **MIT** – libre d’utilisation à des fins éducatives et professionnelles.
