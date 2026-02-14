@@ -24,6 +24,7 @@ CREATE TABLE ops.hourly_production (
    reliability_rate NUMERIC(5,2) NOT NULL,
    explained_ratio NUMERIC(5,2) NOT NULL,
    unexplained_ratio NUMERIC(5,2) NOT NULL,
+   load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
 
    FOREIGN KEY (shift_supervision_id) REFERENCES ops.shift_supervision(shift_supervision_id),
