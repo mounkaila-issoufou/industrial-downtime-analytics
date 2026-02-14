@@ -1,40 +1,50 @@
 -- ==========================================================
--- Alimentation de la dimension ORGANE / ÉLÉMENT (DW)
--- Source : ops.production_events
+-- Fait analytique : Performance horaire de production
+-- Grain : 1 heure x 1 machine x 1 équipe
 -- ==========================================================
 
-INSERT INTO dw.dim_organe_element (
-    organe_element_key,
-    organe,
-    element,
-    cause_category,
-    cause_family,
-    valid_from,
-    is_current
+INSERT INTO dw.fact_hourly_performance (
+    time_key,
+    machine_key,
+    team_key,
+    theoretical_production,
+    actual_production,
+    non_production_minutes,
+    explained_minutes,
+    unexplained_minutes,
+    reliability_rate,
+    explained_ratio,
+    unexplained_ratio,
+    load_timestamp
 )
+
 SELECT DISTINCT
-    -- Clé analytique stable et lisible
-    pe.event_type AS organe_element_key,
+    dt.time_key,
+    dm.machine_key,
+    dteam.team_key,
 
-    -- Décomposition métier (proxy à partir de event_type dans ton mock)
-    SPLIT_PART(pe.event_type, '_', 1) AS organe,
-    SPLIT_PART(pe.event_type, '_', 2) AS element,
+    hp.theoretical_production,
+    hp.actual_production,
+    hp.non_production_minutes,
+    hp.explained_minutes,
+    hp.unexplained_minutes,
+    hp.reliability_rate,
+    hp.explained_ratio,
+    hp.unexplained_ratio,
 
-    pe.event_category AS cause_category,
+    CURRENT_TIMESTAMP
 
-    CASE 
-        WHEN pe.event_category = 'technical' THEN 'Technique'
-        WHEN pe.event_category = 'planned'   THEN 'Organisation'
-        ELSE 'Autre'
-    END AS cause_family,
+FROM ops.hourly_production hp
 
-    CURRENT_TIMESTAMP AS valid_from,
-    TRUE AS is_current
+JOIN dw.dim_time dt
+  ON dt.date = hp.date
+ AND dt.hour_of_day = hp.hour_index
 
-FROM ops.production_events pe
+JOIN dw.dim_machine dm
+  ON dm.line_id = hp.line_id
 
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM dw.dim_organe_element d
-    WHERE d.organe_element_key = pe.event_type
-);
+JOIN dw.dim_team dteam
+  ON dteam.team_lead_id = hp.team_lead_id
+
+ON CONFLICT (time_key, machine_key, team_key)
+DO NOTHING;

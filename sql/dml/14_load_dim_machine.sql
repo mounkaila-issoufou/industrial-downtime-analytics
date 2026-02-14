@@ -4,24 +4,26 @@
 -- ==========================================================
 
 INSERT INTO dw.dim_machine (
-    machine_key,
-    factory_id,
-    factory_name,
-    workshop_id,
-    workshop_name,
     line_id,
-    line_name
+    workshop_id,
+    factory_id,
+    machine_name,
+    workshop_name,
+    factory_name,
+    theoretical_capacity_per_hour,
+    reliability_target,
+    line_status
 )
-SELECT DISTINCT
-    -- clé surrogée analytique stable
-    f.factory_id || '_' || w.workshop_id || '_' || l.line_id AS machine_key,
-
-    f.factory_id,
-    f.factory_name,
-    w.workshop_id,
-    w.workshop_name,
+SELECT
     l.line_id,
-    l.line_name
+    w.workshop_id,
+    f.factory_id,
+    l.machine_name,
+    w.workshop_name,
+    f.factory_name,
+    l.theoretical_capacity_per_hour,
+    l.reliability_target,
+    l.line_status
 
 FROM ops.production_line l
 JOIN ops.workshop w
@@ -32,6 +34,5 @@ JOIN ops.factory f
 WHERE NOT EXISTS (
     SELECT 1
     FROM dw.dim_machine m
-    WHERE m.machine_key =
-          f.factory_id || '_' || w.workshop_id || '_' || l.line_id
+    WHERE m.line_id = l.line_id
 );

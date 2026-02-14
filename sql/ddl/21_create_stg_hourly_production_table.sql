@@ -4,6 +4,7 @@
 -- ==========================================================
 DROP TABLE IF EXISTS stg.hourly_production CASCADE;
 
+
 CREATE TABLE IF NOT EXISTS stg.hourly_production (
     hourly_prod_id VARCHAR(50) PRIMARY KEY,
     date DATE NOT NULL,
@@ -14,8 +15,15 @@ CREATE TABLE IF NOT EXISTS stg.hourly_production (
     workshop_id VARCHAR(20) NOT NULL,
     line_id VARCHAR(20) NOT NULL,
     hour_index INTEGER NOT NULL,
+    theoretical_production INTEGER NOT NULL,
     actual_production INTEGER NOT NULL,
-    non_production_minutes INTEGER NOT NULL
+    non_production_minutes INTEGER NOT NULL,
+    explained_minutes INTEGER NOT NULL,
+    unexplained_minutes INTEGER NOT NULL,
+    reliability_rate         FLOAT,
+    explained_ratio          FLOAT,
+    unexplained_ratio        FLOAT
+
 );
 
 COMMENT ON TABLE stg.hourly_production IS

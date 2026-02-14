@@ -3,26 +3,10 @@
 # =========================
 
 SHIFTS = {
-    "MATIN": {
-        "start": "05:00",
-        "end": "13:15",
-        "hours": 8
-    },
-    "SOIR": {
-        "start": "13:15",
-        "end": "21:30",
-        "hours": 8
-    },
-    "NUIT": {
-        "start": "21:30",
-        "end": "05:00",
-        "hours": 8
-    },
-    "SD": {
-        "start": "06:00",
-        "end": "10:00",
-        "hours": 4
-    }
+    "MATIN": {"start": "05:00", "end": "13:15", "hours": 8},
+    "SOIR": {"start": "13:15", "end": "21:30", "hours": 8},
+    "NUIT": {"start": "21:30", "end": "05:00", "hours": 8},
+    "SD": {"start": "06:00", "end": "10:00", "hours": 4},
 }
 
 # =========================
@@ -33,68 +17,102 @@ THEORETICAL_CAPACITY_PER_HOUR = 4800
 UNITS_PER_MINUTE = 80
 
 # =========================
-# EVENTS
+# EVENT CLASSIFICATION
 # =========================
 
-EVENT_TYPES = [
-    # --- Technical failures (machine / mechanical) ---
-    "infeed_conveyor_failure",
-    "outfeed_conveyor_failure",
-    "door_safety_fault",
-    "delta_sensor_fault_1",
-    "delta_sensor_fault_2",
-    "base_plate_transfer_fault",
-    "base_plate_position_fault",
-    "product_detachment_fault",
-    "stacker_jam",
-    "destacker_jam",
-    "empty_tray_before_stacker",
-    "tray_blocked_in_stacker",
-    "axis_collision",
-    "photoelectric_sensor_fault",
+EVENT_CLASSIFICATION = {
+    # ======================
+    # TECHNICAL
+    # ======================
+    "infeed_conveyor_failure": "mechanical",
+    "outfeed_conveyor_failure": "mechanical",
+    "door_safety_fault": "electrical",
+    "delta_sensor_fault_1": "electrical",
+    "delta_sensor_fault_2": "electrical",
+    "base_plate_transfer_fault": "mechanical",
+    "base_plate_position_fault": "mechanical",
+    "product_detachment_fault": "mechanical",
+    "stacker_jam": "mechanical",
+    "destacker_jam": "mechanical",
+    "empty_tray_before_stacker": "process",
+    "tray_blocked_in_stacker": "mechanical",
+    "axis_collision": "mechanical",
+    "photoelectric_sensor_fault": "electrical",
 
-    # --- Packaging process issues ---
-    "sticker_application_fault",
-    "sticker_rewinder_belt_break",
-    "film_retake",
-    "missing_film_imprint",
-    "product_length_out_of_range",
-    "cassette_sticker_adjustment",
-    "conveyor_output_jam",
+    # ======================
+    # PROCESS / QUALITY
+    # ======================
+    "sticker_application_fault": "process",
+    "sticker_rewinder_belt_break": "mechanical",
+    "film_retake": "process",
+    "missing_film_imprint": "quality",
+    "product_length_out_of_range": "quality",
+    "cassette_sticker_adjustment": "process",
+    "conveyor_output_jam": "mechanical",
 
-    # --- Organizational / operational stops ---
-    "material_shortage",
-    "poor_material_supply",
-    "small_product_output",
-    "label_ribbon_replacement",
-    "ink_ribbon_replacement",
+    # ======================
+    # ORGANIZATION / HUMAN
+    # ======================
+    "material_shortage": "organization",
+    "poor_material_supply": "organization",
+    "small_product_output": "process",
+    "label_ribbon_replacement": "operator",
+    "ink_ribbon_replacement": "operator",
 
-    # --- Changeover & setup ---
-    "intermediate_changeover",
-    "paper_roll_change",
-    "sticker_roll_change",
-    "article_code_change",
-    "date_marking_change",
-    "weigher_tank_change",
-    "case_packer_format_change",
+    # ======================
+    # CHANGEOVER
+    # ======================
+    "intermediate_changeover": "changeover",
+    "paper_roll_change": "changeover",
+    "sticker_roll_change": "changeover",
+    "article_code_change": "changeover",
+    "date_marking_change": "changeover",
+    "weigher_tank_change": "changeover",
+    "case_packer_format_change": "changeover",
 
-    # --- Planned activities ---
-    "cleaning",
-    "machine_warmup",
-    "shift_handover",
-    "operator_break",
-    "meeting",
+    # ======================
+    # PLANNED
+    # ======================
+    "cleaning": "planned",
+    "machine_warmup": "planned",
+    "shift_handover": "planned",
+    "operator_break": "planned",
+    "meeting": "planned",
 
-    # --- Maintenance ---
-    "planned_maintenance",
-    "unplanned_maintenance",
+    # ======================
+    # MAINTENANCE
+    # ======================
+    "planned_maintenance": "maintenance",
+    "unplanned_maintenance": "maintenance",
 
-    # --- Misc ---
-    "unknown_event",
-    "other"
-]
+    # ======================
+    # OTHER
+    # ======================
+    "unknown_event": "other",
+    "other": "other",
+}
 
-# --- Configuration métier ---
+# =========================
+# OPTIONAL: reverse mapping
+# =========================
+
+CAUSE_FAMILY_LABELS = {
+    "mechanical": "Technical - Mechanical",
+    "electrical": "Technical - Electrical",
+    "process": "Process",
+    "quality": "Quality",
+    "organization": "Organization",
+    "operator": "Human / Operator",
+    "changeover": "Changeover",
+    "planned": "Planned Stop",
+    "maintenance": "Maintenance",
+    "other": "Other",
+}
+
+# =========================
+# BREAK RULES
+# =========================
+
 PAUSE_RULES = {
     "morning": [
         {"time": "07:30", "duration": 20},

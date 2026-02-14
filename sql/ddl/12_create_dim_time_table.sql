@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS dw.dim_time (
     year                INTEGER NOT NULL,
     month               INTEGER NOT NULL,
     month_name          TEXT NOT NULL,
-    week_iso            INTEGER NOT NULL,
+    iso_week            INTEGER NOT NULL,
     day_of_week         INTEGER NOT NULL,      -- 1 = lundi ... 7 = dimanche
     day_name            TEXT NOT NULL,
     hour_of_day         INTEGER NOT NULL,      -- 0 à 23

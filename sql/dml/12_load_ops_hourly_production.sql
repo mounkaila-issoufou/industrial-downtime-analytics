@@ -1,6 +1,7 @@
 -- ==========================================================
--- Alimentation de la table OPS.hourly_production
--- depuis STAGING
+-- LOAD OPS.hourly_production
+-- Source : STG.hourly_production
+-- Vérification des clés métier
 -- ==========================================================
 
 INSERT INTO ops.hourly_production (
@@ -15,9 +16,16 @@ INSERT INTO ops.hourly_production (
     hour_timestamp,
     theoretical_production,
     actual_production,
-    non_production_minutes
+    non_production_minutes,
+    explained_minutes,
+    unexplained_minutes,
+    reliability_rate,
+    explained_ratio,
+    unexplained_ratio,
+    load_timestamp
 )
-SELECT DISTINCT
+
+SELECT
     s.hourly_prod_id,
     s.shift_supervision_id,
     s.operator_id,
@@ -27,18 +35,32 @@ SELECT DISTINCT
     s.session,
     s.hour_index,
 
-    -- reconstruire un vrai timestamp horaire
-    (s.date + (s.hour_index || ' hours')::interval) AS hour_timestamp,
+    (s.date::timestamp + (s.hour_index || ' hour')::interval),
 
-    -- règle métier cohérente avec ton mock (4800 pièces / heure)
-    4800 AS theoretical_production,
-
+    s.theoretical_production,
     s.actual_production,
-    s.non_production_minutes
+    s.non_production_minutes,
+    s.explained_minutes,
+    s.unexplained_minutes,
+    s.reliability_rate,
+    s.explained_ratio,
+    s.unexplained_ratio,
+    CURRENT_TIMESTAMP
 
 FROM stg.hourly_production s
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM ops.hourly_production o
-    WHERE o.hourly_prod_id = s.hourly_prod_id
-);
+
+-- Vérification des clés métier
+INNER JOIN ops.shift_supervision ss
+    ON ss.shift_supervision_id = s.shift_supervision_id
+
+INNER JOIN ops.operator o
+    ON o.operator_id = s.operator_id
+
+INNER JOIN ops.team_lead tl
+    ON tl.team_lead_id = s.team_lead_id
+
+INNER JOIN ops.production_line pl
+    ON pl.line_id = s.line_id
+
+ON CONFLICT (hourly_prod_id)
+DO NOTHING;

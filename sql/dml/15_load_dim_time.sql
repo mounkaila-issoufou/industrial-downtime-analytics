@@ -1,7 +1,9 @@
--- ==========================================================
--- Alimentation de la dimension TEMPS (DW)
--- Source : ops.hourly_production
--- ==========================================================
+--=============================================================================
+-- Script : 15_load_dim_time.sql    
+-- Description : Alimentation de la dimension temps (DW) à partir du modèle OPS
+-- Source : ops.hourly_production (date + heure)
+--=============================================================================
+
 
 INSERT INTO dw.dim_time (
     time_key,
@@ -12,27 +14,22 @@ INSERT INTO dw.dim_time (
     iso_week,
     day_of_week,
     day_name,
+    hour_of_day,
     session,
-    hour_index
+    is_weekend
 )
 SELECT DISTINCT
-    TO_CHAR(h.date, 'YYYYMMDD')::INT * 10 + h.hour_index AS time_key,
-
+    (TO_CHAR(h.date, 'YYYYMMDD')::INT * 100 + h.hour_index),
     h.date,
-    EXTRACT(YEAR FROM h.date)::INT        AS year,
-    EXTRACT(MONTH FROM h.date)::INT       AS month,
-    TO_CHAR(h.date, 'Month')              AS month_name,
-    EXTRACT(WEEK FROM h.date)::INT        AS iso_week,
-    EXTRACT(ISODOW FROM h.date)::INT      AS day_of_week,
-    TO_CHAR(h.date, 'Day')                AS day_name,
-
+    EXTRACT(YEAR FROM h.date)::INT,
+    EXTRACT(MONTH FROM h.date)::INT,
+    TO_CHAR(h.date, 'FMMonth'),
+    EXTRACT(WEEK FROM h.date)::INT,
+    EXTRACT(ISODOW FROM h.date)::INT,
+    TO_CHAR(h.date, 'FMDay'),
+    h.hour_index,
     h.session,
-    h.hour_index
-
+    (EXTRACT(DOW FROM h.date) IN (0,6))
 FROM ops.hourly_production h
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM dw.dim_time t
-    WHERE t.time_key =
-          TO_CHAR(h.date, 'YYYYMMDD')::INT * 10 + h.hour_index
-);
+
+ON CONFLICT (time_key) DO NOTHING;

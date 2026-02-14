@@ -7,7 +7,7 @@ from src.utils.export import export_csv
 from src.core.context_store import context
 
 
-def main():
+def run_data_generation_pipeline():
     random.seed(RANDOM_SEED)
 
     # 1) Génération du contexte shifts
@@ -15,8 +15,7 @@ def main():
 
     # 2) Génération des faits production
     hourly_prod, events = generate_production()
-    print(f"✔ Génération de {len(hourly_prod)} enregistrements de production horaire")
-    print(hourly_prod[:2])  # Affiche les 2 premiers enregistrements pour vérification
+
     # 3) Export en CSV (couche raw / staging)
     export_csv(context.shifts, "shift_supervision.csv")
     export_csv(context.operator_assignments, "shift_operator_assignment.csv")
@@ -24,7 +23,3 @@ def main():
     export_csv(events, "production_events.csv")
 
     print("✔ Génération cohérente terminée")
-
-
-if __name__ == "__main__":
-    main()
