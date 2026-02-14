@@ -144,39 +144,12 @@ En complément du modèle opérationnel (ingestion / métier), une couche analyt
 
 ### Dimensions analytiques
 - **dim_machine**
-  - machine_key  
-  - line_id  
-  - workshop_id  
-  - factory_id  
-  - machine_name  
-  - theoretical_capacity_per_hour  
-  - reliability_target  
-
 - **dim_time**
-  - date  
-  - hour  
-  - session (MATIN / SOIR / NUIT / SD)  
-  - week  
-  - month  
-
 - **dim_team**
-  - team_lead_id  
-  - scope  
-
 - **dim_organe_element**
-  - organ  
-  - element  
-
 ### Table de faits analytique
 - **fact_hourly_performance**
-  - time_key  
-  - machine_key  
-  - team_lead_id  
-  - total_actual_production  
-  - total_theoretical_production  
-  - total_non_production_minutes  
-  - explained_minutes  
-  - unexplained_minutes  
+- **fact_production_events**
 
 ## Architecture globale
 
@@ -274,13 +247,13 @@ python -m pip install -e .
 ## Run pipeline
 
 ```text
-python -m sales_orders.cli run 
+python -m industrial_downtime.cli run 
 ```
 or
 
 
 ```text
-sales-orders run
+industrial-downtime run
 ```
 ## Résultats attendus
 
