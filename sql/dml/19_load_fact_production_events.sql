@@ -1,49 +1,33 @@
 -- ==========================================================
--- Alimentation de la table de fait DW.fact_hourly_performance
--- Grain : 1 ligne = 1 heure de production
--- Source : ops.hourly_production + dimensions DW
+-- Chargement de la fact_production_events
 -- ==========================================================
 
-INSERT INTO dw.fact_hourly_performance (
-    hourly_prod_id,
-    date_key,
+INSERT INTO dw.fact_production_events (
+    time_key,
     machine_key,
     team_key,
-    shift_supervision_id,
-    operator_id,
-    team_lead_id,
-    hour_index,
-    actual_production,
-    non_production_minutes,
-    load_ts
+    organe_element_key,
+    duration_minutes,
+    load_timestamp
 )
 
 SELECT DISTINCT
-    hp.hourly_prod_id,
-
-    -- Clé temps
-    dt.date_key,
-
-    -- Clé machine (usine + atelier + ligne)
+    dt.time_key,
     dm.machine_key,
-
-    -- Clé équipe (team lead + opérateur)
     dteam.team_key,
+    doe.organe_element_key,
+    pe.duration_minutes,
+    CURRENT_TIMESTAMP
 
-    hp.shift_supervision_id,
-    hp.operator_id,
-    hp.team_lead_id,
-    hp.hour_index,
-    hp.actual_production,
-    hp.non_production_minutes,
+FROM ops.production_events pe
 
-    CURRENT_TIMESTAMP AS load_ts
-
-FROM ops.hourly_production hp
+JOIN ops.hourly_production hp
+  ON hp.hourly_prod_id = pe.hourly_prod_id
 
 -- Dimension temps
 JOIN dw.dim_time dt
   ON dt.date = hp.date
+ AND dt.hour_of_day = hp.hour_index
 
 -- Dimension machine
 JOIN dw.dim_machine dm
@@ -52,10 +36,10 @@ JOIN dw.dim_machine dm
 -- Dimension équipe
 JOIN dw.dim_team dteam
   ON dteam.team_lead_id = hp.team_lead_id
- AND dteam.operator_id = hp.operator_id
 
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM dw.fact_hourly_performance f
-    WHERE f.hourly_prod_id = hp.hourly_prod_id
-);
+-- Dimension organe / élément
+JOIN dw.dim_organe_element doe
+  ON doe.organe = pe.organ
+ AND doe.element = pe.element
+
+ON CONFLICT DO NOTHING;

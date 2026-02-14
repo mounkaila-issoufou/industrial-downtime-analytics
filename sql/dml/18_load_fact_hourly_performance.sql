@@ -1,6 +1,6 @@
 -- ==========================================================
 -- Fait analytique : Performance horaire de production
--- Grain : 1 ligne = 1 heure x 1 ligne x 1 équipe
+-- Grain : 1 heure x 1 machine x 1 équipe
 -- ==========================================================
 
 INSERT INTO dw.fact_hourly_performance (
@@ -18,7 +18,7 @@ INSERT INTO dw.fact_hourly_performance (
     load_timestamp
 )
 
-SELECT
+SELECT DISTINCT
     dt.time_key,
     dm.machine_key,
     dteam.team_key,
@@ -36,22 +36,15 @@ SELECT
 
 FROM ops.hourly_production hp
 
--- Dimension temps
 JOIN dw.dim_time dt
   ON dt.date = hp.date
+ AND dt.hour_of_day = hp.hour_index
 
--- Dimension machine
 JOIN dw.dim_machine dm
   ON dm.line_id = hp.line_id
 
--- Dimension équipe
 JOIN dw.dim_team dteam
   ON dteam.team_lead_id = hp.team_lead_id
 
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM dw.fact_hourly_performance f
-    WHERE f.time_key = dt.time_key
-      AND f.machine_key = dm.machine_key
-      AND f.team_key = dteam.team_key
-);
+ON CONFLICT (time_key, machine_key, team_key)
+DO NOTHING;
