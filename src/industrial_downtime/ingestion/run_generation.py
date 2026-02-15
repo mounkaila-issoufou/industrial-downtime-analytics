@@ -23,3 +23,6 @@ def run_data_generation_pipeline():
     export_csv(events, "production_events.csv")
 
     print("✔ Génération cohérente terminée")
+
+
+run_data_generation_pipeline()

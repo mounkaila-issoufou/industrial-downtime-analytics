@@ -4,16 +4,22 @@ from datetime import datetime, date
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.context_store import context
 from industrial_downtime.config.constants import (
-    PAUSE_RULES,
-    EVENT_CLASSIFICATION,
-)
+    PAUSE_RULES
+    )
+from industrial_downtime.config.settings import (
+    WORKSHOPS, 
+    EVENT_CLASSIFICATION
+    )
+
 
 # =========================
-# CONSTANTES KPI
+# BUILD LINE CONFIG
 # =========================
 
-THEORETICAL_PER_HOUR = 4800
-UNITS_PER_MINUTE = 80
+LINE_CONFIG = {}
+
+for workshop in WORKSHOPS:
+    LINE_CONFIG.update(workshop)
 
 
 # =========================
@@ -21,10 +27,6 @@ UNITS_PER_MINUTE = 80
 # =========================
 
 def is_break_day(shift_date) -> bool:
-    """
-    Alternating daily break (1 day out of 2).
-    Accepte date ou string.
-    """
     if isinstance(shift_date, str):
         date_obj = datetime.strptime(shift_date, "%Y-%m-%d").date()
     elif isinstance(shift_date, date):
@@ -47,9 +49,6 @@ def generate_events_for_hour(
     is_break_day: bool,
     total_downtime: int
 ) -> list[dict]:
-    """
-    Génère des événements expliquant le downtime horaire.
-    """
 
     events = []
     remaining = total_downtime
@@ -67,6 +66,9 @@ def generate_events_for_hour(
             "hourly_prod_id": prod_id,
             "event_type": "operator_break",
             "cause_family": "planned",
+            "organ": "human",
+            "element": "break",
+            "operator_action": "break",
             "duration_minutes": duration,
             "comment": f"Scheduled pause at {pause['time']}",
         })
@@ -81,17 +83,20 @@ def generate_events_for_hour(
             "hourly_prod_id": prod_id,
             "event_type": "short_break",
             "cause_family": "planned",
+            "organ": "human",
+            "element": "break",
+            "operator_action": "break",
             "duration_minutes": duration,
             "comment": "Alternating daily break",
         })
 
-    # --- Autres événements (technique, maintenance, etc.) ---
+    # --- Autres événements ---
     event_types = list(EVENT_CLASSIFICATION.keys())
 
     while remaining > 0:
 
         event_type = random.choice(event_types)
-        cause_family = EVENT_CLASSIFICATION[event_type]
+        event_def = EVENT_CLASSIFICATION[event_type]
 
         duration = (
             remaining
@@ -105,7 +110,10 @@ def generate_events_for_hour(
             "event_id": generate_id("EV"),
             "hourly_prod_id": prod_id,
             "event_type": event_type,
-            "cause_family": cause_family,
+            "cause_family": event_def["event_category"],
+            "organ": event_def["organ"],
+            "element": event_def["element"],
+            "operator_action": event_def["operator_action"],
             "duration_minutes": duration,
             "comment": "Generated production event",
         })
@@ -118,11 +126,6 @@ def generate_events_for_hour(
 # =========================
 
 def generate_production():
-    """
-    Génère :
-    - hourly_production (avec KPI core + dérivés)
-    - production_events (avec cause_family)
-    """
 
     hourly_production = []
     production_events = []
@@ -136,44 +139,55 @@ def generate_production():
         workshop_id = shift["workshop_id"]
         line_id = shift["line_id"]
 
+        if line_id not in LINE_CONFIG:
+            raise ValueError(f"Unknown line_id {line_id}")
+
+        line_config = LINE_CONFIG[line_id]
+
+        theoretical_production = line_config["THEORETICAL_CAPACITY_PER_HOUR"]
+        units_per_minute = line_config["UNITS_PER_MINUTE"]
+        reliability_target = line_config["RELIABILITY_TARGET"]
+
         break_day = is_break_day(shift_date)
 
-        # Récupérer opérateur affecté
         assignment = next(
             a for a in context.operator_assignments
             if a["shift_supervision_id"] == shift_id
         )
         operator_id = assignment["operator_id"]
 
-        # 8 heures par shift
         for hour_index in range(8):
 
             prod_id = generate_id("HP")
 
-            # ---- 1 heure parfaite garantie par shift ----
+            # 1 heure parfaite garantie
             if hour_index == 0:
-                actual_production = THEORETICAL_PER_HOUR
+                actual_production = theoretical_production
                 non_production_minutes = 0
             else:
-                actual_production = random.randint(
-                    3500,
-                    THEORETICAL_PER_HOUR
+                reliability_real = random.uniform(
+                    reliability_target - 0.05,
+                    reliability_target + 0.05
                 )
+
+                reliability_real = max(0.3, min(1.0, reliability_real))
+
+                actual_production = int(
+                    theoretical_production * reliability_real
+                )
+
                 non_production_minutes = max(
                     0,
                     int(
-                        (THEORETICAL_PER_HOUR - actual_production)
-                        / UNITS_PER_MINUTE
+                        (theoretical_production - actual_production)
+                        / units_per_minute
                     ),
                 )
 
             # ======================
-            # KPI CORE
+            # Répartition pertes
             # ======================
 
-            theoretical_production = THEORETICAL_PER_HOUR
-
-            # Répartition pertes
             if non_production_minutes > 0:
                 explained_minutes = int(
                     non_production_minutes * random.uniform(0.6, 0.9)
@@ -194,6 +208,8 @@ def generate_production():
                 if theoretical_production > 0 else 0
             )
 
+            reliability_gap = reliability_rate - reliability_target
+
             explained_ratio = (
                 explained_minutes / non_production_minutes
                 if non_production_minutes > 0 else 0
@@ -205,7 +221,7 @@ def generate_production():
             )
 
             # ======================
-            # ENREGISTREMENT PROD
+            # ENREGISTREMENT
             # ======================
 
             hourly_production.append({
@@ -217,26 +233,27 @@ def generate_production():
                 "team_lead_id": team_lead_id,
                 "workshop_id": workshop_id,
                 "line_id": line_id,
+
                 "hour_index": hour_index,
 
-                # KPI core
+                # Capacités
                 "theoretical_production": theoretical_production,
                 "actual_production": actual_production,
 
-                # pertes
+                # Objectif
+                "reliability_target": reliability_target,
+
+                # Pertes
                 "non_production_minutes": non_production_minutes,
                 "explained_minutes": explained_minutes,
                 "unexplained_minutes": unexplained_minutes,
 
-                # KPI dérivés
+                # KPI
                 "reliability_rate": reliability_rate,
+                "reliability_gap": reliability_gap,
                 "explained_ratio": explained_ratio,
                 "unexplained_ratio": unexplained_ratio,
             })
-
-            # ======================
-            # GÉNÉRATION ÉVÉNEMENTS
-            # ======================
 
             production_events.extend(
                 generate_events_for_hour(
