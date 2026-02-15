@@ -86,16 +86,17 @@ Atelier de production au sein d’une usine.
 
 ---
 
-### `production_line`
+### `production_line`  
 Ligne ou machine de conditionnement.
 
-| Champ | Description |
-|---|---|
-| line_id (PK) | Identifiant ligne |
-| machine_name | ms, es50, ENT1, ALPA1… |
-| workshop_id (FK) | Atelier |
-| theoretical_capacity_per_hour | Capacité théorique (ex: 4800) |
-| reliability_target | Objectif de fiabilité (%) |
+| Champ | Type | Description |
+|-------|------|------------|
+| `line_id` | PK / VARCHAR | Identifiant de la ligne |
+| `machine_name` | VARCHAR | Nom de la machine (ex: MS, ES50, ENT1, ALPA1…) |
+| `workshop_id` | FK / VARCHAR | Atelier auquel la ligne appartient |
+| `theoretical_capacity_per_hour` | INT | Capacité théorique maximale par heure (ex: 4800) |
+| `reliability_target` | NUMERIC(5,4) | Objectif de fiabilité (%) |
+
 
 ---
 
@@ -156,37 +157,49 @@ Décrit quel opérateur travaille pendant un shift.
 
 ## 📊 Tables de faits (Production)
 
-### `hourly_production`
+### `hourly_production`  
 Table de faits principale – production agrégée à l’heure.
 
-| Champ | Description |
-|---|---|
-| hourly_prod_id (PK) | Identifiant production horaire |
-| shift_supervision_id (FK) | Contexte du shift |
-| operator_id (FK) | Opérateur |
-| team_lead_id (FK) | Chef d’équipe |
-| line_id (FK) | Ligne |
-| hour_timestamp | Heure de référence |
-| theoretical_production | Production théorique |
-| actual_production | Production réelle |
-| non_production_minutes | Temps de non-production |
+| Champ | Type | Description |
+|-------|------|------------|
+| `hourly_prod_id` | PK / VARCHAR | Identifiant unique de la production horaire |
+| `shift_supervision_id` | FK / VARCHAR | Contexte du shift |
+| `operator_id` | FK / VARCHAR | Opérateur responsable |
+| `team_lead_id` | FK / VARCHAR | Chef d’équipe |
+| `workshop_id` | FK / VARCHAR | Atelier |
+| `line_id` | FK / VARCHAR | Ligne de production |
+| `production_date` | DATE | Date du shift |
+| `session` | VARCHAR | Session du shift (matin, après-midi, etc.) |
+| `hour_index` | INT | Heure dans le shift (0 = première heure, …) |
+| `theoretical_production` | INT | Production théorique maximale attendue |
+| `actual_production` | INT | Production réellement réalisée |
+| `reliability_target` | NUMERIC(5,4) | Objectif de fiabilité pour la ligne |
+| `reliability_rate` | NUMERIC(6,4) | Taux de fiabilité réel (actual / theoretical) |
+| `reliability_gap` | NUMERIC(6,4) | Écart entre fiabilité réelle et cible |
+| `non_production_minutes` | INT | Minutes de non-production |
+| `explained_minutes` | INT | Minutes de perte expliquées (pauses, maintenance planifiée, etc.) |
+| `unexplained_minutes` | INT | Minutes de perte inexpliquées |
+| `explained_ratio` | NUMERIC(6,4) | Ratio minutes expliquées / non-production |
+| `unexplained_ratio` | NUMERIC(6,4) | Ratio minutes inexpliquées / non-production |
+
 
 ---
 
-### `production_events`
+### `production_events`  
 Détail des événements expliquant la non-production.
 
-| Champ | Description |
-|---|---|
-| event_id (PK) | Identifiant événement |
-| hourly_prod_id (FK) | Heure concernée |
-| event_type | Défaut / Pause / Nettoyage / Maintenance |
-| organ | Empileur / Emballeuse / Encaisseuse |
-| element | Trainard, Porte, Delta… |
-| duration_minutes | Durée |
-| operator_action | Action réalisée |
-| escalation | Chef / Maintenance |
-| comment | Commentaire libre |
+| Champ | Type | Description |
+|-------|------|------------|
+| `event_id` | PK / VARCHAR | Identifiant unique de l’événement |
+| `hourly_prod_id` | FK / VARCHAR | Heure concernée (`hourly_production`) |
+| `event_type` | VARCHAR | Type d’événement (ex: Défaut, Pause, Nettoyage, Maintenance) |
+| `organ` | VARCHAR | Machine ou poste concerné (ex: Empileur, Emballeuse, Encaisseuse) |
+| `element` | VARCHAR | Élément spécifique affecté (ex: Trainard, Porte, Delta…) |
+| `duration_minutes` | INT | Durée de l’événement en minutes |
+| `operator_action` | VARCHAR | Action réalisée par l’opérateur |
+| `escalation` | VARCHAR | Escalade si nécessaire (ex: Chef, Maintenance) |
+| `comment` | TEXT | Commentaire libre |
+
 
 ---
 
