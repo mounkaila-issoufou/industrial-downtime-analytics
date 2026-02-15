@@ -3,15 +3,29 @@ from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.calendar import iter_shifts
 from industrial_downtime.config.settings import (
     FACTORY_ID,
-    WORKSHOPS,
-    LINES,
     OPERATORS,
     TEAM_LEADS,
 )
+from industrial_downtime.config.settings import WORKSHOPS
+
+# =========================
+# STRUCTURE ATELIERS / LIGNES
+# =========================
+
+WORKSHOP_MAP = {}
+
+for workshop_dict in WORKSHOPS:
+    first_line = next(iter(workshop_dict.keys()))
+    
+    # "L_CAM_A" → "W_CAM"
+    workshop_id = "W_" + first_line.split("_")[1]
+    
+    WORKSHOP_MAP[workshop_id] = list(workshop_dict.keys())
+
+WORKSHOP_IDS = list(WORKSHOP_MAP.keys())
 
 
 def _pick_rotating(values: list, index: int):
-    """Helper déterministe pour alterner proprement."""
     return values[index % len(values)]
 
 
@@ -21,8 +35,9 @@ def generate_shift_context():
     - shift_supervision
     - shift_operator_assignment
 
-    Règles simples et lisibles :
-    - rotation ateliers/lignes
+    Règles :
+    - rotation ateliers
+    - ligne choisie dans l'atelier
     - rotation opérateurs
     - rotation team leads
     """
@@ -34,12 +49,21 @@ def generate_shift_context():
 
         shift_id = generate_id("SS")
 
-        workshop_id = _pick_rotating(WORKSHOPS, i)
-        line_id = _pick_rotating(LINES, i)
+        # --- Atelier ---
+        workshop_id = _pick_rotating(WORKSHOP_IDS, i)
+
+        # --- Ligne appartenant à l’atelier ---
+        lines_for_workshop = WORKSHOP_MAP[workshop_id]
+        line_id = _pick_rotating(lines_for_workshop, i)
+
+        # --- RH rotation ---
         team_lead_id = _pick_rotating(TEAM_LEADS, tl_idx)
         operator_id = _pick_rotating(OPERATORS, op_idx)
 
-        # --- SHIFT SUPERVISION ---
+        # =========================
+        # SHIFT SUPERVISION
+        # =========================
+
         context.shifts.append({
             "shift_supervision_id": shift_id,
             "date": shift["date"],
@@ -52,7 +76,10 @@ def generate_shift_context():
             "end_time": shift["end_time"],
         })
 
-        # --- AFFECTATION OPERATEUR ---
+        # =========================
+        # AFFECTATION OPERATEUR
+        # =========================
+
         context.operator_assignments.append({
             "shift_operator_assignment_id": generate_id("SOA"),
             "shift_supervision_id": shift_id,

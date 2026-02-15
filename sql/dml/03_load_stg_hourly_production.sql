@@ -1,6 +1,7 @@
 -- ==========================================================
 -- Chargement du CSV dans la zone STAGING : hourly_production
 -- ==========================================================
+
 COPY stg.hourly_production (
     hourly_prod_id,
     date,
@@ -13,10 +14,12 @@ COPY stg.hourly_production (
     hour_index,
     theoretical_production,
     actual_production,
+    reliability_target,
     non_production_minutes,
     explained_minutes,
     unexplained_minutes,
     reliability_rate,
+    reliability_gap,
     explained_ratio,
     unexplained_ratio
 )

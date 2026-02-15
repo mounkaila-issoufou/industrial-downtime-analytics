@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS stg.production_events (
     hourly_prod_id VARCHAR(50) NOT NULL,
     event_type VARCHAR(100) NOT NULL,
     event_category VARCHAR(20) NOT NULL,
+    organ VARCHAR(50),
+    element VARCHAR(50),
+    operator_action VARCHAR(100),
     duration_minutes INTEGER NOT NULL,
     comment TEXT
 );

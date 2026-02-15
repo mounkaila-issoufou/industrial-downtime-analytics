@@ -21,6 +21,8 @@ CREATE TABLE ops.hourly_production (
    non_production_minutes INTEGER NOT NULL,
    explained_minutes INTEGER NOT NULL,
    unexplained_minutes INTEGER NOT NULL,
+   reliability_target NUMERIC(5,2) NOT NULL,
+   reliability_gap NUMERIC(5,2) NOT NULL,
    reliability_rate NUMERIC(5,2) NOT NULL,
    explained_ratio NUMERIC(5,2) NOT NULL,
    unexplained_ratio NUMERIC(5,2) NOT NULL,

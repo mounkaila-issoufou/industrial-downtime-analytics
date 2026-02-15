@@ -13,7 +13,7 @@ SHIFTS = {
 # PRODUCTION
 # =========================
 
-THEORETICAL_CAPACITY_PER_HOUR = 4800
+THEORETICAL_PER_HOUR = 4800
 UNITS_PER_MINUTE = 80
 
 # =========================
