@@ -21,4 +21,3 @@ src/industrial_downtime/utils/__pycache__/
 src/industrial_downtime/config/__pycache__/
 src/industrial_downtime/industrial_downtime.egg-info/
 .venv/
-requirements.txt
