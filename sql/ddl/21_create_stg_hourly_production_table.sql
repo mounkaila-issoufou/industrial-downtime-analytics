@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS stg.hourly_production (
     non_production_minutes INTEGER NOT NULL,
     explained_minutes INTEGER NOT NULL,
     unexplained_minutes INTEGER NOT NULL,
+    reliability_target FLOAT,
+    reliability_gap FLOAT,
     reliability_rate         FLOAT,
     explained_ratio          FLOAT,
     unexplained_ratio        FLOAT
@@ -30,7 +32,7 @@ COMMENT ON TABLE stg.hourly_production IS
 'Données brutes de production horaire issues du fichier CSV.';
 
 COMMENT ON COLUMN stg.hourly_production.hour_index IS
-'Index de l’heure dans le shift (0 à 7).';
+'Index de l’heure dans le shift (0 à 7) h24.';
 
 COMMENT ON COLUMN stg.hourly_production.actual_production IS
 'Production réelle sur l’heure (unités produites).';
