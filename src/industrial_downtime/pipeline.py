@@ -24,7 +24,7 @@ def main():
     # 1. Generate mock production data
     # =========================
     logger.info("▶ Generating mock production data")
-    #run_data_generation_pipeline()
+    run_data_generation_pipeline()
     logger.info("✔ Mock data generated")
 
     # =========================
