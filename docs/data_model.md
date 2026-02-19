@@ -233,8 +233,103 @@ Au-dessus du modèle opérationnel, une couche analytique en schéma en étoile 
 - dim_team  
 - dim_organe_element  
 
+
 ### Fait principal
 - fact_hourly_performance  
+- fact_production_events
+
+```mermaid
+erDiagram
+
+    DIM_TIME {
+        int time_key PK
+        date date
+        int year
+        int month
+        string month_name
+        int iso_week
+        int day_of_week
+        string day_name
+        int hour_of_day
+        string session
+        boolean is_weekend
+    }
+
+    DIM_MACHINE {
+        int machine_key PK
+        string line_id UK
+        string factory_id
+        string workshop_id
+        string factory_name
+        string workshop_name
+        string machine_name
+        int theoretical_capacity_per_hour
+        float reliability_target
+        string line_status
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    DIM_TEAM {
+        int team_key PK
+        string team_lead_id
+        string shift_supervision_id
+        string session
+        string scope_factory_id
+        string scope_workshop_id
+        string scope_line_id
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    DIM_ORGANE_ELEMENT {
+        int organe_element_key PK
+        string organe
+        string element
+        string cause_category
+        string cause_family
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    FACT_HOURLY_PERFORMANCE {
+        int time_key FK
+        int machine_key FK
+        int team_key FK
+        int theoretical_production
+        int actual_production
+        int non_production_minutes
+        int explained_minutes
+        int unexplained_minutes
+        float reliability_rate
+        float explained_ratio
+        float unexplained_ratio
+        timestamp load_timestamp
+    }
+
+    FACT_PRODUCTION_EVENTS {
+        int time_key FK
+        int machine_key FK
+        int team_key FK
+        int organe_element_key FK
+        int duration_minutes
+        timestamp load_timestamp
+    }
+
+    DIM_TIME ||--o{ FACT_HOURLY_PERFORMANCE : "time_key"
+    DIM_MACHINE ||--o{ FACT_HOURLY_PERFORMANCE : "machine_key"
+    DIM_TEAM ||--o{ FACT_HOURLY_PERFORMANCE : "team_key"
+
+    DIM_TIME ||--o{ FACT_PRODUCTION_EVENTS : "time_key"
+    DIM_MACHINE ||--o{ FACT_PRODUCTION_EVENTS : "machine_key"
+    DIM_TEAM ||--o{ FACT_PRODUCTION_EVENTS : "team_key"
+    DIM_ORGANE_ELEMENT ||--o{ FACT_PRODUCTION_EVENTS : "organe_element_key"
+```
+
+
 
 Cette couche permet :
 - analyses rapides en SQL,
