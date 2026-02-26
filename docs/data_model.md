@@ -63,155 +63,113 @@ Le modèle est :
 
 ## 🏭 Dimensions de structure
 
-### `factory`
-Représente un site industriel.
+```mermaid
 
-| Champ | Description |
-|---|---|
-| factory_id (PK) | Identifiant usine |
-| factory_name | Nom du site |
-| city | Ville |
-| country | Pays |
+erDiagram
 
----
+    FACTORY {
+        string factory_id PK
+        string factory_name
+        string city
+        string country
+    }
 
-### `workshop`
-Atelier de production au sein d’une usine.
+    WORKSHOP {
+        string workshop_id PK
+        string workshop_name
+        string factory_id FK
+    }
 
-| Champ | Description |
-|---|---|
-| workshop_id (PK) | Identifiant atelier |
-| workshop_name | Ovale, Camembert, Portion, Entier |
-| factory_id (FK) | Usine de rattachement |
+    PRODUCTION_LINE {
+        string line_id PK
+        string machine_name
+        string workshop_id FK
+        int theoretical_capacity_per_hour
+        float reliability_target
+    }
 
----
+    OPERATOR {
+        string operator_id PK
+        int experience_years
+        string status
+    }
 
-### `production_line`  
-Ligne ou machine de conditionnement.
+    TEAM_LEAD {
+        string team_lead_id PK
+        string scope
+    }
 
-| Champ | Type | Description |
-|-------|------|------------|
-| `line_id` | PK / VARCHAR | Identifiant de la ligne |
-| `machine_name` | VARCHAR | Nom de la machine (ex: MS, ES50, ENT1, ALPA1…) |
-| `workshop_id` | FK / VARCHAR | Atelier auquel la ligne appartient |
-| `theoretical_capacity_per_hour` | INT | Capacité théorique maximale par heure (ex: 4800) |
-| `reliability_target` | NUMERIC(5,4) | Objectif de fiabilité (%) |
+    SHIFT_SUPERVISION {
+        string shift_supervision_id PK
+        date date
+        string session
+        time start_time
+        time end_time
+        string factory_id FK
+        string workshop_id FK
+        string line_id FK
+        string team_lead_id FK
+    }
 
+    SHIFT_OPERATOR_ASSIGNMENT {
+        string shift_operator_assignment_id PK
+        string shift_supervision_id FK
+        string operator_id FK
+        string role
+    }
 
----
+    HOURLY_PRODUCTION {
+        string hourly_prod_id PK
+        string shift_supervision_id FK
+        string operator_id FK
+        string team_lead_id FK
+        string workshop_id FK
+        string line_id FK
+        date production_date
+        string session
+        int hour_index
+        int theoretical_production
+        int actual_production
+        float reliability_target
+        float reliability_rate
+        float reliability_gap
+        int non_production_minutes
+        int explained_minutes
+        int unexplained_minutes
+        float explained_ratio
+        float unexplained_ratio
+    }
 
-## 👥 Dimensions humaines
+    PRODUCTION_EVENTS {
+        string event_id PK
+        string hourly_prod_id FK
+        string event_type
+        string organ
+        string element
+        int duration_minutes
+        string operator_action
+        string escalation
+        string comment
+    }
 
-### `operator`
-Opérateur de conduite machine.
+    FACTORY ||--o{ WORKSHOP : has
+    WORKSHOP ||--o{ PRODUCTION_LINE : has
 
-| Champ | Description |
-|---|---|
-| operator_id (PK) | Identifiant opérateur |
-| experience_years | Ancienneté |
-| status | Actif / Intérim |
+    FACTORY ||--o{ SHIFT_SUPERVISION : context
+    WORKSHOP ||--o{ SHIFT_SUPERVISION : context
+    PRODUCTION_LINE ||--o{ SHIFT_SUPERVISION : context
+    TEAM_LEAD ||--o{ SHIFT_SUPERVISION : supervises
 
----
+    SHIFT_SUPERVISION ||--o{ SHIFT_OPERATOR_ASSIGNMENT : assigns
+    OPERATOR ||--o{ SHIFT_OPERATOR_ASSIGNMENT : works_on
 
-### `team_lead`
-Chef d’équipe.
+    SHIFT_SUPERVISION ||--o{ HOURLY_PRODUCTION : generates
+    OPERATOR ||--o{ HOURLY_PRODUCTION : produces
+    TEAM_LEAD ||--o{ HOURLY_PRODUCTION : manages
+    PRODUCTION_LINE ||--o{ HOURLY_PRODUCTION : produces_on
 
-| Champ | Description |
-|---|---|
-| team_lead_id (PK) | Identifiant chef |
-| scope | Ligne / Atelier |
-
----
-
-## ⏱️ Tables de contexte (Shifts)
-
-### `shift_supervision`
-Décrit le **contexte managérial d’un service**.
-
-| Champ | Description |
-|---|---|
-| shift_supervision_id (PK) | Identifiant du shift |
-| date | Date |
-| session | MATIN / SOIR / NUIT / SD |
-| start_time | Heure de début |
-| end_time | Heure de fin |
-| factory_id (FK) | Usine |
-| workshop_id (FK) | Atelier |
-| line_id (FK) | Ligne |
-| team_lead_id (FK) | Chef d’équipe |
-
-
----
-
-### `shift_operator_assignment`
-Décrit quel opérateur travaille pendant un shift.
-
-| Champ | Description |
-|---|---|
-| shift_operator_assignment_id (PK) | Affectation |
-| shift_supervision_id (FK) | Shift |
-| operator_id (FK) | Opérateur |
-| role | Conduite / Assistance |
-
----
-
-## 📊 Tables de faits (Production)
-
-### `hourly_production`  
-Table de faits principale – production agrégée à l’heure.
-
-| Champ | Type | Description |
-|-------|------|------------|
-| `hourly_prod_id` | PK / VARCHAR | Identifiant unique de la production horaire |
-| `shift_supervision_id` | FK / VARCHAR | Contexte du shift |
-| `operator_id` | FK / VARCHAR | Opérateur responsable |
-| `team_lead_id` | FK / VARCHAR | Chef d’équipe |
-| `workshop_id` | FK / VARCHAR | Atelier |
-| `line_id` | FK / VARCHAR | Ligne de production |
-| `production_date` | DATE | Date du shift |
-| `session` | VARCHAR | Session du shift (matin, après-midi, etc.) |
-| `hour_index` | INT | Heure dans le shift (0 = première heure, …) |
-| `theoretical_production` | INT | Production théorique maximale attendue |
-| `actual_production` | INT | Production réellement réalisée |
-| `reliability_target` | NUMERIC(5,4) | Objectif de fiabilité pour la ligne |
-| `reliability_rate` | NUMERIC(6,4) | Taux de fiabilité réel (actual / theoretical) |
-| `reliability_gap` | NUMERIC(6,4) | Écart entre fiabilité réelle et cible |
-| `non_production_minutes` | INT | Minutes de non-production |
-| `explained_minutes` | INT | Minutes de perte expliquées (pauses, maintenance planifiée, etc.) |
-| `unexplained_minutes` | INT | Minutes de perte inexpliquées |
-| `explained_ratio` | NUMERIC(6,4) | Ratio minutes expliquées / non-production |
-| `unexplained_ratio` | NUMERIC(6,4) | Ratio minutes inexpliquées / non-production |
-
-
----
-
-### `production_events`  
-Détail des événements expliquant la non-production.
-
-| Champ | Type | Description |
-|-------|------|------------|
-| `event_id` | PK / VARCHAR | Identifiant unique de l’événement |
-| `hourly_prod_id` | FK / VARCHAR | Heure concernée (`hourly_production`) |
-| `event_type` | VARCHAR | Type d’événement (ex: Défaut, Pause, Nettoyage, Maintenance) |
-| `organ` | VARCHAR | Machine ou poste concerné (ex: Empileur, Emballeuse, Encaisseuse) |
-| `element` | VARCHAR | Élément spécifique affecté (ex: Trainard, Porte, Delta…) |
-| `duration_minutes` | INT | Durée de l’événement en minutes |
-| `operator_action` | VARCHAR | Action réalisée par l’opérateur |
-| `escalation` | VARCHAR | Escalade si nécessaire (ex: Chef, Maintenance) |
-| `comment` | TEXT | Commentaire libre |
-
-
----
-
-## 🔗 Cardinalités principales
-
-- 1 `factory` → N `workshop`
-- 1 `workshop` → N `production_line`
-- 1 `shift_supervision` → N `hourly_production`
-- 1 `hourly_production` → N `production_events`
-- 1 `shift_supervision` → N `shift_operator_assignment`
-
----
+    HOURLY_PRODUCTION ||--o{ PRODUCTION_EVENTS : explains
+```
 
 ## 🧠 Principes analytiques supplémentaires
 
@@ -233,8 +191,103 @@ Au-dessus du modèle opérationnel, une couche analytique en schéma en étoile 
 - dim_team  
 - dim_organe_element  
 
+
 ### Fait principal
 - fact_hourly_performance  
+- fact_production_events
+
+```mermaid
+erDiagram
+
+    DIM_TIME {
+        int time_key PK
+        date date
+        int year
+        int month
+        string month_name
+        int iso_week
+        int day_of_week
+        string day_name
+        int hour_of_day
+        string session
+        boolean is_weekend
+    }
+
+    DIM_MACHINE {
+        int machine_key PK
+        string line_id UK
+        string factory_id
+        string workshop_id
+        string factory_name
+        string workshop_name
+        string machine_name
+        int theoretical_capacity_per_hour
+        float reliability_target
+        string line_status
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    DIM_TEAM {
+        int team_key PK
+        string team_lead_id
+        string shift_supervision_id
+        string session
+        string scope_factory_id
+        string scope_workshop_id
+        string scope_line_id
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    DIM_ORGANE_ELEMENT {
+        int organe_element_key PK
+        string organe
+        string element
+        string cause_category
+        string cause_family
+        timestamp valid_from
+        timestamp valid_to
+        boolean is_current
+    }
+
+    FACT_HOURLY_PERFORMANCE {
+        int time_key FK
+        int machine_key FK
+        int team_key FK
+        int theoretical_production
+        int actual_production
+        int non_production_minutes
+        int explained_minutes
+        int unexplained_minutes
+        float reliability_rate
+        float explained_ratio
+        float unexplained_ratio
+        timestamp load_timestamp
+    }
+
+    FACT_PRODUCTION_EVENTS {
+        int time_key FK
+        int machine_key FK
+        int team_key FK
+        int organe_element_key FK
+        int duration_minutes
+        timestamp load_timestamp
+    }
+
+    DIM_TIME ||--o{ FACT_HOURLY_PERFORMANCE : "time_key"
+    DIM_MACHINE ||--o{ FACT_HOURLY_PERFORMANCE : "machine_key"
+    DIM_TEAM ||--o{ FACT_HOURLY_PERFORMANCE : "team_key"
+
+    DIM_TIME ||--o{ FACT_PRODUCTION_EVENTS : "time_key"
+    DIM_MACHINE ||--o{ FACT_PRODUCTION_EVENTS : "machine_key"
+    DIM_TEAM ||--o{ FACT_PRODUCTION_EVENTS : "team_key"
+    DIM_ORGANE_ELEMENT ||--o{ FACT_PRODUCTION_EVENTS : "organe_element_key"
+```
+
+
 
 Cette couche permet :
 - analyses rapides en SQL,

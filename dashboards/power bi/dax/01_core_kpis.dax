@@ -1,0 +1,204 @@
+/* =========================================================
+   CORE KPI – Production Performance
+   Grain : Horaire (fact_hourly_performance)
+   ========================================================= */
+
+/* ---------------------------------------
+   PRODUCTION VOLUMES
+---------------------------------------- */
+
+-- Production théorique totale
+Total Theoretical Production = SUM('dw fact_hourly_performance'[theoretical_production])
+
+-- Production réelle totale
+Total Actual Production = SUM('dw fact_hourly_performance'[actual_production])
+
+
+/* ---------------------------------------
+   PERFORMANCE & FIABILITÉ
+---------------------------------------- */
+
+-- Taux de fiabilité global (%)
+-- Mesure clé = Production réelle / Production théorique
+
+Reliability Rate % =
+DIVIDE (
+    [Total Actual Production],
+    [Total Theoretical Production],
+    0
+)
+
+
+Reliability % Previous Period = 
+CALCULATE(
+    [Reliability Rate %],
+    DATEADD('dw dim_time'[date], -1, MONTH)
+)
+
+Reliability Delta = 
+[Reliability Rate %] - [Reliability % Previous Period]
+
+
+Reliability Delta Label = 
+VAR Delta = [Reliability Delta]
+VAR Arrow =
+    SWITCH(
+        TRUE(),
+        Delta > 0, "▲",
+        Delta < 0, "▼",
+        "→"
+    )
+VAR Sign =
+    IF(Delta > 0, "+", "")
+RETURN
+IF(
+    ISBLANK(Delta),
+    BLANK(),
+    Arrow & " "
+    & Sign & FORMAT(Delta * 100, "0.0")
+    & " pp vs previous period"
+)
+
+
+-- Écart de production
+Performance Gap =
+[Total Theoretical Production] - [Total Actual Production]
+
+Production Gap Previous Period =
+CALCULATE(
+    [Production Gap],
+    DATEADD(dim_time[date], -1, MONTH)
+)
+
+Production Gap Delta % =
+DIVIDE(
+    [Production Gap] - [Production Gap Previous Period],
+    [Production Gap Previous Period],
+    0
+)
+
+/* ---------------------------------------
+   NON PRODUCTION TIME
+---------------------------------------- */
+
+-- Minutes totales de non-production
+Total Non Production Minutes = 
+SUM ('dw fact_hourly_performance'[non_production_minutes])
+
+
+-- Minutes expliquées (arrêts identifiés)
+Explained Minutes =
+Explained Minutes = SUM ( 'dw fact_hourly_performance'[explained_minutes])
+
+-- Minutes non expliquées (zone à risque)
+Unexplained Minutes = 
+SUM ( 'dw fact_hourly_performance'[unexplained_minutes])
+
+-- Ratio d’arrêts expliqués (%)
+Explained Ratio % =
+DIVIDE (
+    [Explained Minutes],
+    [Total Non Production Minutes],
+    0
+)
+
+-- Ratio d’arrêts non expliqués (%)
+Unexplained Ratio % =
+DIVIDE (
+    [Unexplained Minutes],
+    [Total Non Production Minutes],
+    0
+)
+
+
+/* =========================================================
+   MAINTENANCE & INCIDENTS
+   Source : fact_production_events
+   ========================================================= */
+
+-- Nombre total d'événements (incidents)
+Total Events =
+COUNTROWS ( fact_production_events )
+
+-- Temps total d'arrêt issu des événements (minutes)
+Total Downtime (Events) =
+SUM ( fact_production_events[duration_minutes] )
+
+-- Durée moyenne d’un événement (MTTR simplifié)
+Average Event Duration =
+AVERAGE ( fact_production_events[duration_minutes] )
+
+
+/* ---------------------------------------
+   MTTR - Mean Time To Repair
+   Formule : Total downtime / nombre d'incidents
+---------------------------------------- */
+
+MTTR (Minutes) =
+DIVIDE (
+    [Total Downtime (Events)],
+    [Total Events],
+    0
+)
+
+
+/* ---------------------------------------
+   MTBF - Mean Time Between Failures
+   Hypothèse : 
+   Temps de fonctionnement = 
+   (Temps total observé - Downtime)
+
+   Ici simplifié via production horaire
+---------------------------------------- */
+
+-- Temps total observé (en minutes)
+Total Observed Minutes =
+COUNTROWS ( fact_hourly_performance ) * 60
+
+-- Temps total de fonctionnement
+Total Runtime Minutes =
+[Total Observed Minutes] - [Total Downtime (Events)]
+
+-- MTBF (minutes)
+MTBF (Minutes) =
+DIVIDE (
+    [Total Runtime Minutes],
+    [Total Events],
+    0
+)
+
+
+/* ---------------------------------------
+   Disponibilité opérationnelle (%)
+   Disponibilité = MTBF / (MTBF + MTTR)
+---------------------------------------- */
+
+Availability % =
+DIVIDE (
+    [MTBF (Minutes)],
+    [MTBF (Minutes)] + [MTTR (Minutes)],
+    0
+)
+
+Availability Delta Pts =
+[Availability %] - [Availability % Previous Period]
+
+Availability Delta Label =
+VAR Delta = [Availability Delta Pts]
+VAR Arrow =
+    SWITCH(
+        TRUE(),
+        Delta > 0, "▲",
+        Delta < 0, "▼",
+        "→"
+    )
+VAR Sign =
+    IF(Delta > 0, "+", "")
+RETURN
+IF(
+    ISBLANK(Delta),
+    BLANK(),
+    Arrow & " "
+    & Sign & FORMAT(Delta * 100, "0.0")
+    & " pp vs previous period"
+)
