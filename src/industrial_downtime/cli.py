@@ -1,5 +1,5 @@
 import argparse
-from industrial_downtime.pipeline import main as pipeline_main
+from industrial_downtime.orchestration.pipeline import main as pipeline_main
 
 
 def main():
