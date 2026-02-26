@@ -1,0 +1,200 @@
+/* =========================================================
+   MAINTENANCE & INCIDENT ANALYSIS
+   Source principale : fact_production_events
+   ========================================================= */
+
+
+/* =========================================================
+   1️⃣ VOLUME & INTENSITÉ DES INCIDENTS
+   ========================================================= */
+
+-- Nombre total d'incidents
+Total Incidents =
+COUNTROWS ( fact_production_events )
+
+-- Incidents par jour (moyenne)
+Average Incidents per Day =
+DIVIDE (
+    [Total Incidents],
+    DISTINCTCOUNT ( dim_time[date] ),
+    0
+)
+
+-- Downtime total (minutes)
+Total Downtime Minutes =
+SUM ( fact_production_events[duration_minutes] )
+
+-- Downtime moyen par jour
+Average Downtime per Day =
+DIVIDE (
+    [Total Downtime Minutes],
+    DISTINCTCOUNT ( dim_time[date] ),
+    0
+)
+
+
+/* =========================================================
+   2️⃣ SÉVÉRITÉ DES INCIDENTS
+   ========================================================= */
+
+-- Durée moyenne d’un incident
+Average Incident Duration =
+AVERAGE ( fact_production_events[duration_minutes] )
+
+-- Durée médiane (plus robuste aux outliers)
+Median Incident Duration =
+MEDIAN ( fact_production_events[duration_minutes] )
+
+-- Incident le plus long
+Max Incident Duration =
+MAX ( fact_production_events[duration_minutes] )
+
+
+/* =========================================================
+   3️⃣ MTTR & MTBF AVANCÉS
+   ========================================================= */
+
+-- MTTR (Mean Time To Repair)
+MTTR (Minutes) =
+DIVIDE (
+    [Total Downtime Minutes],
+    [Total Incidents],
+    0
+)
+
+-- Temps total observé
+Total Observed Minutes =
+COUNTROWS ( fact_hourly_performance ) * 60
+
+-- Temps de fonctionnement réel
+Total Runtime Minutes =
+[Total Observed Minutes] - [Total Downtime Minutes]
+
+-- MTBF (Mean Time Between Failures)
+MTBF (Minutes) =
+DIVIDE (
+    [Total Runtime Minutes],
+    [Total Incidents],
+    0
+)
+
+-- Disponibilité opérationnelle
+Availability % =
+DIVIDE (
+    [MTBF (Minutes)],
+    [MTBF (Minutes)] + [MTTR (Minutes)],
+    0
+)
+
+
+/* =========================================================
+   4️⃣ PARETO DES CAUSES
+   Hypothèse : colonne fact_production_events[cause]
+   ========================================================= */
+
+-- Downtime par cause
+Downtime by Cause =
+[Total Downtime Minutes]
+
+-- % contribution de la cause au downtime total
+Downtime Contribution % =
+DIVIDE (
+    [Downtime by Cause],
+    CALCULATE ( [Total Downtime Minutes], ALL ( fact_production_events[cause] ) ),
+    0
+)
+
+-- Rang des causes (pour Pareto)
+Cause Rank =
+RANKX (
+    ALL ( fact_production_events[cause] ),
+    [Downtime by Cause],
+    ,
+    DESC
+)
+
+-- Downtime cumulatif % (Pareto 80/20)
+Cumulative Downtime % =
+VAR CurrentRank =
+    [Cause Rank]
+RETURN
+DIVIDE (
+    CALCULATE (
+        [Downtime by Cause],
+        FILTER (
+            ALL ( fact_production_events[cause] ),
+            [Cause Rank] <= CurrentRank
+        )
+    ),
+    CALCULATE ( [Total Downtime Minutes], ALL ( fact_production_events[cause] ) ),
+    0
+)
+
+
+/* =========================================================
+   5️⃣ FIABILITÉ PAR DIMENSIONS
+   ========================================================= */
+
+-- MTTR par ligne
+MTTR by Line =
+DIVIDE (
+    SUM ( fact_production_events[duration_minutes] ),
+    COUNTROWS ( fact_production_events ),
+    0
+)
+
+-- Fréquence incident par ligne
+Incident Frequency by Line =
+COUNTROWS ( fact_production_events )
+
+-- Downtime par équipe de supervision
+Downtime by Supervision =
+[Total Downtime Minutes]
+
+
+/* =========================================================
+   6️⃣ INCIDENTS CRITIQUES
+   Hypothèse : critique si durée > 60 min
+   ========================================================= */
+
+Critical Incidents =
+CALCULATE (
+    COUNTROWS ( fact_production_events ),
+    fact_production_events[duration_minutes] > 60
+)
+
+Critical Incident Rate % =
+DIVIDE (
+    [Critical Incidents],
+    [Total Incidents],
+    0
+)
+
+
+/* =========================================================
+   7️⃣ TENDANCE MAINTENANCE (ROLLING)
+   ========================================================= */
+
+-- Downtime Rolling 30 jours
+Downtime Rolling 30D =
+CALCULATE (
+    [Total Downtime Minutes],
+    DATESINPERIOD (
+        dim_time[date],
+        MAX ( dim_time[date] ),
+        -30,
+        DAY
+    )
+)
+
+-- Incidents Rolling 30 jours
+Incidents Rolling 30D =
+CALCULATE (
+    [Total Incidents],
+    DATESINPERIOD (
+        dim_time[date],
+        MAX ( dim_time[date] ),
+        -30,
+        DAY
+    )
+)

@@ -1,0 +1,189 @@
+/* =========================================================
+   TIME ANALYSIS MEASURES
+   Basé sur : dim_time (grain horaire)
+   Nécessite relation active :
+   dim_time[time_key] -> fact_hourly_performance[time_key]
+   ========================================================= */
+
+
+/* =========================================================
+   BASE TEMPORAL FILTERS
+   ========================================================= */
+
+-- Production réelle YTD (Year-To-Date)
+Actual Production YTD =
+TOTALYTD (
+    [Total Actual Production],
+    dim_time[date]
+)
+
+-- Production théorique YTD
+Theoretical Production YTD =
+TOTALYTD (
+    [Total Theoretical Production],
+    dim_time[date]
+)
+
+-- Reliability YTD
+Reliability YTD % =
+DIVIDE (
+    [Actual Production YTD],
+    [Theoretical Production YTD],
+    0
+)
+
+
+-- Production réelle MTD (Month-To-Date)
+Actual Production MTD =
+TOTALMTD (
+    [Total Actual Production],
+    dim_time[date]
+)
+
+-- Production réelle QTD (Quarter-To-Date)
+Actual Production QTD =
+TOTALQTD (
+    [Total Actual Production],
+    dim_time[date]
+)
+
+
+/* =========================================================
+   PREVIOUS PERIOD COMPARISON
+   ========================================================= */
+
+-- Production période précédente (mois précédent)
+Actual Production Previous Month =
+CALCULATE (
+    [Total Actual Production],
+    PREVIOUSMONTH ( dim_time[date] )
+)
+
+-- Variation MoM (%)
+Actual Production MoM % =
+DIVIDE (
+    [Total Actual Production] - [Actual Production Previous Month],
+    [Actual Production Previous Month],
+    0
+)
+
+
+-- Production année précédente
+Actual Production Previous Year =
+CALCULATE (
+    [Total Actual Production],
+    SAMEPERIODLASTYEAR ( dim_time[date] )
+)
+
+-- Variation YoY (%)
+Actual Production YoY % =
+DIVIDE (
+    [Total Actual Production] - [Actual Production Previous Year],
+    [Actual Production Previous Year],
+    0
+)
+
+
+/* =========================================================
+   ROLLING METRICS
+   ========================================================= */
+
+-- Rolling 7 jours production réelle
+Actual Production Rolling 7D =
+CALCULATE (
+    [Total Actual Production],
+    DATESINPERIOD (
+        dim_time[date],
+        MAX ( dim_time[date] ),
+        -7,
+        DAY
+    )
+)
+
+-- Rolling 30 jours production réelle
+Actual Production Rolling 30D =
+CALCULATE (
+    [Total Actual Production],
+    DATESINPERIOD (
+        dim_time[date],
+        MAX ( dim_time[date] ),
+        -30,
+        DAY
+    )
+)
+
+
+/* =========================================================
+   ANALYSE HORAIRE
+   ========================================================= */
+
+-- Production moyenne par heure
+Average Production per Hour =
+AVERAGEX (
+    VALUES ( dim_time[hour_of_day] ),
+    [Total Actual Production]
+)
+
+-- Reliability par heure
+Reliability by Hour % =
+DIVIDE (
+    [Total Actual Production],
+    [Total Theoretical Production],
+    0
+)
+
+
+/* =========================================================
+   ANALYSE PAR SESSION (MATIN / SOIR / NUIT / SD)
+   ========================================================= */
+
+-- Production par session
+Actual Production by Session =
+[Total Actual Production]
+
+-- Reliability par session
+Reliability by Session % =
+DIVIDE (
+    [Total Actual Production],
+    [Total Theoretical Production],
+    0
+)
+
+
+/* =========================================================
+   WEEKEND VS WEEKDAY
+   ========================================================= */
+
+-- Production Weekend
+Actual Production Weekend =
+CALCULATE (
+    [Total Actual Production],
+    dim_time[is_weekend] = TRUE ()
+)
+
+-- Production Weekday
+Actual Production Weekday =
+CALCULATE (
+    [Total Actual Production],
+    dim_time[is_weekend] = FALSE ()
+)
+
+
+/* =========================================================
+   INCIDENT TIME ANALYSIS
+   ========================================================= */
+
+-- Downtime YTD
+Downtime YTD =
+TOTALYTD (
+    [Total Downtime (Events)],
+    dim_time[date]
+)
+
+-- MTTR YTD
+MTTR YTD =
+DIVIDE (
+    [Downtime YTD],
+    CALCULATE ( [Total Events], DATESYTD ( dim_time[date] ) ),
+    0
+)

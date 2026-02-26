@@ -1,7 +1,7 @@
 from datetime import date
 
 START_DATE = date(2026, 1, 3)
-END_DATE = date(2026, 1, 10)
+END_DATE = date(2026, 2, 10)
 
 FACTORY_ID = "F_DOM"
 
