@@ -1,5 +1,5 @@
 import pytest
-from src.industrial_downtime.config import config
+from industrial_downtime.config import config
 
 def test_db_config_keys():
     db = config.DB_CONFIG
