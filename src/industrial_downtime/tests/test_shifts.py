@@ -1,4 +1,4 @@
-from config.shifts import SHIFTS, ShiftName
+from industrial_downtime.config.shifts import SHIFTS, ShiftName
 from datetime import time
 
 def test_shifts_structure():

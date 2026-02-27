@@ -1,7 +1,12 @@
-from datetime import timedelta
-from industrial_downtime.config.settings import START_DATE, END_DATE
-from industrial_downtime.config.constants import SHIFTS
+from datetime import timedelta, date as date_type
 
+from industrial_downtime.config.settings import START_DATE, END_DATE
+from industrial_downtime.config.shifts import SHIFTS, ShiftName
+
+
+# =========================
+# DATE ITERATOR
+# =========================
 
 def iter_dates():
     """
@@ -13,29 +18,45 @@ def iter_dates():
         current += timedelta(days=1)
 
 
-def get_sessions_for_date(date):
+# =========================
+# SESSION LOGIC
+# =========================
+
+def get_sessions_for_date(day: date_type) -> list[ShiftName]:
     """
     Retourne les sessions applicables selon le jour :
-    - semaine : matin / soir / nuit
+    - semaine : MATIN / SOIR / NUIT
     - week-end : SD
     """
-    if date.weekday() >= 5:  # samedi = 5, dimanche = 6
-        return ["SD"]
-    return ["MATIN", "SOIR", "NUIT"]
 
+    if day.weekday() >= 5:  # 5 = samedi, 6 = dimanche
+        return [ShiftName.SD]
+
+    return [
+        ShiftName.MATIN,
+        ShiftName.SOIR,
+        ShiftName.NUIT,
+    ]
+
+
+# =========================
+# SHIFT GENERATOR
+# =========================
 
 def iter_shifts():
     """
     Génère les shifts réels (date + session + horaires).
     """
-    for date in iter_dates():
-        for session in get_sessions_for_date(date):
+
+    for day in iter_dates():
+        for session in get_sessions_for_date(day):
+
             shift_cfg = SHIFTS[session]
 
             yield {
-                "date": date,
-                "session": session,
-                "start_time": shift_cfg["start"],
-                "end_time": shift_cfg["end"],
-                "duration_hours": shift_cfg["hours"]
+                "date": day,
+                "session": session.value,  # 👈 important
+                "start_time": shift_cfg.start,
+                "end_time": shift_cfg.end,
+                "duration_hours": shift_cfg.hours,
             }

@@ -1,10 +1,19 @@
 [![Version](https://img.shields.io/badge/Version-1.0-0066cc?style=flat-square)](#versioning)
+[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#)
+
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-F37726?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![PowerBI](https://img.shields.io/badge/Power%20BI-Analytics-F2CC8F?style=flat-square&logo=powerbi&logoColor=black)](https://www.microsoft.com/fr-fr/power-platform/products/power-bi)
+
+[![Tests](https://img.shields.io/badge/Tests-Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)](#testing)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](#ci)
+[![Architecture](https://img.shields.io/badge/Architecture-Industrial_Grade-6A1B9A?style=flat-square)](#architecture)
+[![Config](https://img.shields.io/badge/Config-Env_Based-4CAF50?style=flat-square)](#configuration)
+
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#licence)
-[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#)
+
+[![Data Engineering](https://img.shields.io/badge/Data-Pipeline-ff6f00?style=flat-square)](#)
+[![Analytics](https://img.shields.io/badge/Analytics-OEE%20%26%20Downtime-1E88E5?style=flat-square)](#) 
 
 # Analyse globale des performances du service conditionnement d'une société fromagère industriel
 

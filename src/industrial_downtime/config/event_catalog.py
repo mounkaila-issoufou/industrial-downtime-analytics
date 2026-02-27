@@ -74,5 +74,12 @@ EVENT_CATALOG: Dict[str, Event] = {
         element="transfer",
         operator_action="plate transfer",
     ),
+    "short_break": Event(
+        event="short_break",
+        category=EventCategory.PLANNED,
+        organ="human",
+        element="micro_break",
+        operator_action="pause"
+    ),
     # ... ajouter tous les autres événements existants de ton constants/settings
 }
