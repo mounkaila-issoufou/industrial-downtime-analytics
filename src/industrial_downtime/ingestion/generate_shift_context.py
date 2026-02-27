@@ -6,21 +6,17 @@ from industrial_downtime.config.settings import (
     OPERATORS,
     TEAM_LEADS,
 )
-from industrial_downtime.config.settings import WORKSHOPS
+from industrial_downtime.config.shifts import SHIFTS, ShiftName
+from industrial_downtime.config.workshops import WORKSHOPS
 
 # =========================
 # STRUCTURE ATELIERS / LIGNES
 # =========================
 
-WORKSHOP_MAP = {}
-
-for workshop_dict in WORKSHOPS:
-    first_line = next(iter(workshop_dict.keys()))
-    
-    # "L_CAM_A" → "W_CAM"
-    workshop_id = "W_" + first_line.split("_")[1]
-    
-    WORKSHOP_MAP[workshop_id] = list(workshop_dict.keys())
+WORKSHOP_MAP = {
+    workshop_id: list(workshop.lines.keys())
+    for workshop_id, workshop in WORKSHOPS.items()
+}
 
 WORKSHOP_IDS = list(WORKSHOP_MAP.keys())
 
@@ -48,6 +44,8 @@ def generate_shift_context():
     for i, shift in enumerate(iter_shifts()):
 
         shift_id = generate_id("SS")
+        shift_enum = ShiftName(shift["session"])
+        shift_config = SHIFTS[shift_enum]
 
         # --- Atelier ---
         workshop_id = _pick_rotating(WORKSHOP_IDS, i)
@@ -64,21 +62,18 @@ def generate_shift_context():
         # SHIFT SUPERVISION
         # =========================
 
+
         context.shifts.append({
             "shift_supervision_id": shift_id,
             "date": shift["date"],
-            "session": shift["session"],
+            "session": shift_enum.value,  # toujours string pour compatibilité
             "factory_id": FACTORY_ID,
             "workshop_id": workshop_id,
             "line_id": line_id,
             "team_lead_id": team_lead_id,
-            "start_time": shift["start_time"],
-            "end_time": shift["end_time"],
+            "start_time": shift_config.start,
+            "end_time": shift_config.end,
         })
-
-        # =========================
-        # AFFECTATION OPERATEUR
-        # =========================
 
         context.operator_assignments.append({
             "shift_operator_assignment_id": generate_id("SOA"),
@@ -86,7 +81,7 @@ def generate_shift_context():
             "operator_id": operator_id,
             "line_id": line_id,
             "date": shift["date"],
-            "session": shift["session"],
+            "session": shift_enum.value,
         })
 
         op_idx += 1

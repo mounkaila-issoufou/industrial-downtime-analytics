@@ -1,25 +1,20 @@
 import random
 from datetime import datetime, date
 
+from industrial_downtime.config.event_catalog import EVENT_CATALOG
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.context_store import context
 from industrial_downtime.config.constants import (
     PAUSE_RULES
     )
-from industrial_downtime.config.settings import (
-    WORKSHOPS, 
-    EVENT_CLASSIFICATION
-    )
 
 
-# =========================
-# BUILD LINE CONFIG
-# =========================
+from industrial_downtime.config.shifts import SHIFTS, ShiftName
 
-LINE_CONFIG = {}
+from industrial_downtime.config.workshops import WORKSHOPS
 
-for workshop in WORKSHOPS:
-    LINE_CONFIG.update(workshop)
+
+
 
 
 # =========================
@@ -53,12 +48,15 @@ def generate_events_for_hour(
     events = []
     remaining = total_downtime
 
+    shift_enum = ShiftName(shift_type)
+    shift_config = SHIFTS[shift_enum]
+
     # --- Pauses planifiées ---
-    for pause in PAUSE_RULES.get(shift_type.lower(), []):
+    for pause in shift_config.breaks:
         if remaining <= 0:
             break
 
-        duration = min(pause["duration"], remaining)
+        duration = min(pause.duration_minutes, remaining)
         remaining -= duration
 
         events.append({
@@ -70,33 +68,36 @@ def generate_events_for_hour(
             "element": "break",
             "operator_action": "break",
             "duration_minutes": duration,
-            "comment": f"Scheduled pause at {pause['time']}",
+            "comment": f"Scheduled pause at {pause.start}",
         })
 
     # --- Pause alternée ---
     if is_break_day and remaining > 0:
+
         duration = min(10, remaining)
         remaining -= duration
+
+        event_def = EVENT_CATALOG["short_break"]
 
         events.append({
             "event_id": generate_id("EV"),
             "hourly_prod_id": prod_id,
             "event_type": "short_break",
-            "cause_family": "planned",
-            "organ": "human",
-            "element": "break",
-            "operator_action": "break",
             "duration_minutes": duration,
             "comment": "Alternating daily break",
+            "cause_family": event_def.category,
+            "organ": event_def.organ,
+            "element": event_def.element,
+            "operator_action": event_def.operator_action,
         })
 
     # --- Autres événements ---
-    event_types = list(EVENT_CLASSIFICATION.keys())
+    event_types = list(EVENT_CATALOG.keys())
 
     while remaining > 0:
 
         event_type = random.choice(event_types)
-        event_def = EVENT_CLASSIFICATION[event_type]
+        event_def = EVENT_CATALOG[event_type]
 
         duration = (
             remaining
@@ -110,10 +111,10 @@ def generate_events_for_hour(
             "event_id": generate_id("EV"),
             "hourly_prod_id": prod_id,
             "event_type": event_type,
-            "cause_family": event_def["event_category"],
-            "organ": event_def["organ"],
-            "element": event_def["element"],
-            "operator_action": event_def["operator_action"],
+            "cause_family": event_def.category,
+            "organ": event_def.organ,
+            "element": event_def.element,
+            "operator_action": event_def.operator_action,
             "duration_minutes": duration,
             "comment": "Generated production event",
         })
@@ -139,14 +140,31 @@ def generate_production():
         workshop_id = shift["workshop_id"]
         line_id = shift["line_id"]
 
-        if line_id not in LINE_CONFIG:
+        # ======================
+        # SHIFT CONFIG
+        # ======================
+
+        shift_enum = ShiftName(shift_type)
+        shift_config = SHIFTS[shift_enum]
+
+        # ======================
+        # WORKSHOP / LINE
+        # ======================
+
+        if workshop_id not in WORKSHOPS:
+            print(f"Unknown workshop_id {workshop_id}")
+            raise ValueError(f"Unknown workshop_id {workshop_id}")
+
+        workshop = WORKSHOPS[workshop_id]
+
+        if line_id not in workshop.lines:
             raise ValueError(f"Unknown line_id {line_id}")
 
-        line_config = LINE_CONFIG[line_id]
+        line_config = workshop.lines[line_id]
 
-        theoretical_production = line_config["THEORETICAL_CAPACITY_PER_HOUR"]
-        units_per_minute = line_config["UNITS_PER_MINUTE"]
-        reliability_target = line_config["RELIABILITY_TARGET"]
+        theoretical_production = line_config.theoretical_capacity_per_hour
+        units_per_minute = line_config.units_per_minute
+        reliability_target = line_config.reliability_target
 
         break_day = is_break_day(shift_date)
 
@@ -156,7 +174,8 @@ def generate_production():
         )
         operator_id = assignment["operator_id"]
 
-        for hour_index in range(8):
+
+        for hour_index in range(int(shift_config.hours)):
 
             prod_id = generate_id("HP")
 
