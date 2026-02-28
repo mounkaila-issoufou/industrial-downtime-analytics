@@ -37,4 +37,4 @@ Suivant la convention [Keep a Changelog](https://keepachangelog.com/fr/).
 - Mock data : simulation réaliste des arrêts par type et durée
 
 ### Corrigé
-- Correction de la génération des événements `micro_stop` pour refléter les causes réelles
+- Correction de la génération des événements `micro_stop` pour refléter les causes réelles 
