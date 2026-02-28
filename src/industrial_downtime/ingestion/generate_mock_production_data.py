@@ -1,18 +1,40 @@
 import random
 from datetime import datetime, date
 
-from industrial_downtime.config.event_catalog import EVENT_CATALOG
+from industrial_downtime.config.event_catalog import EVENT_CATALOG, EventCategory, pick_root_cause, MICRO_STOP_CATEGORIES, FAILURE_CATEGORIES
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.context_store import context
-from industrial_downtime.config.constants import (
-    PAUSE_RULES
-    )
-
-
 from industrial_downtime.config.shifts import SHIFTS, ShiftName
-
 from industrial_downtime.config.workshops import WORKSHOPS
+from industrial_downtime.core.markov_engine import (
+    LineState,
+    next_state,
+    generate_duration
+)
 
+
+def simulate_hour(line_config, total_minutes=60):
+
+    state = LineState.RUNNING
+    minutes_remaining = total_minutes
+    events = []
+
+    while minutes_remaining > 0:
+
+        state = next_state(state, line_config.transition_matrix)
+
+        if state == LineState.RUNNING:
+            minutes_remaining -= 1
+            continue
+
+        duration = generate_duration(state)
+
+        duration = min(duration, minutes_remaining)
+        minutes_remaining -= duration
+
+        events.append((state, duration))
+
+    return events
 
 
 
@@ -179,41 +201,29 @@ def generate_production():
 
             prod_id = generate_id("HP")
 
-            # 1 heure parfaite garantie
+            # ======================
+            # Simulation Markov
+            # ======================
+
             if hour_index == 0:
+                events = []
                 actual_production = theoretical_production
                 non_production_minutes = 0
             else:
-                reliability_real = random.uniform(
-                    reliability_target - 0.05,
-                    reliability_target + 0.05
-                )
+                events = simulate_hour(line_config, total_minutes=60)
 
-                reliability_real = max(0.3, min(1.0, reliability_real))
+                non_production_minutes = sum(duration for _, duration in events)
 
-                actual_production = int(
-                    theoretical_production * reliability_real
-                )
+                productive_minutes = 60 - non_production_minutes
 
-                non_production_minutes = max(
-                    0,
-                    int(
-                        (theoretical_production - actual_production)
-                        / units_per_minute
-                    ),
-                )
-
+                actual_production = productive_minutes * units_per_minute
             # ======================
             # Répartition pertes
             # ======================
 
             if non_production_minutes > 0:
-                explained_minutes = int(
-                    non_production_minutes * random.uniform(0.6, 0.9)
-                )
-                unexplained_minutes = (
-                    non_production_minutes - explained_minutes
-                )
+                explained_minutes = non_production_minutes
+                unexplained_minutes = 0
             else:
                 explained_minutes = 0
                 unexplained_minutes = 0
@@ -274,13 +284,29 @@ def generate_production():
                 "unexplained_ratio": unexplained_ratio,
             })
 
-            production_events.extend(
-                generate_events_for_hour(
-                    prod_id=prod_id,
-                    shift_type=shift_type,
-                    is_break_day=break_day,
-                    total_downtime=non_production_minutes,
-                )
-            )
+            for state, duration in events:
+
+                if state == LineState.MICRO_STOP:
+                    event_key = pick_root_cause(MICRO_STOP_CATEGORIES)
+
+                elif state == LineState.FAILURE:
+                    event_key = pick_root_cause(FAILURE_CATEGORIES)
+
+                else:
+                    continue
+
+                event_def = EVENT_CATALOG[event_key]
+
+                production_events.append({
+                    "event_id": generate_id("EV"),
+                    "hourly_prod_id": prod_id,
+                    "event_type": event_key,
+                    "cause_family": event_def.category,
+                    "organ": event_def.organ,
+                    "element": event_def.element,
+                    "operator_action": event_def.operator_action,
+                    "duration_minutes": duration,
+                    "comment": "Generated from Markov + root cause model",
+                })
 
     return hourly_production, production_events
