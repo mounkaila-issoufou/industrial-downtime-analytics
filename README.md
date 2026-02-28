@@ -1,230 +1,236 @@
+<!-- ========================= -->
+<!-- PROJECT STATUS -->
+<!-- ========================= -->
+
 [![Version](https://img.shields.io/badge/Version-1.0-0066cc?style=flat-square)](#versioning)
-[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#project-status)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#license)
+
+---
+
+<!-- ========================= -->
+<!-- TECH STACK -->
+<!-- ========================= -->
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![PowerBI](https://img.shields.io/badge/Power%20BI-Analytics-F2CC8F?style=flat-square&logo=powerbi&logoColor=black)](https://www.microsoft.com/fr-fr/power-platform/products/power-bi)
+[![Power BI](https://img.shields.io/badge/Power%20BI-Analytics-F2CC8F?style=flat-square&logo=powerbi&logoColor=black)](https://www.microsoft.com/power-platform/products/power-bi)
+
+---
+
+<!-- ========================= -->
+<!-- ENGINEERING -->
+<!-- ========================= -->
 
 [![Tests](https://img.shields.io/badge/Tests-Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)](#testing)
-[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](#ci)
-[![Architecture](https://img.shields.io/badge/Architecture-Industrial_Grade-6A1B9A?style=flat-square)](#architecture)
-[![Config](https://img.shields.io/badge/Config-Env_Based-4CAF50?style=flat-square)](#configuration)
-
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#licence)
-
-[![Data Engineering](https://img.shields.io/badge/Data-Pipeline-ff6f00?style=flat-square)](#)
-[![Analytics](https://img.shields.io/badge/Analytics-OEE%20%26%20Downtime-1E88E5?style=flat-square)](#) 
-
-# Analyse globale des performances du service conditionnement d'une société fromagère industriel
-
-## Objectif du projet
-Ce projet vise à mettre en place une **analyse globale, transverse et structurée** de la performance des ateliers de conditionnement industriel, en s’appuyant sur les **feuilles de marche opérateur** et les **compteurs de production**.
-
-L’objectif est de suivre, comparer et analyser :
-- l’ensemble des **ateliers**,
-- toutes les **lignes et machines**,
-- tous les **opérateurs, chefs d’équipe et responsables**,
-- l’ensemble des **événements impactant la production**.
-
-Le projet transforme une donnée terrain **manuelle, locale et opérationnelle** en une **vision analytique consolidée**, exploitable pour le **pilotage industriel** et l’**amélioration continue**.
-
-
-
-## Table des matières
-
-## 📚 Table des matières
-- [Objectif du projet](#objectif-du-projet)
-- [Contexte industriel](#contexte-industriel)
-- [Source et nature des données](#source-et-nature-des-données)
-- [Principe de mesure de la non-production](#principe-de-mesure-de-la-non-production)
-- [Périmètre d’analyse](#périmètre-danalyse)
-- [Démarche analytique](#démarche-analytique)
-- [Approche données](#approche-données)
-- [Couche analytique (Data Warehouse)](#couche-analytique-data-warehouse)
-- [Architecture globale](#architecture-globale)
-- [Stack technologique](#stack-technologique)
-- [KPIs industriels clés](#kpis-industriels-clés)
-- [Organisation du repository](#organisation-du-repository)
-- [Dashboards Power BI](#dashboards-power-bi)
-- [Pipeline](#le-pipeline)
-- [Installation](#installation)
-- [Organisation du projet](#structure-du-projet)
-- [Documentation](#documentation-détaillée)
----
-
-## Contexte industriel
-- **Secteur** : industrie agroalimentaire (conditionnement fromager)
-- **Ateliers** : ovales, camembert, portions
-- **Équipements** : empileur / dépileur, emballeuse, encaisseuse
-- **Organisation** : équipes matin / soir / nuit / SD (samedi, dimanche)
-
-Chaque ligne fonctionne avec une **cadence théorique optimale** de :
-- **80 fromages par minute**
-- **4 800 fromages par heure** (condition sans arrêt)
-
-Lorsqu’un arrêt survient, le système de pilotage indique l’**organe** et l’**élément** en cause.  
-L’opérateur intervient directement sur la machine, puis consigne l’événement sur une **feuille de marche**.
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](#ci-cd)
+[![Architecture](https://img.shields.io/badge/Architecture-Industrial_Grade-6A1B9A?style=flat-square)](#system-architecture)
+[![Configuration](https://img.shields.io/badge/Config-Environment_Based-4CAF50?style=flat-square)](#configuration)
 
 ---
 
-## Source et nature des données
+<!-- ========================= -->
+<!-- DOMAIN -->
+<!-- ========================= -->
 
-Les données analysées sont issues de **feuilles de marche opérateur**, renseignées **heure par heure**.
+[![Data Engineering](https://img.shields.io/badge/Data-Pipeline-ff6f00?style=flat-square)](#data-pipeline)
+[![Analytics](https://img.shields.io/badge/Analytics-OEE%20%26%20Downtime-1E88E5?style=flat-square)](#analytics)
 
-Chaque feuille contient :
-- les **heures de production**,
-- le **compteur emballeuse** (nombre réel de fromages emballés par heure),
-- les **événements d’arrêt**, décrits par :
-  - atelier,
-  - ligne,
-  - machine,
-  - organe,
-  - élément,
-- la **durée approximative** des interventions,
-- des **commentaires libres** en cas d’événements non répertoriés,
-- les opérations normales : pause, break, échauffement, nettoyage, pilotage.
-
-Les données présentes dans ce repository sont des **mock data réalistes**, reconstruites à partir de ce fonctionnement réel, sans exposition de données sensibles.
+# Industrial Packaging Performance Analytics
+### Global Performance Analysis – Dairy Manufacturing Conditioning Department
 
 ---
 
-## Principe de mesure de la non-production
+## 🎯 Project Objective
 
-Le temps de non-production n’est pas saisi directement.  
-Il est **calculé** à partir de l’écart entre la production théorique et la production réelle.
+This project implements a **structured, cross-functional performance analysis framework** for industrial packaging workshops.
 
-Pour chaque heure :
+Key goals:
 
-**Temps de non-production (minutes) = (4 800 – compteur emballeuse) / 80**
+- Cross-workshop performance benchmarking  
+- Line and equipment reliability monitoring  
+- Operator and team performance assessment  
+- Root cause analysis of production downtime  
+- Continuous improvement decision support  
 
-
-Ce temps peut être expliqué par :
-- des arrêts techniques (au niveau organe / élément),
-- des arrêts organisationnels (approvisionnement, changements),
-- des opérations normales (pause, nettoyage, échauffement),
-- des arrêts maintenance.
-
-Les événements enregistrés permettent de **qualifier et analyser** ces pertes de production.
+It consolidates **raw operational shopfloor data** into a **centralized analytical model** for industrial steering.
 
 ---
 
-## Périmètre d’analyse
+## 🏭 Industrial Context
 
-L’analyse couvre de manière globale :
-- tous les **ateliers**,
-- toutes les **lignes de conditionnement**,
-- toutes les **machines**,
-- l’ensemble des **organes et éléments techniques**,
-- tous les **acteurs opérationnels** (opérateurs, chefs d’équipe, responsables).
+### Sector
 
-L’objectif n’est pas l’évaluation individuelle, mais la **compréhension systémique** de la performance industrielle.
+Food manufacturing – Dairy packaging operations.
+
+### Workshops
+
+- **Oval lines**, **Camembert lines**, **Portion lines**  
+
+### Equipment
+
+- Stacker / Destacker  
+- Wrapping machines  
+- Case packers  
+- Conveyor systems  
+
+### Shift Organization
+
+- Morning / Evening / Night  
+- Weekend (Saturday / Sunday)  
+
+### Theoretical Production Model
+
+- **80 units/min** → **4,800 units/hour** (ideal operation)  
+
+### Downtime Declaration Process
+
+1. System identifies the affected **organ** and **component**  
+2. Operator performs corrective action  
+3. Event recorded on **shift sheet**  
 
 ---
 
-## Démarche analytique
+## 📄 Data Sources & Nature
 
-1. Compréhension du fonctionnement terrain
-2. Structuration des données issues des feuilles de marche
-3. Normalisation des événements et de la nomenclature
-4. Modélisation analytique multi-ateliers et multi-lignes
-5. Analyse du temps de non-production et des causes racines
-6. Comparaisons transverses (ateliers, machines, équipes, périodes)
-7. Restitution via indicateurs et dashboards décisionnels
+- **Operator shift sheets**, hourly granularity  
+- **Production counters**, actual units packaged  
+- **Downtime events**, component-level and manual notes  
+- **Planned operations**, e.g., breaks, cleaning, warm-up  
+
+**Note:** All repository data are **synthetic mock data**, reflecting realistic operational behavior without exposing sensitive information.
 
 ---
-## Approche données
 
-Le projet distingue deux niveaux d’usage des données :
+## 📉 Downtime Measurement Framework
 
-1) **Modèle opérationnel structurant**  
-   - décrit fidèlement le fonctionnement industriel  
-   - relie usines, ateliers, lignes, shifts, production et événements  
-   - garantit traçabilité et cohérence des analyses  
+**Downtime (minutes) = (Theoretical production − Actual production) / Units per minute**  
 
-2) **Tables analytiques pour la BI**  
-   - issues du modèle opérationnel  
-   - agrégées et simplifiées pour les besoins métiers  
-   - prêtes à être consommées par Power BI / Tableau  
-   - sans complexité technique pour les équipes terrain et management  
+**Loss categories:**
 
-## Couche analytique (Data Warehouse)
+- Technical stoppages (mechanical, electrical, process)  
+- Organizational interruptions (supply, changeovers)  
+- Planned operations (breaks, cleaning, warm-up)  
+- Maintenance interventions  
 
-En complément du modèle opérationnel (ingestion / métier), une couche analytique dédiée est construite pour faciliter l’analyse et la BI.
+---
 
-### Dimensions analytiques
-- **dim_machine**
-- **dim_time**
-- **dim_team**
-- **dim_organe_element**
-### Table de faits analytique
-- **fact_hourly_performance**
-- **fact_production_events**
+## 🎯 Scope of Analysis
 
-## Architecture globale
+- All workshops, lines, machines, and components  
+- All operational roles (operators, team leads, supervisors)  
+- Focus on **systemic performance**, not individual evaluation  
+
+---
+
+## 🧠 Analytical Methodology
+
+1. Operational understanding  
+2. Data extraction & structuring  
+3. Event normalization & taxonomy standardization  
+4. Multi-line/workshop modeling  
+5. Downtime quantification & root cause analysis  
+6. Cross-sectional comparisons (lines, teams, periods)  
+7. KPI & dashboard construction  
+
+---
+
+## 💾 Data Approach
+
+### 1️⃣ Operational Data Model
+- Full industrial process representation  
+- Links factories, workshops, lines, shifts, production, events  
+- Ensures **traceability** and **auditability**  
+
+### 2️⃣ Analytical Layer
+- Derived, aggregated, and simplified  
+- BI-ready (Power BI, Tableau)  
+- Abstracts complexity for operational teams  
+
+---
+
+## 🏗 Analytical Data Warehouse
+
+**Dimensions:**
+
+- `dim_machine` – machine metadata  
+- `dim_time` – shift, hour, day, week, month  
+- `dim_team` – operators & shifts  
+- `dim_organe_element` – components & subcomponents  
+
+**Fact Tables:**
+
+- `fact_hourly_performance` – hourly metrics  
+- `fact_production_events` – downtime & root causes  
+
+**Data Flow:**
 
 ```text
-Raw data (CSV)
+Raw Data (CSV / Excel)
 ↓
-Python (EDA, Cleaning, Modeling)
+Python ETL (Clean, Validate, Model)
 ↓
-Parquet (processed / curated)
+Processed / Curated Parquet
 ↓
-PostgreSQL (staging → dimensions → facts)
+PostgreSQL Staging → Dimensions → Facts
 ↓
-SQL Analytics (BI-ready)
+SQL Analytics Layer (Aggregations, KPIs)
 ↓
-Power BI / Looker
-
+BI Tools (Power BI / Looker / Tableau)
 ```
+## ⚙️ Technology Stack
+
+| Layer | Tools |
+|:---|:---|
+| Ingestion & ETL | Python, Pandas |
+| Storage & Processing | PostgreSQL, Parquet |
+| Analysis & Exploration | Jupyter, NumPy |
+| Visualization & BI | Power BI, SQL |
+| DevOps & Versioning | Git, GitHub, GitHub Actions |
 
 ---
 
+## 📊 Key Industrial KPIs
 
-## Stack Technologique
+### 1️⃣ Production Efficiency
+- **Reliability (%)** = Actual Production / Theoretical Production  
+- **Utilization Rate (%)** = (Actual Operating Time / Scheduled Time) × 100  
+- **Throughput (units/hour)** = Total units produced / Production hours  
 
-| Couche | Technologies |
-|:---:|:---|
-| **Ingestion & ETL** | [![Python](https://img.shields.io/badge/Python-Data%20Processing-3776ab?style=flat&logo=python&logoColor=white)](https://www.python.org/) [![Pandas](https://img.shields.io/badge/Pandas-Data%20Transformation-150458?style=flat&logo=pandas)](https://pandas.pydata.org/) |
-| **Storage & Processing** | [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Data%20Warehouse-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![Parquet](https://img.shields.io/badge/Parquet-Columnar%20Format-2C3E50?style=flat)](https://parquet.apache.org/) |
-| **Analysis & Exploration** | [![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-F37726?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/) [![NumPy](https://img.shields.io/badge/NumPy-Scientific%20Computing-013243?style=flat&logo=numpy)](https://numpy.org/) |
-| **Visualization & BI** | [![PowerBI](https://img.shields.io/badge/Power%20BI-Business%20Intelligence-F2CC8F?style=flat&logo=powerbi&logoColor=black)](https://www.microsoft.com/power-platform/products/power-bi) [![SQL](https://img.shields.io/badge/SQL-Analytics%20Queries-CC2927?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/) |
-| **DevOps & Versioning** | [![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=flat&logo=git&logoColor=white)](https://git-scm.com/) [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat&logo=github)](https://github.com/) |
+### 2️⃣ Downtime & Availability
+- **Downtime (%)** = Total downtime minutes / Total available minutes × 100  
+- **Planned vs Unplanned Downtime (%)** = Planned / Unplanned downtime ratio  
+- **Mean Time Between Failures (MTBF, min)** = Operating time / Number of failures  
+- **Mean Time to Repair (MTTR, min)** = Downtime / Number of failures  
 
-## KPIs industriels clés
+### 3️⃣ Quality Metrics
+- **Defect Rate (%)** = Number of defective units / Total units produced × 100  
+- **First Pass Yield (FPY, %)** = Units meeting quality standard on first pass / Total units  
 
-### 1️⃣ Fiabilité opérationnelle  
-\`\`\`
-Fiabilité (%) = Actual Production / Theoretical Production
-\`\`\`
+### 4️⃣ Operator & Team Performance
+- **Operator Efficiency (%)** = Actual output / Expected output per operator  
+- **Shift Performance (%)** = Sum of line outputs per shift / Theoretical shift output  
 
-### 2️⃣ Taux d’explication des pertes  
-\`\`\`
-Taux expliqué (%) = Minutes expliquées / Minutes de non-production
-\`\`\`
+### 5️⃣ Root Cause & Loss Analysis
+- **Explained Loss Rate (%)** = Explained downtime / Total downtime  
+- **Top 5 Root Causes (%)** = Contribution of main downtime categories to total loss  
+- **Pareto Analysis Coverage (%)** = % of total downtime captured by top causes  
 
-Ces indicateurs permettent :
-- d’évaluer la performance réelle des lignes,
-- de mesurer la qualité de la traçabilité des événements terrain.
-
-
-
-## Organisation du repository
-
-Le projet suit une architecture **modulaire, lisible et reproductible** :
-
-- `data/` : données brutes, traitées et curatées  
-- `notebooks/` : exploration, préparation, modélisation et analyse  
-- `src/` : logique Python réutilisable (ingestion, nettoyage, modélisation)  
-- `sql/` : schémas, tables analytiques et requêtes  
-- `docs/` : documentation métier, data et hypothèses  
-- `dashboards/` : description des tableaux de bord  
 
 ---
-## Dashboards Power BI
 
-Les dashboards Power BI sont conçus pour offrir une **lecture claire, synthétique et orientée décision** des performances commerciales.
+## 📁 Repository Structure
 
-### Emplacement des fichiers
+- `data/` – raw, processed, curated  
+- `notebooks/` – analysis & modeling  
+- `src/` – Python modules (ingestion, modeling, utils)  
+- `sql/` – schemas, tables, queries  
+- `docs/` – architecture, data model, KPI definitions  
+- `dashboards/` – Power BI files  
+
+---
+
+## 📊 Dashboards Power BI
 
 ```text
 dashboards/
@@ -233,15 +239,15 @@ dashboards/
     └── screenshots/
 ```
 
-## Le pipeline
+## 🔄 Pipeline
 
-initialise les tables SQL,
+- Initialize SQL tables
 
-charge le staging,
+- Load staging
 
-alimente les dimensions,
+- Build dimensions
 
-peuple la table de faits.
+- Populate fact tables
 
 
 
@@ -264,56 +270,53 @@ or
 ```text
 industrial-downtime run
 ```
-## Résultats attendus
+## Expected outcomes:
 
-- Vision consolidée de la performance industrielle
-- Identification des principaux contributeurs au temps de non-production
-- Analyse des écarts entre ateliers, lignes et machines
-- Aide à la priorisation des actions d’amélioration continue
+Consolidated performance overview
+
+Root cause analysis of downtime
+
+Cross-line / workshop comparison
+
+Improvement prioritization
 
 ---
 
-## Documentation détaillée
+## 📚 Documentation
 
-La documentation fonctionnelle et technique du projet est centralisée dans le dossier `docs/` :
+- **Architecture** → docs/architecture_overview.md
 
-- **Architecture globale**  
-  👉 [`docs/architecture_overview.md`](docs/architecture_overview.md)
+- **Star schema** → docs/data_model.md
 
-- **Modèle de données (Star Schema)**  
-  👉 [`docs/data_model.md`](docs/data_model.md)
+- **Data dictionary** → docs/data_dictionary.md
 
-- **Dictionnaire de données**  
-  👉 [`docs/data_dictionary.md`](docs/data_dictionary.md)
+- **KPI definitions** → docs/kpi_definitions.md
 
-- **Définition des KPI métier**  
-  👉 [`docs/kpi_definitions.md`](docs/kpi_definitions.md)
-
-- **Hypothèses, périmètre et limites du projet**  
-  👉 [`docs/assumptions_and_limits.md`](docs/assumptions_and_limits.md)
+- **Assumptions & limits** → docs/assumptions_and_limits.md
 
 
-## ⚠️ Limites
+## ⚠️ Limitations
 
-- Données issues de saisies manuelles (durées estimées)
-- Granularité horaire
-- Micro-arrêts non systématiquement tracés
+- Manual data entry, approximate durations
 
-Ces limites sont **documentées et prises en compte** dans l’interprétation des résultats.
+- Hourly granularity
+
+- Micro-stops not always captured
+
 
 ---
 
 ## 👤 Auteur
-Projet de portfolio **Data Analyst senior** – Orientation **industrie**, **performance opérationnelle** et **pilotage data-driven**.  
-Basé sur mon expérience en tant que **pilote de ligne de production**, appliquée à ma vision du métier de Data Analyst.
+Portfolio project – **Senior Data Analyst**, industrial performance & data-driven operations
 
-## Contact & Liens
+
+## Contact & Link
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mounkaila%20Issoufou-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/abdoul-m-3a76b5214/)
 [![GitHub](https://img.shields.io/badge/GitHub-mounkaila--issoufou-181717?style=flat-square&logo=github)](https://github.com/mounkaila-issoufou)
 [![Email](https://img.shields.io/badge/Email-Contact%20Me-D14836?style=flat-square&logo=gmail)](mailto:mounkaila.issoufou025@gmail.com)
 
 
-## Licence
+## 📜 License
 
-Ce projet est sous licence **MIT** – libre d’utilisation à des fins éducatives et professionnelles.
+MIT License – Free for educational & professional use
