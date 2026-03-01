@@ -56,4 +56,4 @@ Suivant la convention [Keep a Changelog](https://keepachangelog.com/fr/).
 - Génération de mock data réaliste pour les ateliers, lignes et machines
 - Modèle opérationnel et tables analytiques pour la BI
 - Dashboards Power BI pour suivi OEE et downtime
-- README initial détaillé avec contexte, périmètre et pipeline
+- README initial détaillé avec contexte, périmètre et pipeline.
