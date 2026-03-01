@@ -27,3 +27,7 @@ src/industrial_downtime/industrial_downtime.egg-info/
 .env/
 .env
 data/raw/*.csv
+data/processed/*.parquet
+.DS_Store
+.pytest_cache/
+.ruff_cache/
