@@ -2,8 +2,6 @@
 -- Dimension Machine (usine → atelier → ligne)
 -- Dimension centrale du contexte industriel
 -- ==========================================================
-DROP TABLE IF EXISTS dw.dim_machine CASCADE;
-
 CREATE TABLE IF NOT EXISTS dw.dim_machine (
     machine_key SERIAL PRIMARY KEY,          -- clé surrogée analytique
     -- Clés métier sources (traçabilité vers le modèle ops)

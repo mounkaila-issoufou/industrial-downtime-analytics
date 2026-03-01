@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS ops.hourly_production CASCADE;
-
-CREATE TABLE ops.hourly_production (
+CREATE TABLE IF NOT EXISTS  ops.hourly_production (
    hourly_prod_id TEXT PRIMARY KEY,
 
    -- clés métier

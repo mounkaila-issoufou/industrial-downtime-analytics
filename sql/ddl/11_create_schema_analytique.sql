@@ -1,8 +1,6 @@
 -- ==========================================================
 -- Création du schéma analytique (Data Warehouse)
 -- ==========================================================
-DROP TABLE IF EXISTS dw CASCADE;
-
 CREATE SCHEMA IF NOT EXISTS dw;
 
 COMMENT ON SCHEMA dw IS 

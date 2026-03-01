@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS ops.shift_supervision CASCADE;
-
-CREATE TABLE ops.shift_supervision (
+CREATE TABLE IF NOT EXISTS  ops.shift_supervision (
    shift_supervision_id TEXT PRIMARY KEY,
    date DATE,
    session TEXT,

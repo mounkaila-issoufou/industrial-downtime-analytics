@@ -251,24 +251,96 @@ dashboards/
 
 
 
-## Installation
+## 🚀 Installation
 
-```text
-python -m venv .venv
-.\.venv\Scripts\activate
-python -m pip install -e .
+### 1️⃣ Clone the repository
 
+```bash
+git clone git@github.com:mounkaila-issoufou/industrial-downtime-analytics.gitcd industrial-downtime-analytics
 ```
-## Run pipeline
+### 2️⃣ Create a virtual environment
 
-```text
-python -m industrial_downtime.cli run 
+```bash
+python -m venv .venv
+```
+Activate the environment:
+
+**Windows**
+
+```bash
+.\.venv\Scripts\activate
+```
+**macOS / Linux**
+
+```bash
+source .venv/bin/activate
+```
+### 3️⃣ Install the project (editable mode)
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+Editable mode (-e) allows local development and CLI usage.
+
+### 🧱 Database Initialization
+
+Before running the pipeline for the first time:
+
+```bash
+industrial-downtime init
+```
+This command:
+
+- Creates schemas (stg, ops, dw)
+
+- Creates all staging, operational, and data warehouse tables
+
+- Prepares the full database structure
+
+### 🔄 Optional – Reset Data
+
+To truncate all data (without dropping tables):
+```bash
+industrial-downtime reset
+```
+This clears all data layers while keeping the database structure intact.
+
+### ▶ Run the Data Pipeline
+
+To execute the full end-to-end pipeline:
+```bash
+industrial-downtime run
 ```
 or
 
+```bash
+python -m industrial_downtime.cli run
+```
+- The pipeline performs:
 
-```text
-industrial-downtime run
+- Mock industrial data generation
+
+- Staging layer load
+
+- Operational layer transformation
+
+- Data warehouse population
+
+### 🔁 Full Refresh (Reset + Run)
+
+For a complete refresh:
+
+```bash
+industrial-downtime full-refresh
+```
+## 🏗 Execution Flow Overview
+
+```bash
+init         → Create schemas & tables
+reset        → Truncate data layers
+run          → Execute full DML pipeline
+full-refresh → Reset + Run
 ```
 ## Expected outcomes:
 

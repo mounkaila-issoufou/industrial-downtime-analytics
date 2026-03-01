@@ -2,9 +2,8 @@
 -- Alimentation DW.fact_hourly_performance
 -- Grain : 1 ligne = 1 heure
 -- ==========================================================
-DROP TABLE IF EXISTS dw.fact_hourly_performance CASCADE;
 
-CREATE TABLE dw.fact_hourly_performance (
+CREATE TABLE IF NOT EXISTS  dw.fact_hourly_performance (
 
     -- =========================
     -- Clés dimensionnelles

@@ -3,8 +3,6 @@
 -- Données brutes issues du CSV (aucune transformation métier)
 -- ==========================================================
 
-DROP TABLE IF EXISTS stg.shift_supervision CASCADE;
-
 CREATE TABLE IF NOT EXISTS stg.shift_supervision (
     shift_supervision_id VARCHAR(50) PRIMARY KEY,
     date DATE NOT NULL,

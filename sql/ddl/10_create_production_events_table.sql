@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS ops.production_events CASCADE;
-
-CREATE TABLE ops.production_events (
+CREATE TABLE IF NOT EXISTS  ops.production_events (
    event_id TEXT PRIMARY KEY,
    hourly_prod_id TEXT,
    event_type TEXT,

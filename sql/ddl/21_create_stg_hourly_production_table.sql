@@ -2,8 +2,6 @@
 -- STAGING : hourly_production
 -- Données brutes issues du CSV (aucune transformation métier)
 -- ==========================================================
-DROP TABLE IF EXISTS stg.hourly_production CASCADE;
-
 
 CREATE TABLE IF NOT EXISTS stg.hourly_production (
     hourly_prod_id VARCHAR(50) PRIMARY KEY,

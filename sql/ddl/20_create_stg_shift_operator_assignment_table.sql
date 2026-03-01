@@ -3,8 +3,6 @@
 -- Données brutes issues du CSV (aucune transformation métier)
 -- ==========================================================
 
-DROP TABLE IF EXISTS stg.shift_operator_assignment CASCADE;
-
 CREATE TABLE IF NOT EXISTS stg.shift_operator_assignment (
     shift_operator_assignment_id VARCHAR(50) PRIMARY KEY,
     shift_supervision_id VARCHAR(50) NOT NULL,

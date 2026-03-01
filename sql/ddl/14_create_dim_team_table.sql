@@ -3,8 +3,6 @@
 -- Dérivée du contexte managérial des shifts
 -- ==========================================================
 
-DROP TABLE IF EXISTS dw.dim_team CASCADE;
-
 CREATE TABLE IF NOT EXISTS dw.dim_team (
     team_key SERIAL PRIMARY KEY,          -- clé surrogée analytique
 

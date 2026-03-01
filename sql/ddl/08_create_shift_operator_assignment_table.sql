@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS ops.shift_operator_assignment CASCADE;
-
-CREATE TABLE ops.shift_operator_assignment (
+CREATE TABLE IF NOT EXISTS  ops.shift_operator_assignment (
    shift_operator_assignment_id TEXT PRIMARY KEY,
    shift_supervision_id TEXT NOT NULL,
    operator_id TEXT NOT NULL,

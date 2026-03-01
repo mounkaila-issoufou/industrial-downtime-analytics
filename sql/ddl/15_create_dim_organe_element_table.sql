@@ -3,8 +3,6 @@
 -- Sert à analyser finement les causes d'arrêts
 -- ==========================================================
 
-DROP TABLE IF EXISTS dw.dim_organe_element CASCADE;
-
 CREATE TABLE IF NOT EXISTS dw.dim_organe_element (
     organe_element_key SERIAL PRIMARY KEY,   -- clé surrogée analytique
 

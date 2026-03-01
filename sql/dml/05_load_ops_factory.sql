@@ -5,12 +5,9 @@
 INSERT INTO ops.factory (factory_id, factory_name, city, country)
 SELECT DISTINCT
     ss.factory_id,
-    ss.factory_id        AS factory_name,   -- proxy simple dans ton mock
-    'UNKNOWN'            AS city,
-    'UNKNOWN'            AS country
+    ss.factory_id AS factory_name,
+    'UNKNOWN',
+    'UNKNOWN'
 FROM stg.shift_supervision ss
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM ops.factory f
-    WHERE f.factory_id = ss.factory_id
-);
+ON CONFLICT (factory_id)
+DO NOTHING;

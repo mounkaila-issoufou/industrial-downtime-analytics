@@ -1,8 +1,6 @@
 -- ==========================================================
 -- Dimension temps - socle temporel du modèle analytique
 -- ==========================================================
-DROP TABLE IF EXISTS dw.dim_time CASCADE;
-
 CREATE TABLE IF NOT EXISTS dw.dim_time (
     time_key            INTEGER PRIMARY KEY,   -- ex: 2024011009 (YYYYMMDDHH)
     date                DATE NOT NULL,

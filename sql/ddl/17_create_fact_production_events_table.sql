@@ -3,9 +3,7 @@
 -- Grain : 1 ligne = 1 événement
 -- ==========================================================
 
-DROP TABLE IF EXISTS dw.fact_production_events CASCADE;
-
-CREATE TABLE dw.fact_production_events (
+CREATE TABLE IF NOT EXISTS  dw.fact_production_events (
 
     -- =========================
     -- Clés dimensionnelles

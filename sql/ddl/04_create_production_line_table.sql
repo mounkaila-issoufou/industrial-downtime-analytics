@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS ops.production_line CASCADE;
-
-CREATE TABLE ops.production_line (
+CREATE TABLE IF NOT EXISTS  ops.production_line (
    line_id TEXT PRIMARY KEY,
    machine_name TEXT,
    workshop_id TEXT NOT NULL,
