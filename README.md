@@ -283,6 +283,26 @@ python -m pip install -e .
 ```
 Editable mode (-e) allows local development and CLI usage.
 
+### 🔄 Regenerate dependencies (after updating pyproject.toml)
+
+If you add or modify dependencies in `pyproject.toml`, regenerate the locked `requirements.txt` file with:
+
+```bash
+pip install pip-tools
+pip-compile pyproject.toml -o requirements.txt
+```
+
+This will:
+
+- Resolve all transitive dependencies
+
+- Lock exact versions
+
+- Keep requirements.txt fully synchronized with pyproject.toml
+
+⚠️ Do not edit requirements.txt manually — it is automatically generated.
+
+
 ### 🧱 Database Initialization
 
 Before running the pipeline for the first time:
