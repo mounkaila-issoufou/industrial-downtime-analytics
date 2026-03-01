@@ -8,6 +8,7 @@ from industrial_downtime.config.shifts import SHIFTS, ShiftName
 # DATE ITERATOR
 # =========================
 
+
 def iter_dates():
     """
     Génère toutes les dates entre START_DATE et END_DATE incluses.
@@ -21,6 +22,7 @@ def iter_dates():
 # =========================
 # SESSION LOGIC
 # =========================
+
 
 def get_sessions_for_date(day: date_type) -> list[ShiftName]:
     """
@@ -43,6 +45,7 @@ def get_sessions_for_date(day: date_type) -> list[ShiftName]:
 # SHIFT GENERATOR
 # =========================
 
+
 def iter_shifts():
     """
     Génère les shifts réels (date + session + horaires).
@@ -50,7 +53,6 @@ def iter_shifts():
 
     for day in iter_dates():
         for session in get_sessions_for_date(day):
-
             shift_cfg = SHIFTS[session]
 
             yield {

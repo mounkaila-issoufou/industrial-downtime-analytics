@@ -13,6 +13,7 @@ SQL_DIR = Path("sql")
 # DATABASE INITIALIZATION (DDL ONLY)
 # ==========================================================
 
+
 def init_db():
     logger.info("🧱 Initializing database structure (DDL)")
 
@@ -53,6 +54,7 @@ def init_db():
 # DATA RESET (OPTIONAL)
 # ==========================================================
 
+
 def reset_data():
     logger.info("🔄 Resetting data layers (TRUNCATE)")
 
@@ -66,6 +68,7 @@ def reset_data():
 # ==========================================================
 # DATA PIPELINE (DML ONLY)
 # ==========================================================
+
 
 def run_pipeline():
     logger.info("🚀 PIPELINE STARTED")
@@ -84,22 +87,22 @@ def run_pipeline():
 
     run_sql_file(
         SQL_DIR / "dml/01_load_stg_shift_supervision.sql",
-        RAW_DATA_DIR / "shift_supervision.csv"
+        RAW_DATA_DIR / "shift_supervision.csv",
     )
 
     run_sql_file(
         SQL_DIR / "dml/02_load_stg_shift_operator_assignment.sql",
-        RAW_DATA_DIR / "shift_operator_assignment.csv"
+        RAW_DATA_DIR / "shift_operator_assignment.csv",
     )
 
     run_sql_file(
         SQL_DIR / "dml/03_load_stg_hourly_production.sql",
-        RAW_DATA_DIR / "hourly_production.csv"
+        RAW_DATA_DIR / "hourly_production.csv",
     )
 
     run_sql_file(
         SQL_DIR / "dml/04_load_stg_production_events.sql",
-        RAW_DATA_DIR / "production_events.csv"
+        RAW_DATA_DIR / "production_events.csv",
     )
 
     logger.info("✔ Staging loaded")

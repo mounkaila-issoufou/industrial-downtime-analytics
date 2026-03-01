@@ -14,11 +14,15 @@ __pycache__/
 *.pyo
 src/config/__pycache__/
 src/db/__pycache__/
+src/tests/__pycache__/
+src/industrial_downtime/__pycache__/
 src/industrial_downtime/db/__pycache__/
 src/industrial_downtime/ingestion/__pycache__/
 src/industrial_downtime/core/__pycache__/
 src/industrial_downtime/utils/__pycache__/
 src/industrial_downtime/config/__pycache__/
+src/industrial_downtime/tests/__pycache__/
 src/industrial_downtime/industrial_downtime.egg-info/
 .venv/
 .env/
+.env

@@ -1,5 +1,6 @@
 from industrial_downtime.config.workshops import WORKSHOPS
 
+
 def test_workshops_lines():
     for ws_name, ws in WORKSHOPS.items():
         assert hasattr(ws, "lines")

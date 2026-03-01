@@ -3,6 +3,7 @@ from datetime import time
 from typing import List, Dict
 from enum import Enum
 
+
 # ==========================
 # Enum pour shifts
 # ==========================
@@ -12,6 +13,7 @@ class ShiftName(str, Enum):
     NUIT = "NUIT"
     SD = "SD"
 
+
 # ==========================
 # Pause / break
 # ==========================
@@ -20,6 +22,7 @@ class Break:
     start: time
     duration_minutes: int
 
+
 @dataclass(frozen=True)
 class Shift:
     name: ShiftName
@@ -27,6 +30,7 @@ class Shift:
     end: time
     hours: float
     breaks: List[Break]
+
 
 SHIFTS: Dict[ShiftName, Shift] = {
     ShiftName.MATIN: Shift(

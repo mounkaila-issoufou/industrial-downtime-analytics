@@ -3,6 +3,7 @@ from pathlib import Path
 
 OUTPUT_DIR = Path("data/raw")
 
+
 def export_csv(records: list[dict], filename: str):
     """
     Exporte une liste de dictionnaires en CSV.

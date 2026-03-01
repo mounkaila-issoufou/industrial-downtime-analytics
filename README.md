@@ -362,6 +362,61 @@ reset        → Truncate data layers
 run          → Execute full DML pipeline
 full-refresh → Reset + Run
 ```
+
+### 🧹 Pre-commit hooks (Automatic code checks)
+
+We use `pre-commit` to ensure code quality and consistent formatting before committing. It automatically runs tools like **black** (code formatter) and **ruff** (linter) on your modified files.
+
+#### 1️⃣ Install pre-commit
+
+```bash
+pip install pre-commit
+```
+#### 2️⃣ Add the configuration file
+
+Create a ``.pre-commit-config.yaml`` at the root of your project:
+
+```bash
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.326
+    hooks:
+      - id: ruff
+```
+#### 3️⃣ Activate pre-commit hooks
+
+```bash
+pre-commit install
+```
+
+This installs the Git hook. From now on, every git commit will automatically check your code.
+
+#### 4️⃣ Usage
+
+Simply work as usual and commit your changes:
+
+```bash
+git add .
+git commit -m "feat: add new feature"
+```
+
+Pre-commit will check and format modified files automatically.
+
+If issues are found, fix them and commit again.
+
+### 5️⃣ Optional: run on all files
+
+To apply hooks to all files in the project (useful when first setting up):
+
+```bash
+pre-commit run --all-files
+```
+
 ## Expected outcomes:
 
 Consolidated performance overview

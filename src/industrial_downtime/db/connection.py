@@ -17,7 +17,7 @@ def get_connection():
         user=DB_CONFIG["user"],
         password=str(DB_CONFIG["password"]),
         options="-c client_encoding=UTF8",
-        cursor_factory=RealDictCursor
+        cursor_factory=RealDictCursor,
     )
 
 

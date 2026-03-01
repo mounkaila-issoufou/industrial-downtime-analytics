@@ -2,7 +2,9 @@ import random
 
 from industrial_downtime.config.settings import RANDOM_SEED
 from industrial_downtime.ingestion.generate_shift_context import generate_shift_context
-from industrial_downtime.ingestion.generate_mock_production_data import generate_production
+from industrial_downtime.ingestion.generate_mock_production_data import (
+    generate_production,
+)
 from industrial_downtime.utils.export import export_csv
 from industrial_downtime.core.context_store import context
 

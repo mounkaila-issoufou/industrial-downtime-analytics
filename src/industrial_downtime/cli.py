@@ -1,18 +1,11 @@
 import argparse
 
-from industrial_downtime.orchestration.pipeline import (
-    init_db,
-    reset_data,
-    run_pipeline
-)
-from industrial_downtime.orchestration.pipeline import init_db
-from industrial_downtime.orchestration.pipeline import reset_data
+from industrial_downtime.orchestration.pipeline import init_db, reset_data, run_pipeline
 
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="industrial-downtime",
-        description="Industrial Downtime Data Platform CLI"
+        prog="industrial-downtime", description="Industrial Downtime Data Platform CLI"
     )
 
     subparsers = parser.add_subparsers(dest="command")

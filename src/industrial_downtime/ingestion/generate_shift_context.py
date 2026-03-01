@@ -42,7 +42,6 @@ def generate_shift_context():
     tl_idx = 0
 
     for i, shift in enumerate(iter_shifts()):
-
         shift_id = generate_id("SS")
         shift_enum = ShiftName(shift["session"])
         shift_config = SHIFTS[shift_enum]
@@ -62,27 +61,30 @@ def generate_shift_context():
         # SHIFT SUPERVISION
         # =========================
 
+        context.shifts.append(
+            {
+                "shift_supervision_id": shift_id,
+                "date": shift["date"],
+                "session": shift_enum.value,  # toujours string pour compatibilité
+                "factory_id": FACTORY_ID,
+                "workshop_id": workshop_id,
+                "line_id": line_id,
+                "team_lead_id": team_lead_id,
+                "start_time": shift_config.start,
+                "end_time": shift_config.end,
+            }
+        )
 
-        context.shifts.append({
-            "shift_supervision_id": shift_id,
-            "date": shift["date"],
-            "session": shift_enum.value,  # toujours string pour compatibilité
-            "factory_id": FACTORY_ID,
-            "workshop_id": workshop_id,
-            "line_id": line_id,
-            "team_lead_id": team_lead_id,
-            "start_time": shift_config.start,
-            "end_time": shift_config.end,
-        })
-
-        context.operator_assignments.append({
-            "shift_operator_assignment_id": generate_id("SOA"),
-            "shift_supervision_id": shift_id,
-            "operator_id": operator_id,
-            "line_id": line_id,
-            "date": shift["date"],
-            "session": shift_enum.value,
-        })
+        context.operator_assignments.append(
+            {
+                "shift_operator_assignment_id": generate_id("SOA"),
+                "shift_supervision_id": shift_id,
+                "operator_id": operator_id,
+                "line_id": line_id,
+                "date": shift["date"],
+                "session": shift_enum.value,
+            }
+        )
 
         op_idx += 1
         tl_idx += 1
