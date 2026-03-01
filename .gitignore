@@ -26,3 +26,4 @@ src/industrial_downtime/industrial_downtime.egg-info/
 .venv/
 .env/
 .env
+data/raw/*.csv
