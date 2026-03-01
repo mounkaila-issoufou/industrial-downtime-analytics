@@ -8,7 +8,6 @@ import random
 # Catégories d'événements
 # ==========================
 
-
 class EventCategory(str, Enum):
     MECHANICAL = "mechanical"
     ELECTRICAL = "electrical"
@@ -22,12 +21,16 @@ class EventCategory(str, Enum):
     MAINTENANCE = "maintenance"
     OTHER = "other"
 
-
 # ==========================
 # Dataclass événement
 # ==========================
-
-
+@dataclass(frozen=True)
+class Event:
+    event: str
+    category: EventCategory
+    organ: str
+    element: str
+    operator_action: str
 @dataclass(frozen=True)
 class Event:
     event: str
@@ -38,8 +41,6 @@ class Event:
     base_probability: float
     mean_duration: int
     duration_std: int
-
-
 # ==========================
 # Référentiel complet
 # ==========================
@@ -147,9 +148,12 @@ FAILURE_CATEGORIES = [
     EventCategory.ELECTRICAL,
 ]
 
-
 def pick_root_cause(categories: list[EventCategory]) -> str:
-    candidates = [e for e in EVENT_CATALOG.values() if e.category in categories]
+
+    candidates = [
+        e for e in EVENT_CATALOG.values()
+        if e.category in categories
+    ]
 
     total_weight = sum(e.base_probability for e in candidates)
 
