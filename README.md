@@ -2,7 +2,7 @@
 <!-- PROJECT STATUS -->
 <!-- ========================= -->
 
-[![Version](https://img.shields.io/badge/Version-1.0-0066cc?style=flat-square)](#versioning)
+[![Version](https://img.shields.io/badge/Version-1.2-0066cc?style=flat-square)](#versioning)
 [![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square)](#project-status)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#license)
 
@@ -14,6 +14,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Power BI](https://img.shields.io/badge/Power%20BI-Analytics-F2CC8F?style=flat-square&logo=powerbi&logoColor=black)](https://www.microsoft.com/power-platform/products/power-bi)
 
 ---
@@ -24,6 +25,8 @@
 
 [![Tests](https://img.shields.io/badge/Tests-Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white)](#testing)
 [![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](#ci-cd)
+[![Black](https://img.shields.io/badge/Code%20Style-Black-000000?style=flat-square&logo=python&logoColor=white)](https://black.readthedocs.io/)
+[![Ruff](https://img.shields.io/badge/Linting-Ruff-46A2F1?style=flat-square)](https://docs.astral.sh/ruff/)
 [![Architecture](https://img.shields.io/badge/Architecture-Industrial_Grade-6A1B9A?style=flat-square)](#system-architecture)
 [![Configuration](https://img.shields.io/badge/Config-Environment_Based-4CAF50?style=flat-square)](#configuration)
 
