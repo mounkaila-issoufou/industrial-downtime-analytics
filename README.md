@@ -181,6 +181,47 @@ SQL Analytics Layer (Aggregations, KPIs)
 ↓
 BI Tools (Power BI / Looker / Tableau)
 ```
+
+## 🏗 System Architecture
+
+```mermaid
+flowchart LR
+
+    subgraph Sources
+        A[Shopfloor Systems]
+        B[IoT Sensors]
+        C[ERP / MES]
+    end
+
+    subgraph Bronze Layer (Raw Data)
+        D[Raw Data Lake]
+    end
+
+    subgraph Silver Layer (Cleaned & Transformed)
+        E[Data Cleaning]
+        F[Data Transformation]
+    end
+
+    subgraph Gold Layer (Business Ready)
+        G[Data Warehouse]
+        H[SQL KPIs]
+    end
+
+    subgraph Consumption
+        I[BI Dashboards]
+        J[Operational Decisions]
+    end
+
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+```
 ## ⚙️ Technology Stack
 
 | Layer | Tools |
@@ -435,6 +476,25 @@ Cross-line / workshop comparison
 Improvement prioritization
 
 ---
+## 📈 Business Impact Simulation
+
+Based on modeled industrial scenarios:
+
+- 3% OEE improvement → +X units/day
+- 10 min MTTR reduction → +Y hours/month recovered
+- Top 3 root causes removal → -Z% downtime
+
+## 🧭 Operational Decision Scenarios
+
+Example 1:
+If Line A underperforms 3 consecutive shifts → trigger maintenance audit.
+
+Example 2:
+If MTBF < threshold → preventive maintenance scheduling.
+
+Example 3:
+If weekend performance < weekday performance → workforce adjustment analysis.
+
 
 ## 📚 Documentation
 
@@ -457,12 +517,26 @@ Improvement prioritization
 
 - Micro-stops not always captured
 
+## 🏭 Real Industrial Inspiration
+
+This project structure is inspired by real dairy packaging operations,
+including shift-based production monitoring,
+TRS calculation,
+and component-level downtime tracking.
 
 ---
+## 🚀 Future Extensions
+
+- Predictive maintenance model (ML)
+- Anomaly detection on production signals
+- Real-time streaming ingestion
+- Multi-site comparative benchmarking
+
 
 ## 👤 Auteur
-Portfolio project – **Senior Data Analyst**, industrial performance & data-driven operations
-
+Industrial Performance & Data Engineering Project
+Designed and implemented by:
+Production Engineer & Industrial Data Analyst
 
 ## Contact & Link
 
