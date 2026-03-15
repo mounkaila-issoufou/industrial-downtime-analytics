@@ -1,14 +1,19 @@
 CREATE TABLE dw.fact_quality_events (
 
     time_key INTEGER NOT NULL,
+
     machine_key INTEGER NOT NULL,
+
     team_key INTEGER NOT NULL,
 
     defect_key INTEGER NOT NULL,
 
     inspected_units INTEGER,
+
     defective_units INTEGER,
+
     scrap_units INTEGER,
+
     reworked_units INTEGER,
 
     load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

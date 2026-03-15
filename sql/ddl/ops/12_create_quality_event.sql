@@ -1,12 +1,15 @@
 CREATE TABLE ops.quality_event (
 
-    quality_event_id SERIAL PRIMARY KEY,
+    quality_event_id VARCHAR(50) PRIMARY KEY,
 
-    inspection_id INTEGER NOT NULL,
+    inspection_id VARCHAR(50) NOT NULL,
+
     defect_id INTEGER NOT NULL,
 
-    defective_units INTEGER,
+    defective_units INTEGER NOT NULL,
+
     scrap_units INTEGER,
+
     reworked_units INTEGER,
 
     comment TEXT,
