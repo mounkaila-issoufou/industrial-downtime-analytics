@@ -87,7 +87,13 @@ sql/
   - électrique
   - process
 
-## [v1.2] - 2026-03-15
+## [v1.2] - 2026-02-28
+
+### Ajouté
+- Release v1.2 - pipeline refactor, reset layer, pre-commit integration
+
+
+## [v1.3] - 2026-03-15
 
 ### Ajouté
 - Extension du modèle analytique pour intégrer la **dimension qualité dans le calcul de l’OEE**
