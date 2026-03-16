@@ -64,7 +64,9 @@ CREATE TABLE IF NOT EXISTS  dw.fact_hourly_performance (
         machine_key,
         team_key
     )
-);
+)
+
+PARTITION BY RANGE (time_key);
 
 COMMENT ON TABLE dw.fact_hourly_performance IS
 'Table de faits centrale pour piloter la performance horaire des lignes de production.';

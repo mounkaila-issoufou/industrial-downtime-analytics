@@ -33,4 +33,6 @@ CREATE TABLE dw.fact_quality_events (
     CONSTRAINT fk_defect
         FOREIGN KEY (defect_key)
         REFERENCES dw.dim_defect(defect_key)
-);
+)
+
+PARTITION BY RANGE (time_key);

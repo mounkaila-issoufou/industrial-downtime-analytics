@@ -53,7 +53,10 @@ CREATE TABLE IF NOT EXISTS  dw.fact_production_events (
         organe_element_key,
         load_timestamp
     )
-);
+)
+PARTITION BY RANGE (time_key);
 
 COMMENT ON TABLE dw.fact_production_events IS
 'Table de faits détaillant les événements d''arrêt ou de perturbation.';
+
+

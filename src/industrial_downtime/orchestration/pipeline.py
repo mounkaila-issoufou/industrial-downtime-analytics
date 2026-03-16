@@ -46,15 +46,21 @@ def init_db():
 
 
     # Data Warehouse tables
-    run_sql_file(SQL_DIR / "ddl/dw/02_create_dim_time_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/03_create_dim_machine_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/04_create_dim_team_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/05_create_dim_organe_element_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/06_create_fact_hourly_performance_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/07_create_fact_production_events_table.sql")
-    #run_sql_file(SQL_DIR / "ddl/dw/08_create_dim_quality_defect.sql")
-    #run_sql_file(SQL_DIR / "ddl/dw/09_create_dim_quality_inspection.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/02_create_dim_time_table.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/03_create_dim_machine_table.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/04_create_dim_team_table.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/05_create_dim_organe_element_table.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/facts/06_create_fact_hourly_performance_table.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/facts/07_create_fact_production_events_table.sql")
+    #run_sql_file(SQL_DIR / "ddl/dw/dimensions/08_create_dim_quality_defect.sql")
+    #run_sql_file(SQL_DIR / "ddl/dw/dimensions/09_create_dim_quality_inspection.sql")
+    #run_sql_file(SQL_DIR / "ddl/dw/facts/09_fact_quality_events.sql")
 
+    # PARTITIONS INITIAL SETUP
+    run_sql_file(SQL_DIR / "ddl/dw/partitions/partitioning_setup.sql")
+
+    # INDEXES
+    run_sql_file(SQL_DIR / "ddl/dw/indexes/indexes_dw.sql")
     logger.info("✔ Database structure ready")
 
 
@@ -142,7 +148,8 @@ def run_pipeline():
     # 4️⃣ Load Data Warehouse
     # ------------------------------------------------------
     logger.info("▶ Loading data warehouse")
-
+    run_sql_file(SQL_DIR / "ddl/dw/partitions/create_partitions.sql")
+    logger.info("✔ Partition check completed")
     run_sql_file(SQL_DIR / "dml/dw/01_load_dim_machine.sql")
     run_sql_file(SQL_DIR / "dml/dw/02_load_dim_time.sql")
     run_sql_file(SQL_DIR / "dml/dw/03_load_dim_team.sql")
@@ -151,6 +158,9 @@ def run_pipeline():
     run_sql_file(SQL_DIR / "dml/dw/06_load_fact_production_events.sql")
     #run_sql_file(SQL_DIR / "dml/dw/07_load_dim_quality_defect.sql")
     #run_sql_file(SQL_DIR / "dml/dw/08_load_fact_quality_events.sql")
+
+
+
 
     logger.info("✔ Data warehouse load completed")
     logger.info("✅ END-TO-END PIPELINE COMPLETED SUCCESSFULLY")
