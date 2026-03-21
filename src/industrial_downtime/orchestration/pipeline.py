@@ -27,8 +27,8 @@ def init_db():
     run_sql_file(SQL_DIR / "ddl/stg/02_create_stg_shift_operator_assignment_table.sql")
     run_sql_file(SQL_DIR / "ddl/stg/03_create_stg_hourly_production_table.sql")
     run_sql_file(SQL_DIR / "ddl/stg/04_create_stg_production_events_table.sql")
-    #run_sql_file(SQL_DIR / "ddl/stg/05_create_stg_quality_events.sql")
-    #run_sql_file(SQL_DIR / "ddl/stg/06_create_stg_quality_inspection.sql")
+    run_sql_file(SQL_DIR / "ddl/stg/05_create_stg_quality_events.sql")
+    run_sql_file(SQL_DIR / "ddl/stg/06_create_stg_quality_inspection.sql")
 
     # Operational tables
     run_sql_file(SQL_DIR / "ddl/ops/02_create_factory_table.sql")
@@ -40,9 +40,9 @@ def init_db():
     run_sql_file(SQL_DIR / "ddl/ops/08_create_shift_operator_assignment_table.sql")
     run_sql_file(SQL_DIR / "ddl/ops/09_create_hourly_production_table.sql")
     run_sql_file(SQL_DIR / "ddl/ops/10_create_production_events_table.sql")
-    #run_sql_file(SQL_DIR / "ddl/ops/11_create_quality_event.sql")
-    #run_sql_file(SQL_DIR / "ddl/ops/12_create_quality_inspection.sql")
-    #run_sql_file(SQL_DIR / "ddl/ops/13_create_quality_defect.sql")
+    run_sql_file(SQL_DIR / "ddl/ops/13_create_quality_defect.sql")
+    run_sql_file(SQL_DIR / "ddl/ops/11_create_quality_inspection.sql")
+    run_sql_file(SQL_DIR / "ddl/ops/12_create_quality_event.sql")
 
 
     # Data Warehouse tables
@@ -52,13 +52,15 @@ def init_db():
     run_sql_file(SQL_DIR / "ddl/dw/dimensions/05_create_dim_organe_element_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/facts/06_create_fact_hourly_performance_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/facts/07_create_fact_production_events_table.sql")
-    #run_sql_file(SQL_DIR / "ddl/dw/dimensions/08_create_dim_quality_defect.sql")
-    #run_sql_file(SQL_DIR / "ddl/dw/dimensions/09_create_dim_quality_inspection.sql")
-    #run_sql_file(SQL_DIR / "ddl/dw/facts/09_fact_quality_events.sql")
-
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/08_dim_quality_defect.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/facts/09_fact_quality_events.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/facts/10_create_fact_oee_hourly.sql")
     # PARTITIONS INITIAL SETUP
     run_sql_file(SQL_DIR / "ddl/dw/partitions/partitioning_setup.sql")
 
+    # PARTITIONS
+    run_sql_file(SQL_DIR / "ddl/dw/partitions/create_partitions.sql")
+    logger.info("✔ Partition check completed")
     # INDEXES
     run_sql_file(SQL_DIR / "ddl/dw/indexes/indexes_dw.sql")
     logger.info("✔ Database structure ready")
@@ -118,11 +120,15 @@ def run_pipeline():
         SQL_DIR / "dml/stg/04_load_stg_production_events.sql",
         RAW_DATA_DIR / "production_events.csv",
     )
-    #run_sql_file(
-    #    SQL_DIR / "dml/stg/05_load_stg_quality_events.sql",
-    #    RAW_DATA_DIR / "quality_events.csv",
-    #)
+    run_sql_file(
+        SQL_DIR / "dml/stg/05_load_staging_quality_events.sql",
+        RAW_DATA_DIR / "quality_events.csv",
+    )
 
+    run_sql_file(
+        SQL_DIR / "dml/stg/06_load_stg_quality_inspection.sql",
+        RAW_DATA_DIR / "quality_inspections.csv",
+    )
 
     logger.info("✔ Staging loaded")
 
@@ -140,27 +146,24 @@ def run_pipeline():
     run_sql_file(SQL_DIR / "dml/ops/07_load_ops_shift_operator_assignment.sql")
     run_sql_file(SQL_DIR / "dml/ops/08_load_ops_hourly_production.sql")
     run_sql_file(SQL_DIR / "dml/ops/09_load_ops_production_events.sql")
-    #run_sql_file(SQL_DIR / "dml/ops/10_load_ops_quality_inspection.sql")
-    #run_sql_file(SQL_DIR / "dml/ops/11_load_ops_quality_events.sql")
-    #run_sql_file(SQL_DIR / "dml/ops/12_load_ops_quality_defect.sql")
+    run_sql_file(SQL_DIR / "dml/ops/10_load_quality_inspection.sql")
+    run_sql_file(SQL_DIR / "dml/ops/11_load_quality_event.sql")
+    #run_sql_file(SQL_DIR / "dml/ops/12_load_quality_defect.sql")
 
     # ------------------------------------------------------
     # 4️⃣ Load Data Warehouse
     # ------------------------------------------------------
     logger.info("▶ Loading data warehouse")
-    run_sql_file(SQL_DIR / "ddl/dw/partitions/create_partitions.sql")
-    logger.info("✔ Partition check completed")
+
     run_sql_file(SQL_DIR / "dml/dw/01_load_dim_machine.sql")
     run_sql_file(SQL_DIR / "dml/dw/02_load_dim_time.sql")
     run_sql_file(SQL_DIR / "dml/dw/03_load_dim_team.sql")
     run_sql_file(SQL_DIR / "dml/dw/04_load_dim_organe_element.sql")
     run_sql_file(SQL_DIR / "dml/dw/05_load_fact_hourly_performance.sql")
     run_sql_file(SQL_DIR / "dml/dw/06_load_fact_production_events.sql")
-    #run_sql_file(SQL_DIR / "dml/dw/07_load_dim_quality_defect.sql")
-    #run_sql_file(SQL_DIR / "dml/dw/08_load_fact_quality_events.sql")
-
-
-
+    run_sql_file(SQL_DIR / "dml/dw/07_load_dim_quality_defect.sql")
+    run_sql_file(SQL_DIR / "dml/dw/08_load_fact_quality_events.sql")
+    run_sql_file(SQL_DIR / "dml/dw/09_load_fact_oee_hourly.sql")
 
     logger.info("✔ Data warehouse load completed")
     logger.info("✅ END-TO-END PIPELINE COMPLETED SUCCESSFULLY")
