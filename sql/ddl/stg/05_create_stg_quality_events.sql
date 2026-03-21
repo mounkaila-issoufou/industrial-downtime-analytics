@@ -1,40 +1,28 @@
 -- ==========================================================
--- STAGING : quality_inspection
+-- STAGING : quality_events
 -- Données brutes issues du CSV (aucune transformation métier)
 -- ==========================================================
 
-CREATE TABLE IF NOT EXISTS stg.quality_inspection (
+CREATE TABLE IF NOT EXISTS stg.quality_events (
 
-    inspection_id VARCHAR(50) PRIMARY KEY,
+    quality_event_id VARCHAR(50) PRIMARY KEY,
 
-    hourly_prod_id VARCHAR(50) NOT NULL,
+    inspection_id VARCHAR(50) NOT NULL,
 
-    inspection_date DATE NOT NULL,
+    defect_category VARCHAR(30) NOT NULL,
 
-    session VARCHAR(10) NOT NULL,
+    defect_family VARCHAR(50) NOT NULL,
 
-    shift_supervision_id VARCHAR(50) NOT NULL,
+    defect_type VARCHAR(100) NOT NULL,
 
-    inspector_id VARCHAR(20) NOT NULL,
+    defective_units INTEGER NOT NULL CHECK (defective_units >= 0),
 
-    workshop_id VARCHAR(20) NOT NULL,
+    scrap_units INTEGER CHECK (scrap_units >= 0),
 
-    line_id VARCHAR(20) NOT NULL,
+    reworked_units INTEGER CHECK (reworked_units >= 0),
 
-    inspection_type VARCHAR(20) NOT NULL,
+    comment TEXT,
 
-    inspected_units INTEGER NOT NULL
-
+    source_file_name VARCHAR(255),
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-COMMENT ON TABLE stg.quality_inspection IS
-'Données brutes d inspections qualité issues du générateur de mock data industriel.';
-
-COMMENT ON COLUMN stg.quality_inspection.hourly_prod_id IS
-'Référence à l heure de production inspectée.';
-
-COMMENT ON COLUMN stg.quality_inspection.inspection_type IS
-'Type de contrôle qualité : VISUAL / WEIGHT / LAB / PACKAGING.';
-
-COMMENT ON COLUMN stg.quality_inspection.inspected_units IS
-'Nombre d unités inspectées lors du contrôle qualité.';
