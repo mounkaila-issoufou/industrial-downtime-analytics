@@ -1,0 +1,7 @@
+from industrial_downtime.ingestion.production.compute_production import compute_kpis
+
+def test_compute_kpis():
+    kpis = compute_kpis(900, 1000, 0.95, 10)
+
+    assert kpis["reliability_rate"] == 0.9
+    assert kpis["reliability_gap"] < 0

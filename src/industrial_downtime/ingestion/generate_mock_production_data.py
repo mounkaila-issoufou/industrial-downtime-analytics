@@ -10,12 +10,16 @@ from industrial_downtime.config.event_catalog import (
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.context_store import context
 from industrial_downtime.config.shifts import SHIFTS, ShiftName
+#from industrial_downtime.core.quality_engine import generate_quality_for_hour
 from industrial_downtime.config.workshops import WORKSHOPS
 from industrial_downtime.core.markov_engine import (
     LineState,
     next_state,
     generate_duration,
 )
+from industrial_downtime.ingestion.events.production_event_generator import generate_production_events
+from industrial_downtime.ingestion.quality.quality_generator import generate_quality_for_hour
+from industrial_downtime.ingestion.production.kpi_calculator import compute_kpis
 
 
 def simulate_hour(line_config, total_minutes=60):
@@ -151,8 +155,12 @@ def generate_events_for_hour(
 def generate_production():
     hourly_production = []
     production_events = []
+    quality_inspections = []
+    quality_events = []
 
     for shift in context.shifts:
+        performance_factor = 1.0
+
         shift_id = shift["shift_supervision_id"]
         shift_date = shift["date"]
         shift_type = shift["session"]
@@ -160,97 +168,73 @@ def generate_production():
         workshop_id = shift["workshop_id"]
         line_id = shift["line_id"]
 
-        # ======================
-        # SHIFT CONFIG
-        # ======================
-
-        shift_enum = ShiftName(shift_type)
-        shift_config = SHIFTS[shift_enum]
-
-        # ======================
-        # WORKSHOP / LINE
-        # ======================
-
-        if workshop_id not in WORKSHOPS:
-            print(f"Unknown workshop_id {workshop_id}")
-            raise ValueError(f"Unknown workshop_id {workshop_id}")
-
+        shift_config = SHIFTS[ShiftName(shift_type)]
         workshop = WORKSHOPS[workshop_id]
-
-        if line_id not in workshop.lines:
-            raise ValueError(f"Unknown line_id {line_id}")
-
         line_config = workshop.lines[line_id]
 
         theoretical_production = line_config.theoretical_capacity_per_hour
-        units_per_minute = line_config.units_per_minute
         reliability_target = line_config.reliability_target
-
-        # break_day = is_break_day(shift_date)
+        units_per_minute = line_config.units_per_minute
         assignment = next(
-            a
-            for a in context.operator_assignments
+            a for a in context.operator_assignments
             if a["shift_supervision_id"] == shift_id
         )
+
         operator_id = assignment["operator_id"]
+        # 👉 on peut distinguer opérateur / inspecteur si besoin
+        inspector_id = operator_id  # simple pour l’instant
         for hour_index in range(int(shift_config.hours)):
+
             prod_id = generate_id("HP")
 
             # ======================
-            # Simulation Markov
+            # 1. SIMULATION
             # ======================
-
             if hour_index == 0:
                 events = []
-                actual_production = theoretical_production
-                non_production_minutes = 0
+                
+                # petit bruit réaliste
+                noise = random.uniform(0.85, 1.0)
+
+                actual_production = int(theoretical_production * noise)
+                non_production_minutes = int(60 - (60*actual_production/theoretical_production))
             else:
-                events = simulate_hour(line_config, total_minutes=60)
+                events = simulate_hour(line_config)
+                micro_stop_minutes = sum(
+                    duration for state, duration in events
+                    if state == LineState.MICRO_STOP
+                )
 
-                non_production_minutes = sum(duration for _, duration in events)
+                failure_minutes = sum(
+                    duration for state, duration in events
+                    if state == LineState.FAILURE
+                )
+                performance_factor -= micro_stop_minutes * 0.0015
+                performance_factor -= failure_minutes * 0.004
 
-                productive_minutes = 60 - non_production_minutes
+                # sécurité
+                performance_factor = max(0.75, min(1.0, performance_factor))
+                non_production_minutes = int(sum(d for _, d in events))
+                productive_minutes = max(0, 60 - non_production_minutes)
 
-                actual_production = productive_minutes * units_per_minute
+                #actual_production = productive_minutes * line_config.units_per_minute
+                actual_production = int(
+                    productive_minutes * units_per_minute * performance_factor
+                )
+  
             # ======================
-            # Répartition pertes
+            # 2. KPI
             # ======================
 
-            if non_production_minutes > 0:
-                explained_minutes = non_production_minutes
-                unexplained_minutes = 0
-            else:
-                explained_minutes = 0
-                unexplained_minutes = 0
-
-            # ======================
-            # KPI DÉRIVÉS
-            # ======================
-
-            reliability_rate = (
-                actual_production / theoretical_production
-                if theoretical_production > 0
-                else 0
+            kpis = compute_kpis(
+                actual_production=actual_production,
+                theoretical_production=theoretical_production,
+                reliability_target=reliability_target,
+                non_production_minutes=int(non_production_minutes),
             )
-
-            reliability_gap = reliability_rate - reliability_target
-
-            explained_ratio = (
-                explained_minutes / non_production_minutes
-                if non_production_minutes > 0
-                else 0
-            )
-
-            unexplained_ratio = (
-                unexplained_minutes / non_production_minutes
-                if non_production_minutes > 0
-                else 0
-            )
-
             # ======================
-            # ENREGISTREMENT
+            # 3. FACT TABLE
             # ======================
-
             hourly_production.append(
                 {
                     "hourly_prod_id": prod_id,
@@ -269,40 +253,54 @@ def generate_production():
                     "reliability_target": reliability_target,
                     # Pertes
                     "non_production_minutes": non_production_minutes,
-                    "explained_minutes": explained_minutes,
-                    "unexplained_minutes": unexplained_minutes,
-                    # KPI
-                    "reliability_rate": reliability_rate,
-                    "reliability_gap": reliability_gap,
-                    "explained_ratio": explained_ratio,
-                    "unexplained_ratio": unexplained_ratio,
+                    # KPI injectés directement
+                    **kpis,
                 }
             )
 
-            for state, duration in events:
-                if state == LineState.MICRO_STOP:
-                    event_key = pick_root_cause(MICRO_STOP_CATEGORIES)
+            # ======================
+            # 4. EVENTS
+            # ======================
+            prod_events = generate_production_events(prod_id, events)
+            production_events.extend(prod_events)
 
-                elif state == LineState.FAILURE:
-                    event_key = pick_root_cause(FAILURE_CATEGORIES)
+            # ======================
+            # 5. QUALITY
+            # ======================
+            inspections, defects = generate_quality_for_hour(
+                prod_id,
+                actual_production
+            )
 
-                else:
-                    continue
-
-                event_def = EVENT_CATALOG[event_key]
-
-                production_events.append(
-                    {
-                        "event_id": generate_id("EV"),
-                        "hourly_prod_id": prod_id,
-                        "event_type": event_key,
-                        "cause_family": event_def.category,
-                        "organ": event_def.organ,
-                        "element": event_def.element,
-                        "operator_action": event_def.operator_action,
-                        "duration_minutes": duration,
-                        "comment": "Generated from Markov + root cause model",
-                    }
+            # petit bruit défauts
+            for d in defects:
+                d["defective_units"] = int(
+                    d["defective_units"] * random.uniform(0.8, 1.2)
                 )
 
-    return hourly_production, production_events
+            # ======================
+            # 6. QUALITY ENRICHMENT (🔥 IMPORTANT)
+            # ======================
+            for ins in inspections:
+                ins.update({
+                    "inspection_date": shift_date,
+                    "session": shift_type,
+                    "shift_supervision_id": shift_id,
+                    "inspector_id": inspector_id,
+                    "workshop_id": workshop_id,
+                    "line_id": line_id,
+                    "source_file_name": "mock_quality.csv",
+                })
+
+
+
+            quality_inspections.extend(inspections)
+            quality_events.extend(defects)
+
+
+    return (
+        hourly_production,
+        production_events,
+        quality_inspections,
+        quality_events,
+    )

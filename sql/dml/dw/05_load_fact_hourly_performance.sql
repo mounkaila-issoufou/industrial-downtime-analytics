@@ -1,8 +1,3 @@
--- ==========================================================
--- Fait analytique : Performance horaire de production
--- Grain : 1 heure x 1 machine x 1 équipe
--- ==========================================================
-
 INSERT INTO dw.fact_hourly_performance (
     time_key,
     machine_key,
@@ -18,7 +13,7 @@ INSERT INTO dw.fact_hourly_performance (
     load_timestamp
 )
 
-SELECT DISTINCT
+SELECT
     dt.time_key,
     dm.machine_key,
     dteam.team_key,
@@ -28,6 +23,7 @@ SELECT DISTINCT
     hp.non_production_minutes,
     hp.explained_minutes,
     hp.unexplained_minutes,
+
     hp.reliability_rate,
     hp.explained_ratio,
     hp.unexplained_ratio,
@@ -43,8 +39,17 @@ JOIN dw.dim_time dt
 JOIN dw.dim_machine dm
   ON dm.line_id = hp.line_id
 
-JOIN dw.dim_team dteam
+JOIN (
+    SELECT DISTINCT
+        team_lead_id,
+        session,
+        scope_line_id,
+        team_key
+    FROM dw.dim_team
+) dteam
   ON dteam.team_lead_id = hp.team_lead_id
+ AND dteam.session = hp.session
+ AND dteam.scope_line_id = hp.line_id
 
 ON CONFLICT (time_key, machine_key, team_key)
 DO NOTHING;

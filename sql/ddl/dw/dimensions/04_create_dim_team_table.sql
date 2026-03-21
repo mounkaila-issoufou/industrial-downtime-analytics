@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS dw.dim_team (
 
     -- Clés métier sources (traçabilité vers le modèle ops)
     team_lead_id TEXT NOT NULL,           -- vient de ops.team_lead
-    shift_supervision_id TEXT NOT NULL,   -- vient de ops.shift_supervision
 
 
     -- Contexte du shift (utile en analyse)
