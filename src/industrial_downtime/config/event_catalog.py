@@ -3,153 +3,186 @@ from enum import Enum
 from typing import Dict
 import random
 
-
 # ==========================
-# Catégories d'événements
+# Catégories (niveau macro)
 # ==========================
-
 
 class EventCategory(str, Enum):
-    MECHANICAL = "mechanical"
-    ELECTRICAL = "electrical"
+    TECHNICAL = "technical"
     PROCESS = "process"
     QUALITY = "quality"
     ORGANIZATION = "organization"
-    OPERATOR = "operator"
-    CHANGEOVER = "changeover"
+    HUMAN = "human"
     PLANNED = "planned"
-    UNPLANNED = "unplanned"
-    MAINTENANCE = "maintenance"
-    OTHER = "other"
 
 
 # ==========================
-# Dataclass événement
+# Familles (🔥 clé BI)
 # ==========================
 
+class EventFamily(str, Enum):
+    MECHANICAL = "mechanical"
+    ELECTRICAL = "electrical"
+    SENSOR = "sensor"
+    CONVEYOR = "conveyor"
+    SAFETY = "safety"
+    BREAK = "break"
+    MICRO_STOP = "micro_stop"
+    FAILURE = "failure"
+
+
+# ==========================
+# Dataclass enrichie
+# ==========================
 
 @dataclass(frozen=True)
 class Event:
     event: str
     category: EventCategory
+    family: EventFamily
+
     organ: str
     element: str
+
     operator_action: str
+
     base_probability: float
+
     mean_duration: int
     duration_std: int
 
+    is_planned: bool
+
 
 # ==========================
-# Référentiel complet
+# Catalogue
 # ==========================
+
 EVENT_CATALOG: Dict[str, Event] = {
+
+    # ======================
+    # CONVEYOR
+    # ======================
     "infeed_conveyor_failure": Event(
         event="infeed_conveyor_failure",
-        category=EventCategory.MECHANICAL,
+        category=EventCategory.TECHNICAL,
+        family=EventFamily.CONVEYOR,
         organ="stacker",
-        element="conveyor",
-        operator_action="conveyor supply",
-        base_probability=0.05,
+        element="infeed_conveyor",
+        operator_action="check product feed",
+        base_probability=0.02,
         mean_duration=15,
         duration_std=5,
+        is_planned=False,
     ),
+
     "outfeed_conveyor_failure": Event(
         event="outfeed_conveyor_failure",
-        category=EventCategory.MECHANICAL,
+        category=EventCategory.TECHNICAL,
+        family=EventFamily.CONVEYOR,
         organ="case_packer",
-        element="conveyor",
-        operator_action="product evacuation",
+        element="outfeed_conveyor",
+        operator_action="clear jam",
         base_probability=0.03,
         mean_duration=12,
         duration_std=4,
+        is_planned=False,
     ),
+
+    # ======================
+    # SAFETY
+    # ======================
     "door_safety_fault": Event(
         event="door_safety_fault",
-        category=EventCategory.ELECTRICAL,
+        category=EventCategory.TECHNICAL,
+        family=EventFamily.SAFETY,
         organ="safety_system",
         element="safety_door",
         operator_action="reset safety",
         base_probability=0.02,
         mean_duration=10,
         duration_std=2,
+        is_planned=False,
     ),
-    "delta_sensor_fault_1": Event(
-        event="delta_sensor_fault_1",
-        category=EventCategory.ELECTRICAL,
+
+    # ======================
+    # SENSORS
+    # ======================
+    "delta_sensor_fault": Event(
+        event="delta_sensor_fault",
+        category=EventCategory.TECHNICAL,
+        family=EventFamily.SENSOR,
         organ="delta_robot",
         element="sensor",
-        operator_action="sensor check",
-        base_probability=0.01,
+        operator_action="sensor cleaning",
+        base_probability=0.02,
         mean_duration=5,
         duration_std=1,
+        is_planned=False,
     ),
-    "delta_sensor_fault_2": Event(
-        event="delta_sensor_fault_2",
-        category=EventCategory.ELECTRICAL,
-        organ="delta_robot",
-        element="sensor",
-        operator_action="sensor check",
-        base_probability=0.01,
-        mean_duration=5,
-        duration_std=1,
-    ),
+
+    # ======================
+    # MECHANICAL
+    # ======================
     "base_plate_transfer_fault": Event(
         event="base_plate_transfer_fault",
-        category=EventCategory.MECHANICAL,
+        category=EventCategory.TECHNICAL,
+        family=EventFamily.MECHANICAL,
         organ="base_plate_system",
         element="transfer",
-        operator_action="plate transfer",
+        operator_action="realign plates",
         base_probability=0.04,
         mean_duration=20,
         duration_std=6,
+        is_planned=False,
     ),
+
+    # ======================
+    # HUMAN / PLANNED
+    # ======================
     "short_break": Event(
         event="short_break",
         category=EventCategory.PLANNED,
+        family=EventFamily.BREAK,
         organ="human",
-        element="micro_break",
+        element="break",
         operator_action="pause",
         base_probability=0.01,
         mean_duration=5,
         duration_std=1,
+        is_planned=True,
     ),
-    "micro_stop": Event(
-        event="micro_stop",
-        category=EventCategory.UNPLANNED,
-        organ="machine",
-        element="minor_stoppage",
-        operator_action="restart",
-        base_probability=0.02,
-        mean_duration=4,
-        duration_std=1,
-    ),
-    "failure": Event(
-        event="failure",
-        category=EventCategory.UNPLANNED,
-        organ="machine",
-        element="major_stoppage",
-        operator_action="repair",
-        base_probability=0.01,
-        mean_duration=18,
-        duration_std=5,
-    ),
-    # ... ajouter tous les autres événements existants de ton constants/settings
 }
 
-MICRO_STOP_CATEGORIES = [
-    EventCategory.ELECTRICAL,
-    EventCategory.PROCESS,
+
+# ==========================
+# GROUPES POUR MARKOV
+# ==========================
+
+MICRO_STOP_FAMILIES = [
+    EventFamily.SENSOR,
+    EventFamily.CONVEYOR,
 ]
 
-FAILURE_CATEGORIES = [
-    EventCategory.MECHANICAL,
-    EventCategory.ELECTRICAL,
+FAILURE_FAMILIES = [
+    EventFamily.MECHANICAL,
+    EventFamily.SAFETY,
 ]
 
 
-def pick_root_cause(categories: list[EventCategory]) -> str:
-    candidates = [e for e in EVENT_CATALOG.values() if e.category in categories]
+# ==========================
+# ROOT CAUSE PICKER (fixé)
+# ==========================
+
+def pick_root_cause(families: list[EventFamily]) -> str:
+
+    candidates = [
+        e for e in EVENT_CATALOG.values()
+        if e.family in families
+    ]
+
+    if not candidates:
+        raise ValueError("No candidates found for given families")
 
     total_weight = sum(e.base_probability for e in candidates)
 
