@@ -1,230 +1,406 @@
 # 📊 KPI Definitions – Industrial Production & Downtime Analytics
 
 ## 🎯 Objectif du document
+
 Ce document définit les **indicateurs clés de performance (KPI)** utilisés pour analyser la performance des lignes de conditionnement fromager.
 
 Les KPI permettent :
-- de mesurer la fiabilité et la performance réelle,
-- d’identifier les causes de non-production,
-- de comparer les performances entre lignes, ateliers, shifts et équipes,
-- d’aider à la prise de décision opérationnelle.
+
+* de mesurer la fiabilité et la performance réelle,
+* d’identifier les causes de non-production,
+* de comparer les performances entre lignes, ateliers, shifts et équipes,
+* d’aider à la prise de décision opérationnelle.
+
+---
+
+# 🏭 KPI CORE (Production & Fiabilité)
 
 ---
 
 ## ⏱️ 1. Production théorique horaire
 
 ### Nom
+
 **Production théorique horaire**
 
 ### Définition
+
 Quantité maximale de fromages pouvant être emballés en une heure en conditions optimales.
 
 ### Formule
-Production théorique = 4800 fromages / heure
 
+```text
+Production théorique = capacité ligne (unités / heure)
+```
 
 ### Source
-- Référentiel industriel
-- Table : `production_line.theoretical_capacity_per_hour`
+
+Table : dw.dim_machine.theoretical_capacity_per_hour
 
 ---
 
 ## 📦 2. Production réelle horaire
 
 ### Nom
-**Production réelle horaire**
+
+Production réelle horaire
 
 ### Définition
+
 Nombre réel de fromages emballés sur une heure donnée.
 
 ### Source
-- Compteur de l’emballeuse
-- Table : `hourly_production.actual_production`
+
+Table : dw.fact_hourly_performance.actual_production
 
 ---
 
-## ⏳ 3. Temps de non-production
+## 📉 3. Taux de fiabilité (Reliability)
 
 ### Nom
-**Temps de non-production (minutes)**
+
+Fiabilité horaire (%)
 
 ### Définition
-Temps pendant lequel la ligne n’a pas produit sur une heure donnée.
 
-### Formule
-Non-production (min) =
-(Production théorique - Production réelle) / 80
-
-
-*(80 fromages/minute)*
-
-### Source
-- Calcul analytique
-- Table : `hourly_production.non_production_minutes`
-
----
-
-## 📉 4. Taux de fiabilité horaire
-
-### Nom
-**Fiabilité horaire (%)**
-
-### Définition
 Rapport entre la production réelle et la production théorique sur une heure donnée.
 
 ### Formule
-Fiabilité (%) =
-(Production réelle / Production théorique) × 100
 
+```text
+Reliability (%) = (Production réelle / Production théorique)
+```
 
-### Source
-- Table : `hourly_production`
+### Interprétation
 
----
-
-## 🕒 5. Fiabilité par shift
-
-### Nom
-**Fiabilité par service**
-
-### Définition
-Fiabilité moyenne calculée sur l’ensemble des heures d’un shift.
-
-### Formule
-Fiabilité shift = Σ Production réelle / Σ Production théorique
-
-
-### Dimensions d’analyse
-- Ligne
-- Atelier
-- Opérateur
-- Chef d’équipe
-- Session (MATIN / SOIR / NUIT / SD)
+* 1.0 → performance parfaite
+* < 1.0 → pertes de production
 
 ---
 
-## 🎯 6. Objectif de fiabilité
+## 🎯 4. Écart à l’objectif (Reliability Gap)
 
 ### Nom
-**Objectif de fiabilité**
+
+Écart à l’objectif de fiabilité
 
 ### Définition
-Seuil de performance attendu pour une ligne donnée.
 
-### Valeurs de référence
-| Atelier | Objectif |
-|---|---|
-| Ovale (ms) | 65 % |
-| Ovale (es50, x, y, z) | 60 % |
-| Camembert | 50 % |
-| Entier | 67 % |
-| Portion | 89 % |
-
-### Source
-- Table : `production_line.reliability_target`
-
----
-
-## ⚠️ 7. Écart à l’objectif
-
-### Nom
-**Écart à l’objectif de fiabilité**
-
-### Définition
 Différence entre la fiabilité réelle et l’objectif défini.
 
 ### Formule
+
+```text
 Écart = Fiabilité réelle - Objectif de fiabilité
-
-
+```
 
 ### Interprétation
-- Écart positif → performance conforme ou supérieure
-- Écart négatif → sous-performance
+
+* Écart positif → performance conforme ou supérieure
+* Écart négatif → sous-performance
 
 ---
 
-## 🚨 8. Nombre d’arrêts par heure
+# ⏳ KPI TEMPS & PERTES
 
-### Nom
-**Nombre d’événements d’arrêt**
+---
+
+## ⏱️ 5. Temps observé
 
 ### Définition
+
+Temps total théorique disponible.
+
+### Formule
+
+```text
+Temps observé = nombre d’heures × 60 minutes
+```
+
+---
+
+## 🛑 6. Temps de non-production
+
+### Nom
+
+Temps de non-production (minutes)
+
+### Définition
+
+Temps pendant lequel la ligne n’a pas produit sur une heure donnée.
+
+### Source
+
+Table : dw.fact_hourly_performance.non_production_minutes
+
+---
+
+## 🧩 7. Temps expliqué
+
+### Définition
+
+Part du downtime associée à des événements identifiés.
+
+### Source
+
+explained_minutes
+
+---
+
+## ❓ 8. Temps non expliqué
+
+### Définition
+
+Part du downtime sans cause identifiée.
+
+### Source
+
+unexplained_minutes
+
+---
+
+## 📊 9. Ratio d’explication
+
+### Formule
+
+```text
+Explained Ratio = explained_minutes / non_production_minutes
+```
+
+### Objectif
+
+Mesurer la qualité du tracking des causes.
+
+---
+
+# 🧠 KPI ÉVÉNEMENTS (Root Cause Analysis)
+
+---
+
+## 🚨 10. Nombre d’événements d’arrêt
+
+### Définition
+
 Nombre d’événements enregistrés sur une heure de production.
 
 ### Source
-- Table : `production_events`
+
+Table : dw.fact_production_events
 
 ---
 
-## 🧩 9. Temps cumulé d’arrêt par cause
-
-### Nom
-**Temps d’arrêt par cause**
+## 🧩 11. Temps cumulé d’arrêt
 
 ### Définition
-Durée totale des arrêts regroupés par type, organe ou élément.
+
+Durée totale des arrêts.
+
+### Formule
+
+```text
+Total Downtime = SUM(duration_minutes)
+```
+
+---
+
+## 🧱 12. Downtime par cause
 
 ### Dimensions d’analyse
-- event_type
-- organ
-- element
-- session
-- ligne
+
+* event_type
+* organ
+* element
+* cause_category
+* session
+* ligne
 
 ---
 
-## 👥 10. Performance opérateur (contextualisée)
-
-### Nom
-**Fiabilité opérateur**
+## 📊 13. Pareto des causes
 
 ### Définition
-Fiabilité moyenne calculée sur les heures réellement travaillées par un opérateur, en tenant compte :
-- de la ligne,
-- du shift,
-- du chef d’équipe.
 
-### Note importante
-Ce KPI **n’est jamais interprété isolément**.
+Classement des causes par contribution décroissante au downtime.
+
+### Objectif
+
+Identifier les causes principales (règle des 80/20).
 
 ---
 
-## 🧑‍💼 11. Performance chef d’équipe
+# 🧪 KPI QUALITÉ
 
-### Nom
-**Fiabilité par chef d’équipe**
+---
+
+## ❌ 14. Defective Units
 
 ### Définition
-Fiabilité moyenne observée sur les shifts supervisés par un chef d’équipe donné.
+
+Nombre d’unités non conformes détectées.
 
 ### Source
-- `shift_supervision`
-- `hourly_production`
+
+dw.fact_quality_events.defective_units
 
 ---
 
-## 🧠 Bonnes pratiques d’interprétation
+## 🗑 15. Scrap Units
 
-- Comparer à périmètre équivalent (ligne, atelier)
-- Prendre en compte pauses, nettoyages et maintenances
-- Analyser les tendances avant les valeurs brutes
-- Croiser systématiquement avec les événements
+### Définition
 
----
-
-## ⚠️ Limites connues
-
-- Données issues de saisies manuelles (approximations possibles)
-- Les causes multiples peuvent se superposer sur une même heure
-- Le contexte humain influence fortement la performance
+Unités perdues définitivement.
 
 ---
 
-## 📌 Conclusion
-Ces KPI fournissent une vision **factuelle, contextualisée et actionnable** de la performance industrielle, en reliant le terrain, les machines et les équipes.
+## 🔁 16. Reworked Units
 
-Ils constituent une base solide pour :
-- le pilotage opérationnel,
-- l’amélioration continue,
-- la valorisation data des feuilles de marche.
+### Définition
+
+Unités corrigées et réintégrées.
+
+---
+
+## 📉 17. Quality Rate
+
+### Formule
+
+```text
+Quality = (actual_production - defective_units) / actual_production
+```
+
+### Interprétation
+
+* 1.0 → zéro défaut
+* < 1.0 → pertes qualité
+
+---
+
+## 🧨 18. Scrap Rate
+
+### Formule
+
+```text
+Scrap Rate = scrap_units / actual_production
+```
+
+---
+
+# 🏆 KPI GLOBAL – OEE (TRS)
+
+---
+
+## ⚙️ 19. Availability
+
+### Formule
+
+```text
+Availability = (60 - non_production_minutes) / 60
+```
+
+---
+
+## ⚡ 20. Performance
+
+### Définition
+
+Capacité à produire à la vitesse nominale.
+
+### Formule
+
+```text
+Performance = actual_production / theoretical_production
+```
+
+---
+
+## 🧪 21. Quality (OEE)
+
+### Formule
+
+```text
+Quality = good_units / actual_production
+```
+
+---
+
+## 🏆 22. OEE (Overall Equipment Effectiveness)
+
+### Formule
+
+```text
+OEE = Availability × Performance × Quality
+```
+
+### Interprétation
+
+| OEE    | Niveau              |
+| ------ | ------------------- |
+| > 85%  | Excellent           |
+| 60–85% | Standard industriel |
+| < 60%  | À améliorer         |
+
+---
+
+# 📊 KPI TEMPORELS (Dashboard)
+
+---
+
+## 📈 23. Trend KPI
+
+### Définition
+
+Évolution dans le temps (jour / semaine / mois)
+
+### Exemples
+
+* Reliability trend
+* Downtime trend
+* OEE trend
+
+---
+
+## 🔄 24. Delta KPI
+
+### Formule
+
+```text
+Delta = KPI actuel - KPI période précédente
+```
+
+---
+
+## 🎨 25. KPI Color Logic
+
+| Situation    | Couleur  |
+| ------------ | -------- |
+| amélioration | 🟢 vert  |
+| dégradation  | 🔴 rouge |
+| stable       | ⚪ gris   |
+
+---
+
+## 🏷 26. KPI Label
+
+### Exemple
+
+* ↑ +2.3% vs last month
+* ↓ -1.5% vs last month
+* → 0.0% vs last month
+
+---
+
+# 🧠 Bonnes pratiques d’interprétation
+
+* Comparer à périmètre équivalent (ligne, atelier)
+* Prendre en compte pauses, nettoyages et maintenances
+* Analyser les tendances avant les valeurs brutes
+* Croiser systématiquement avec les événements
+
+---
+
+# ⚠️ Limites connues
+
+* Données issues de mock data
+* Qualité dépend du générateur
+* Les causes multiples peuvent se superposer
+* Certaines pertes peuvent être sous-estimées

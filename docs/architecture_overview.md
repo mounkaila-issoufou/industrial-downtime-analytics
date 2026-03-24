@@ -1,178 +1,291 @@
 # 🏗️ Architecture Overview – Industrial Production Analytics
 
 ## 🎯 Objectif
-Ce document décrit l’**architecture globale du projet**, depuis la génération / collecte des données terrain jusqu’à leur exploitation analytique et décisionnelle.
 
-L’architecture est pensée pour être :
-- réaliste par rapport à un environnement industriel,
-- modulaire et maintenable,
-- facilement extensible vers un contexte réel (MES / ERP / BI).
+Ce document décrit l’**architecture globale du projet**, depuis la génération des données terrain jusqu’à leur exploitation analytique et décisionnelle.
+
+L’architecture est conçue pour être :
+
+* réaliste (proche d’un environnement industriel réel),
+* modulaire (séparation claire des couches),
+* scalable (évolutive vers un contexte production),
+* BI-ready (optimisée pour Power BI / SQL analytics).
 
 ---
 
-## 🧠 Vue d’ensemble
+# 🧠 Vue d’ensemble
 
 ```text
-Feuilles de marche / Terrain
+Mock Generator (Python)
 ↓
-Mock / Ingestion (Python)
+STAGING (Raw Data)
 ↓
-Data Raw (CSV)
+OPS (Operational Model)
 ↓
-Cleaning & Structuration
+DW (Star Schema)
 ↓
-Data Processed / Curated
+Analytics (SQL / DAX)
 ↓
-Modèle analytique (Facts / Dimensions)
-↓
-SQL Analytics / KPI
-↓
-Dashboards & Insights
+Dashboard (Power BI)
 ```
 
 ---
 
-## 📥 Sources de données
+# 📥 1. Sources de données
 
-### 1. Données opérationnelles terrain
+## 🏭 Données simulées (Mock Data)
+
 Inspirées de la réalité industrielle :
-- feuilles de marche opérateurs,
-- compteurs machines (emballeuse),
-- écrans de pilotage ligne.
 
-Types de données :
-- production horaire,
-- événements d’arrêt détaillés,
-- planning des shifts,
-- supervision (chef d’équipe).
+* production horaire
+* événements d’arrêt machines
+* inspections qualité
+* défauts produits
+* organisation des équipes (shift)
 
----
+### Types de données
 
-## ⚙️ Couche Ingestion (Python)
-
-**Responsabilité :**
-- générer ou charger les données brutes,
-- garantir la cohérence des identifiants et des dates,
-- produire des fichiers exploitables pour l’analyse.
-
-**Scripts clés :**
-- `generate_shift_context.py`
-- `generate_mock_production_data.py`
-- `run_generation.py`
-
-**Principes :**
-- seed aléatoire contrôlé,
-- IDs uniques et stables,
-- paramètres centralisés (dates, opérateurs, lignes).
+* **Production** : volumes théoriques vs réels
+* **Downtime** : causes détaillées (organe, élément)
+* **Qualité** : défauts, rebuts, retouches
+* **Contexte humain** : opérateurs, chefs d’équipe
 
 ---
 
-## 🗂️ Data Layers
+# ⚙️ 2. Couche Ingestion (Python)
 
-### 1. Raw
-Données brutes, non modifiées :
-- `hourly_production.csv`
-- `production_events.csv`
-- `shift_operator_assignment.csv`
-- `shift_supervision.csv`
+## 🎯 Rôle
 
-➡️ Fidèles à la saisie terrain.
+* générer des données cohérentes
+* simuler des comportements industriels réalistes
+* injecter de la variabilité contrôlée
 
----
+## 🧠 Mécaniques utilisées
 
-### 2. Processed
-Données nettoyées et enrichies :
-- typage des colonnes,
-- contrôles de cohérence,
-- normalisation des libellés.
+* moteur Markov → simulation des états machine
+* génération d’événements (micro-arrêts, pannes)
+* calcul de KPI intermédiaires
+* génération qualité (inspection + défauts)
 
----
+## 📁 Modules clés
 
-### 3. Curated
-Données prêtes pour l’analyse :
-- tables de faits,
-- dimensions analytiques,
-- calculs intermédiaires.
+* `production/` → simulation production
+* `events/` → génération downtime
+* `quality/` → génération défauts
+* `kpi_calculator.py` → calculs métiers
 
 ---
 
-## 🧱 Modélisation des données
+# 🗂️ 3. Data Layers (Architecture en 3 couches)
 
-### 🔹 Dimensions
-- Factory / Site
-- Workshop (atelier)
-- Production Line / Machine
-- Operator
-- Team Lead
-- Shift
-- Time (date, heure)
+## 🥉 STAGING (stg)
 
-### 🔹 Faits
-- `fact_hourly_production`
-- `fact_production_events`
+### 🎯 Objectif
 
-Le modèle est **event-based**, centré sur :
-- la performance réelle,
-- les causes de non-production.
+Zone raw data (brut, traçable)
 
----
+### Caractéristiques
 
-## 📊 Couche Analytics
+* aucune transformation métier
+* ajout de métadonnées :
 
-### SQL / Python Analytics
-- calcul de la fiabilité,
-- temps de non-production,
-- analyse des causes dominantes,
-- comparaison objectifs vs réel.
+  * `source_file_name`
+  * `load_timestamp`
 
-### KPIs principaux
-- Taux de fiabilité
-- Temps d’arrêt par organe / élément
-- Production réelle vs théorique
-- Contribution des arrêts planifiés / non planifiés
+### Tables
+
+* `stg.hourly_production`
+* `stg.production_events`
+* `stg.quality_inspection`
+* `stg.quality_events`
 
 ---
 
-## 📈 Restitution & BI
+## 🥈 OPS (Operational Layer)
 
-### Dashboards (Power BI / Looker – conceptuels)
-- performance par ligne / atelier,
-- top causes d’arrêts,
-- suivi opérateur / équipe,
-- tendance hebdomadaire / mensuelle.
+### 🎯 Objectif
 
-➡️ Pensés pour :
-- chefs d’équipe,
-- responsables atelier,
-- direction industrielle.
+Modèle relationnel propre et cohérent
 
----
+### Caractéristiques
 
-## 🔐 Gouvernance & Qualité des données
+* normalisation des données
+* intégrité référentielle (FK)
+* structure proche du terrain
 
-- contrôles de complétude (heures manquantes),
-- cohérence production ↔ événements,
-- règles métiers documentées,
-- hypothèses et limites explicitées.
+### Tables
 
----
-
-## 🚀 Scalabilité & Extensions possibles
-
-- Connexion à un MES réel
-- Ajout de la qualité produit
-- Intégration maintenance préventive
-- Historisation des objectifs
-- Temps réel / near real-time
+* `ops.hourly_production`
+* `ops.production_event`
+* `ops.quality_inspection`
+* `ops.quality_event`
+* `ops.shift_supervision`
+* `ops.operator_assignment`
 
 ---
 
-## ✅ Conclusion
-Cette architecture fournit une **base robuste, réaliste et évolutive** pour l’analyse de la performance industrielle.
+## 🥇 DW (Data Warehouse)
 
-Elle démontre une capacité à :
-- comprendre le terrain,
-- structurer la donnée,
-- produire de la valeur métier.
+### 🎯 Objectif
 
-➡️ Positionnement clair : **Data Analyst / Analytics Engineer orienté industrie**.
+Modèle analytique optimisé BI (schéma en étoile)
+
+### 📐 Dimensions
+
+* `dim_time`
+* `dim_machine`
+* `dim_team`
+* `dim_organe_element`
+* `dim_quality_defect`
+
+### 📊 Tables de faits
+
+#### 🔹 Performance
+
+* `fact_hourly_performance`
+
+#### 🔹 Événements
+
+* `fact_production_events`
+
+#### 🔹 Qualité
+
+* `fact_quality_events`
+
+#### 🔹 KPI global
+
+* `fact_oee_hourly`
+
+### ⚡ Optimisations
+
+* partitionnement par `time_key`
+* index (B-Tree + BRIN)
+* modèle dénormalisé pour Power BI
+
+---
+
+# 🧠 4. Couche Analytics
+
+## 📊 SQL
+
+* calcul des agrégats
+* construction des faits
+* jointures dimensions
+
+## 📈 DAX (Power BI)
+
+* KPI dynamiques :
+
+  * OEE
+  * Availability
+  * Performance
+  * Quality
+
+* deltas temporels
+
+* indicateurs visuels (couleurs, labels)
+
+---
+
+# 📊 5. Dashboard (Power BI)
+
+## 🧱 Structure
+
+### 🔝 KPIs
+
+* OEE
+* Availability
+* Performance
+* Quality
+* Scrap Rate
+
+### 📈 Trends
+
+* OEE over time
+* Downtime trend
+* Reliability evolution
+
+### 🧠 Root Cause Analysis
+
+* Top causes downtime
+* Pareto (80/20)
+* Downtime by machine
+
+### ⚙️ Operations
+
+* statut machine
+* alertes actives
+* monitoring temps réel (simulé)
+
+---
+
+# 🔐 6. Data Quality & Gouvernance
+
+## ✅ Contrôles mis en place
+
+### Intégrité
+
+* Foreign Keys (OPS)
+* contraintes métiers (CHECK)
+
+### Cohérence
+
+* production vs downtime
+* explained vs unexplained minutes
+
+### Complétude
+
+* heures manquantes
+* défauts non rattachés
+
+## 🧪 Tests & garde-fous
+
+* détection des doublons
+* vérification des ratios (0–1)
+* validation du grain (1h = 1 ligne)
+
+---
+
+# 🚀 7. Scalabilité & Extensions
+
+## 🔮 Extensions possibles
+
+* connexion MES réel
+* ingestion streaming (Kafka)
+* orchestration (Airflow / Prefect / Dagster)
+* monitoring (Grafana)
+* machine learning (prédiction pannes)
+
+---
+
+# 🧠 8. Positionnement Data
+
+Ce projet démontre :
+
+## 🧩 Data Engineering
+
+* pipeline complet (Python → SQL → DW)
+* gestion des couches data
+* idempotence
+
+## 📊 Analytics Engineering
+
+* modélisation en étoile
+* KPI métier
+* performance BI
+
+## 🏭 Compréhension métier
+
+* logique industrielle réelle
+* OEE / downtime / qualité
+* analyse root cause
+
+---
+
+# 📌 Conclusion
+
+Cette architecture constitue une base :
+
+* robuste
+* scalable
+* orientée métier
