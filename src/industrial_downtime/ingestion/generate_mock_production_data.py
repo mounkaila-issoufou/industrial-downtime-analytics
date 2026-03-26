@@ -3,9 +3,6 @@ from datetime import datetime, date
 
 from industrial_downtime.config.event_catalog import (
     EVENT_CATALOG,
-    pick_root_cause,
-    MICRO_STOP_CATEGORIES,
-    FAILURE_CATEGORIES,
 )
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.core.context_store import context
@@ -119,9 +116,15 @@ def generate_events_for_hour(
 
     # --- Autres événements ---
     event_types = list(EVENT_CATALOG.keys())
+    print(event_types)
 
     while remaining > 0:
-        event_type = random.choice(event_types)
+
+        event_type = random.choices(
+            event_types,
+            weights=[EVENT_CATALOG[e].base_probability for e in event_types],
+            k=1
+        )[0]
         event_def = EVENT_CATALOG[event_type]
 
         duration = (

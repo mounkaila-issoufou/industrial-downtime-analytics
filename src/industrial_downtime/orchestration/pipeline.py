@@ -51,10 +51,13 @@ def init_db():
     run_sql_file(SQL_DIR / "ddl/dw/dimensions/04_create_dim_team_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/dimensions/05_create_dim_organe_element_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/facts/06_create_fact_hourly_performance_table.sql")
-    run_sql_file(SQL_DIR / "ddl/dw/facts/07_create_fact_production_events_table.sql")
+
+    run_sql_file(SQL_DIR / "ddl/dw/dimensions/09_create_dim_event_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/dimensions/08_dim_quality_defect.sql")
     run_sql_file(SQL_DIR / "ddl/dw/facts/09_fact_quality_events.sql")
+    run_sql_file(SQL_DIR / "ddl/dw/facts/07_create_fact_production_events_table.sql")
     run_sql_file(SQL_DIR / "ddl/dw/facts/10_create_fact_oee_hourly.sql")
+
     # PARTITIONS INITIAL SETUP
     run_sql_file(SQL_DIR / "ddl/dw/partitions/partitioning_setup.sql")
 
@@ -160,8 +163,9 @@ def run_pipeline():
     run_sql_file(SQL_DIR / "dml/dw/03_load_dim_team.sql")
     run_sql_file(SQL_DIR / "dml/dw/04_load_dim_organe_element.sql")
     run_sql_file(SQL_DIR / "dml/dw/05_load_fact_hourly_performance.sql")
-    run_sql_file(SQL_DIR / "dml/dw/06_load_fact_production_events.sql")
     run_sql_file(SQL_DIR / "dml/dw/07_load_dim_quality_defect.sql")
+    run_sql_file(SQL_DIR / "dml/dw/10_load_dim_events.sql")
+    run_sql_file(SQL_DIR / "dml/dw/06_load_fact_production_events.sql")
     run_sql_file(SQL_DIR / "dml/dw/08_load_fact_quality_events.sql")
     run_sql_file(SQL_DIR / "dml/dw/09_load_fact_oee_hourly.sql")
 
