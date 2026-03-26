@@ -59,6 +59,13 @@ Key goals:
 It consolidates **raw operational shopfloor data** into a **centralized analytical model** for industrial steering.
 
 ---
+## 🚀 Demo
+
+Coming soon...
+
+<p align="center">
+  <img src="assets/demo.png" width="700"/>
+</p>
 
 ## 🏭 Industrial Context
 
