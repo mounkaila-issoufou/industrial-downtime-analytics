@@ -1,29 +1,18 @@
 -- ==========================================================
 -- Dimension Organe / Élément
--- Sert à analyser finement les causes d'arrêts
 -- ==========================================================
 
 CREATE TABLE IF NOT EXISTS dw.dim_organe_element (
-    organe_element_key SERIAL PRIMARY KEY,   -- clé surrogée analytique
+    
+    organe_element_key SERIAL PRIMARY KEY,  
 
-    -- Clés métier sources (traçabilité vers ops)
-    event_type TEXT NOT NULL,
-    organe TEXT NOT NULL,        -- ex : Emballeuse, Empileur, Encaisseuse
-    element TEXT NOT NULL,       -- ex : Porte, Capteur, Trainard
+    organe TEXT NOT NULL,
+    element TEXT NOT NULL,
 
-    -- Classification analytique utile pour la BI
-    event_category TEXT NOT NULL,   -- Technique / Opération / Organisation / Qualité
-     -- cause_family TEXT,              -- ex : Mécanique, Électrique, Humain, Process
-
-    -- Métadonnées de chargement
     valid_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     valid_to TIMESTAMP,
-    is_current BOOLEAN DEFAULT TRUE
+    is_current BOOLEAN DEFAULT TRUE,
+
+    -- 🔥 CRUCIAL POUR ON CONFLICT
+    CONSTRAINT uq_organe_element UNIQUE (organe, element)
 );
-
-COMMENT ON TABLE dw.dim_organe_element IS
-'Dimension analytique décrivant les organes et éléments à l’origine des arrêts.';
-
-COMMENT ON COLUMN dw.dim_organe_element.event_category IS
-'Catégorie principale de perte (Technique, Opération, Organisation, etc.).';
-

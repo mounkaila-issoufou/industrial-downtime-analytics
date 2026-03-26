@@ -3,32 +3,41 @@
 -- Grain : 1 ligne = 1 événement
 -- ==========================================================
 
-CREATE TABLE IF NOT EXISTS  dw.fact_production_events (
+CREATE TABLE IF NOT EXISTS dw.fact_production_events (
 
     -- =========================
     -- Clés dimensionnelles
     -- =========================
-
     time_key            INTEGER NOT NULL,
     machine_key         INTEGER NOT NULL,
     team_key            INTEGER NOT NULL,
     organe_element_key  INTEGER NOT NULL,
+    event_key           INTEGER NOT NULL,
 
     -- =========================
-    -- Mesures
+    -- Mesures (facts)
     -- =========================
-
     duration_minutes    INTEGER NOT NULL,
+    severity_score      INTEGER,
+    is_recurrent        BOOLEAN,
+
+    -- =========================
+    -- Drapeaux analytiques
+    -- =========================
+    is_failure          BOOLEAN,
+    is_micro_stop       BOOLEAN,
+    is_quality_loss     BOOLEAN,
 
     -- =========================
     -- Métadonnées
     -- =========================
-
     load_timestamp      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- =========================
     -- Contraintes
     -- =========================
+    CONSTRAINT pk_fact_production_events
+        PRIMARY KEY (time_key, machine_key, team_key, organe_element_key, event_key),
 
     CONSTRAINT fk_fact_event_time
         FOREIGN KEY (time_key)
@@ -46,17 +55,8 @@ CREATE TABLE IF NOT EXISTS  dw.fact_production_events (
         FOREIGN KEY (organe_element_key)
         REFERENCES dw.dim_organe_element(organe_element_key),
 
-    CONSTRAINT uq_fact_event UNIQUE (
-        time_key,
-        machine_key,
-        team_key,
-        organe_element_key,
-        load_timestamp
-    )
+    CONSTRAINT fk_fact_event_type
+        FOREIGN KEY (event_key)
+        REFERENCES dw.dim_event(event_key)
 )
 PARTITION BY RANGE (time_key);
-
-COMMENT ON TABLE dw.fact_production_events IS
-'Table de faits détaillant les événements d''arrêt ou de perturbation.';
-
-

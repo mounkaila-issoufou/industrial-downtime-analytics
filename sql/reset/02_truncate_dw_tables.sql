@@ -8,4 +8,5 @@ TRUNCATE TABLE dw.dim_organe_element CASCADE;
 TRUNCATE TABLE dw.dim_team CASCADE;
 TRUNCATE TABLE dw.dim_machine CASCADE;
 TRUNCATE TABLE dw.dim_time CASCADE;
+TRUNCATE TABLE dw.dim_event CASCADE;
 TRUNCATE TABLE dw.dim_quality_defect CASCADE

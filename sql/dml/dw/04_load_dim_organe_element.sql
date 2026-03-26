@@ -4,22 +4,15 @@
 -- ==========================================================
 
 INSERT INTO dw.dim_organe_element (
-    event_type,
     organe,
     element,
-    event_category,
     valid_from,
     is_current
 )
 SELECT DISTINCT
-    pe.event_type,
     pe.organ,
     pe.element,
-    pe.event_category,
-
     CURRENT_TIMESTAMP,
     TRUE
-
 FROM ops.production_events pe
-
-ON CONFLICT DO NOTHING;
+ON CONFLICT (organe, element) DO NOTHING;
