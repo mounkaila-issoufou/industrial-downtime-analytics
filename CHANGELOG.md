@@ -8,55 +8,121 @@ Suivant la convention [Keep a Changelog](https://keepachangelog.com/fr/).
 ## [Unreleased]
 
 ### Ajouté
-- Extension du modèle analytique pour intégrer la **dimension qualité**
-- Création des tables opérationnelles :
-  - `quality_inspection`
-  - `quality_event`
-  - `quality_defect`
-- Création de la dimension analytique :
-  - `dim_quality_defect`
-- Création de la table de faits :
-  - `fact_quality_events`
-- Ajout des tables de staging pour ingestion des événements qualité
-- Scripts SQL pour le chargement du pipeline qualité
+- Introduction de la dimension analytique `dim_event`
+  - Centralisation des types d’événements
+  - Ajout des attributs :
+    - `event_type`
+    - `event_category`
+    - `is_failure`
+    - `is_micro_stop`
+    - `is_quality_loss`
+
+- Ajout du catalogue d’événements (`event_catalog.py`)
+  - Source unique de vérité pour la classification métier
+  - Standardisation des types d’événements dans tout le pipeline
+
+---
 
 ### Modifié
-- Refactorisation complète de la structure SQL du projet
-- Organisation des scripts selon une architecture **Data Warehouse en couches** :
 
-  OPS → STG → DW
+#### Modèle Data Warehouse
 
-  
-- Réorganisation des dossiers :
+- Refactorisation de `fact_production_events`
+  - Passage à une clé primaire composite :
+    ```
+    (time_key, machine_key, team_key, organe_element_key, event_key)
+    ```
+  - Alignement avec le partitionnement (`PARTITION BY time_key`)
+  - Intégration de `event_key` (liaison avec `dim_event`)
+  - Suppression de la dépendance à `event_id` comme clé principale
+  - Ajout de flags analytiques directement dans la fact :
+    - `is_failure`
+    - `is_micro_stop`
+    - `is_quality_loss`
 
-```bash
-sql/
-├── ddl
-│ ├── ops
-│ ├── stg
-│ └── dw
-├── dml
-│ ├── ops
-│ ├── stg
-│ └── dw
-```
+- Mise à jour de `dim_organe_element`
+  - Alignement avec le nouveau grain événementiel
+  - Amélioration de la cohérence avec les événements de production
 
+---
 
-- Renumérotation des scripts SQL pour refléter l’ordre d’exécution
-- Mise à jour de l’orchestration du pipeline pour supporter la nouvelle structure
+#### Pipeline événements (STG → OPS → DW)
+
+- Refactorisation de `stg_production_events`
+  - Ajout de :
+    - `event_type`
+    - `cause_category`
+
+- Refactorisation de `ops.production_events`
+  - Enrichissement des événements avec :
+    - `severity_score`
+    - `is_recurrent`
+  - Harmonisation de la structure avec le modèle analytique
+
+- Mise à jour des scripts DML :
+  - `stg → ops`
+  - `ops → dw`
+  - Intégration de `dim_event` dans le chargement de la fact
+
+---
+
+#### Simulation & Génération de données
+
+- Mise à jour du moteur de génération d’événements
+  - Intégration du catalogue d’événements
+  - Amélioration de la cohérence des données générées
+
+- Amélioration du `markov_engine`
+  - Simulation plus réaliste des transitions d’état
+  - Meilleure distribution des types d’événements
+
+- Mise à jour du pipeline (`pipeline.py`)
+  - Support du nouveau modèle événementiel
+
+---
+
+### Amélioré
+
+- Qualité analytique des données
+  - Distinction claire entre :
+    - pannes (`failure`)
+    - micro-arrêts (`micro_stop`)
+    - pertes qualité (`quality_loss`)
+
+- Analyse Pareto
+  - Possibilité de filtrer par type d’événement
+  - Meilleure pertinence métier des KPI downtime
+
+- Compatibilité BI (Power BI)
+  - Modèle en étoile plus robuste
+  - Grain explicite : **1 ligne = 1 événement**
+  - Simplification des mesures DAX
+
+---
 
 ### Corrigé
-- Nettoyage des anciens scripts ETL devenus obsolètes après la refactorisation
+
+- Erreur PostgreSQL sur table partitionnée :
+  - Correction de la contrainte `PRIMARY KEY`
+  - Inclusion de `time_key` dans la clé (obligatoire pour partitionnement)
+
+- Correction des duplications potentielles
+  - Alignement avec `ON CONFLICT` sur clé composite
+
+---
 
 ### À venir
-- Génération de **mock data pour les événements qualité**
-- Intégration complète du pipeline qualité dans le workflow ETL
-- Calcul du composant **Quality de l’OEE**
-- Ajout des métriques :
-  - defect rate
-  - good parts
-  - scrap
-- Extension des dashboards Power BI pour inclure la qualité
+
+- Ajout de partitions automatiques par période (mois / jour)
+- Unification potentielle des événements production + qualité
+- Extension du modèle pour analyse avancée OEE :
+  - Availability
+  - Performance
+  - Quality (complète)
+- Optimisation des performances sur gros volumes
+- Enrichissement des dashboards Power BI :
+  - Pareto dynamique par type d’événement
+  - Analyse multi-dimensionnelle (machine, équipe, ligne)
 
 ---
 
@@ -87,11 +153,14 @@ sql/
   - électrique
   - process
 
+---
+
 ## [v1.2] - 2026-02-28
 
 ### Ajouté
 - Release v1.2 - pipeline refactor, reset layer, pre-commit integration
 
+---
 
 ## [v1.3] - 2026-03-15
 

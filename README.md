@@ -532,12 +532,102 @@ TRS calculation,
 and component-level downtime tracking.
 
 ---
-## 🚀 Future Extensions
 
-- Predictive maintenance model (ML)
-- Anomaly detection on production signals
-- Real-time streaming ingestion
-- Multi-site comparative benchmarking
+## 🚀 Roadmap — Industrial Data Platform
+
+This project is evolving from a data warehouse prototype into a **production-ready industrial data platform**, designed to integrate with real-world systems such as MES and ERP.
+
+---
+
+### 🎯 Objective
+
+Build a scalable and modular data architecture capable of:
+
+* Integrating industrial data sources (MES, IoT, ERP)
+* Supporting both batch and streaming ingestion
+* Ensuring data quality, traceability, and reprocessing
+* Delivering reliable KPIs (OEE, downtime, quality)
+
+---
+
+### 🧱 Target Architecture
+
+```
+Sources (MES / ERP / IoT)
+        ↓
+Ingestion (Airflow / Kafka)
+        ↓
+Data Lake (S3 / MinIO)
+        ↓
+Transformation (dbt)
+        ↓
+Data Warehouse (PostgreSQL / Snowflake)
+        ↓
+BI / APIs (Power BI / FastAPI)
+```
+
+---
+
+### 🛠️ Planned Tech Stack
+
+| Layer              | Technology                      | Status         |
+| ------------------ | ------------------------------- | -------------- |
+| Ingestion (Batch)  | Apache Airflow                  | ⏳ Planned      |
+| Ingestion (Stream) | Apache Kafka                    | 🔜 Optional    |
+| Storage            | MinIO (S3-compatible Data Lake) | ⏳ Planned      |
+| Transformation     | dbt                             | 🚧 In Progress |
+| Data Warehouse     | PostgreSQL                      | ✅ Current      |
+| API Layer          | FastAPI                         | 🔜 Optional    |
+| BI / Analytics     | Power BI                        | ✅ Current      |
+| Containerization   | Docker                          | ⏳ Planned      |
+| Data Quality       | dbt tests / Great Expectations  | ⏳ Planned      |
+| Monitoring         | Prometheus + Grafana            | 🔜 Optional    |
+
+---
+
+### 🗺️ Implementation Roadmap
+
+#### Phase 1 — Data Transformation Modernization
+
+* [ ] Migrate SQL pipeline to **dbt**
+* [ ] Introduce staging / intermediate / marts layers
+* [ ] Add data tests (uniqueness, null checks)
+
+#### Phase 2 — Orchestration
+
+* [ ] Integrate **Airflow** for pipeline scheduling
+* [ ] Replace manual execution scripts
+
+#### Phase 3 — Data Lake Integration
+
+* [ ] Add **MinIO** as raw storage layer
+* [ ] Store raw events in Parquet format
+
+#### Phase 4 — Containerization
+
+* [ ] Dockerize the full stack (DB, dbt, Airflow)
+* [ ] Enable reproducible environments
+
+#### Phase 5 — Advanced Features (Optional)
+
+* [ ] Add Kafka for real-time event streaming
+* [ ] Build API layer with FastAPI
+* [ ] Implement monitoring (Grafana / Prometheus)
+
+---
+
+### 🧠 Long-Term Vision
+
+Transition toward an **Industry 4.0-ready data platform**, enabling:
+
+* Real-time production monitoring
+* Predictive maintenance
+* Cross-system analytics (MES × ERP × Quality)
+* Scalable and cloud-ready architecture
+
+---
+
+
 
 
 ## 👤 Auteur
