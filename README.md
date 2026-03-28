@@ -241,8 +241,8 @@ flowchart LR
     G --> H
     H --> I
     I --> J
+...
 ```
-
 ## 🧠 Key Architecture Decisions
 
 - Separation of OPS and DW layers → ensures scalability and clarity
