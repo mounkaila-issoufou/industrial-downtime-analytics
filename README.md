@@ -207,27 +207,27 @@ BI Tools (Power BI / Looker / Tableau)
 ```mermaid
 flowchart LR
 
-    subgraph Sources
+    subgraph "Sources"
         A[Shopfloor Systems]
         B[IoT Sensors]
         C[ERP / MES]
     end
 
-    subgraph Bronze Layer - Raw Data
+    subgraph "Bronze Layer - Raw Data"
         D[Raw Data Lake]
     end
 
-    subgraph Silver Layer - Cleaned and Transformed
+    subgraph "Silver Layer - Cleaned and Transformed"
         E[Data Cleaning]
         F[Data Transformation]
     end
 
-    subgraph Gold Layer - Business Ready
+    subgraph "Gold Layer - Business Ready"
         G[Data Warehouse]
         H[SQL KPIs]
     end
 
-    subgraph Consumption
+    subgraph "Consumption"
         I[BI Dashboards]
         J[Operational Decisions]
     end
