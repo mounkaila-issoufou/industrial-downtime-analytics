@@ -39,9 +39,9 @@
 [![Data Engineering](https://img.shields.io/badge/Data-Pipeline-ff6f00?style=flat-square)](#data-pipeline)
 [![Analytics](https://img.shields.io/badge/Analytics-OEE%20%26%20Downtime-1E88E5?style=flat-square)](#analytics)
 
-# Industrial Packaging Performance Analytics
-### Global Performance Analysis – Dairy Manufacturing Conditioning Department
+# 🏭 Industrial Downtime & OEE Analytics Platform
 
+### End-to-end data platform for manufacturing performance monitoring, root cause analysis, and operational decision support
 ---
 
 ## 🎯 Project Objective
@@ -66,6 +66,18 @@ Coming soon...
 <p align="center">
   <img src="assets/demo.png" width="700"/>
 </p>
+
+# 💡 What this project demonstrates
+
+This project showcases:
+
+- End-to-end data pipeline design (raw → DW → BI)
+- Industrial data modeling (MES-inspired)
+- KPI engineering (OEE, downtime, quality)
+- Analytical thinking for root cause analysis
+- Scalable architecture design (dbt, Airflow-ready)
+
+👉 Designed as a portfolio-grade industrial data platform
 
 ## 🏭 Industrial Context
 
@@ -167,6 +179,7 @@ Food manufacturing – Dairy packaging operations.
 - `dim_time` – shift, hour, day, week, month  
 - `dim_team` – operators & shifts  
 - `dim_organe_element` – components & subcomponents  
+- `dim_event` – standardized downtime classification
 
 **Fact Tables:**
 
@@ -229,6 +242,17 @@ flowchart LR
     H --> I
     I --> J
 ```
+
+## 🧠 Key Architecture Decisions
+
+- Separation of OPS and DW layers → ensures scalability and clarity
+- Star schema modeling → optimized for BI performance
+- Event-level granularity → enables root cause analysis
+- Hourly aggregation → balances precision and performance
+- Synthetic data simulation → allows safe experimentation
+
+👉 These choices reflect real-world industrial data constraints
+
 ## ⚙️ Technology Stack
 
 | Layer | Tools |
@@ -281,7 +305,25 @@ flowchart LR
 
 ---
 
-## 📊 Dashboards Power BI
+## 📊 Dashboard Design (Industrial Monitoring)
+
+The Power BI dashboard follows a standard industrial monitoring structure:
+
+1. **KPI Overview**
+   - OEE, Availability, Performance, Quality
+
+2. **Trend Analysis**
+   - Hourly reliability evolution
+   - Target vs actual comparison
+
+3. **Loss Analysis**
+   - Pareto of downtime causes
+   - Downtime by machine
+
+4. **Drilldown**
+   - Event-level root cause analysis
+
+👉 Designed for real-time operational decision-making
 
 ```text
 dashboards/
@@ -308,7 +350,8 @@ dashboards/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone git@github.com:mounkaila-issoufou/industrial-downtime-analytics.gitcd industrial-downtime-analytics
+git clone git@github.com:mounkaila-issoufou/industrial-downtime-analytics.git
+cd industrial-downtime-analytics
 ```
 ### 2️⃣ Create a virtual environment
 
@@ -629,6 +672,11 @@ Transition toward an **Industry 4.0-ready data platform**, enabling:
 
 
 
+## 👥 Target Audience
+
+- Data Engineers
+- Industrial Performance Managers
+- BI Analysts in manufacturing
 
 ## 👤 Auteur
 Industrial Performance & Data Engineering Project

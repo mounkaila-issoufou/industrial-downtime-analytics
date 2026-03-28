@@ -191,7 +191,9 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | line_id     | string  | Ligne         |
 | workshop_id | string  | Atelier       |
 | factory_id  | string  | Usine         |
-
+| machine_name                  | string  | Nom machine             |
+| theoretical_capacity_per_hour | integer | Capacité               |
+| reliability_target            | float   | Objectif performance   |
 ---
 
 ## 👥 dim_team (⚠️ SENSIBLE)
@@ -217,6 +219,21 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | defect_type     | string  | Type        |
 
 ---
+## ⚙️ dim_event
+
+| Champ            | Type    | Description                  |
+| ---------------- | ------- | ---------------------------- |
+| event_key        | integer | Clé surrogate                |
+| event_type       | string  | Type d’événement             |
+| cause_family     | string  | Catégorie de cause           |
+| organ            | string  | Organe machine               |
+| element          | string  | Élément précis               |
+| classification   | string  | failure / micro_stop / autre |
+
+👉 dimension centrale pour l’analyse des pertes
+
+---
+
 
 # 📈 FACT TABLES
 
@@ -238,6 +255,8 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | explained_ratio        | float   | Ratio             |
 | unexplained_ratio      | float   | Ratio             |
 
+👉 ⚠️ table volontairement dénormalisée pour performance et simplicité analytique (logique proche data mart OPS)
+
 👉 **Grain : 1 heure × 1 machine × 1 équipe**
 
 ---
@@ -251,7 +270,9 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | team_key           | integer | Équipe      |
 | organe_element_key | integer | Cause       |
 | duration_minutes   | integer | Durée       |
+| event_key         | integer | Événement |
 
+👉 enrichie via `dim_event`
 ---
 
 ## 🔍 fact_quality_events
@@ -283,6 +304,40 @@ Ce document décrit **l’ensemble des tables et des champs** utilisés dans le 
 | oee          | float   | TRS           |
 
 👉 **Grain identique à fact_hourly_performance**
+👉 dérivée de `fact_hourly_performance`
+
+
+
+# 🔄 LOGIQUE DE TRANSFORMATION
+
+* Les tables OPS représentent les données opérationnelles (proches MES)
+* Les tables DW sont modélisées en schéma en étoile pour l’analyse
+* Les transformations incluent :
+  - normalisation des événements → dim_event
+  - historisation des équipes → dim_team
+  - agrégation horaire → fact_hourly_performance
+
+
+
+# 📏 GRAIN DES TABLES
+
+| Table                   | Grain                          |
+| ----------------------- | ------------------------------ |
+| hourly_production       | 1 heure × ligne × équipe       |
+| production_events       | 1 événement                    |
+| quality_event           | 1 défaut                       |
+| fact_hourly_performance | 1 heure × machine × équipe     |
+| fact_production_events  | 1 événement                    |
+| fact_quality_events     | 1 défaut                       |
+
+
+# 🎯 USE CASES ANALYTIQUES
+
+* Analyse Pareto des pannes machines
+* Calcul OEE par ligne / équipe / heure
+* Identification des pertes non expliquées
+* Analyse qualité (scrap vs rework)
+* Corrélation performance ↔ équipe
 
 ---
 

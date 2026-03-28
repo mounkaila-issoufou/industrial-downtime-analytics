@@ -26,8 +26,29 @@ Factory
             ├── Shift_Operator_Assignment
             └── Hourly_Production
                 ├── Production_Events
+                │     └── Event (via dim_event)
                 └── Quality_Inspection
-                        └── Quality_Events
+                      └── Quality_Events
+                            └── Quality_Defect
+
+[Industrial Structure]
+Factory
+└── Workshop
+    └── Production_Line
+
+[Execution Layer]
+Production_Line
+└── Shift_Supervision
+    ├── Shift_Operator_Assignment
+    └── Hourly_Production
+
+[Event Layer]
+Hourly_Production
+├── Production_Events
+│     └── Event (standardized via dim_event)
+└── Quality_Inspection
+      └── Quality_Events
+            └── Quality_Defect
 ```
 
 ---
@@ -35,38 +56,69 @@ Factory
 # 🏭 SCHÉMA 1 — MODÈLE OPÉRATIONNEL (OPS)
 
 ```text
+[Industrial Structure]
 FACTORY
    │
    └── WORKSHOP
          │
          └── PRODUCTION_LINE
-               │
-               └── SHIFT_SUPERVISION
-                       │
-       ┌──────────────┼────────────────────────────┐
-       │              │                            │
-SHIFT_OPERATOR   HOURLY_PRODUCTION        QUALITY_INSPECTION
-ASSIGNMENT             │                          │
-                       │                          └── QUALITY_EVENTS
-                       │
-                       └── PRODUCTION_EVENTS
-```
 
+[Execution Layer]
+PRODUCTION_LINE
+   │
+   └── SHIFT_SUPERVISION
+           │
+       ┌───┴───────────────┐
+       │                   │
+SHIFT_OPERATOR      HOURLY_PRODUCTION
+ASSIGNMENT                 │
+                           │
+                ┌──────────┴──────────┐
+                │                     │
+        PRODUCTION_EVENTS     QUALITY_INSPECTION
+                │                     │
+                │                     └── QUALITY_EVENTS
+                │                           │
+                │                           └── QUALITY_DEFECT
+                │
+                └── EVENT (standardized via dim_event)
+
+
+```
 ---
 
 # 📊 SCHÉMA 2 — MODÈLE ANALYTIQUE (DW)
 
 ```text
-              DIM_TIME
-                  │
-DIM_MACHINE ─── FACT_HOURLY_PERFORMANCE ─── DIM_TEAM
-                  │
-                  │
-        FACT_OEE_HOURLY   (pilotage global)
-                  │
-        FACT_PRODUCTION_EVENTS ─── DIM_ORGANE_ELEMENT
-                  │
-        FACT_QUALITY_EVENTS ────── DIM_QUALITY_DEFECT
+                         ┌────────────┐
+                         │  DIM_TIME  │
+                         └─────┬──────┘
+                               │
+        ┌────────────┬─────────┼─────────┬────────────┐
+        │            │         │         │            │
+┌────────────┐ ┌────────────┐ │ ┌────────────┐ ┌────────────┐
+│DIM_MACHINE │ │  DIM_TEAM  │ │ │  DIM_EVENT │ │ DIM_ORGANE │
+└─────┬──────┘ └─────┬──────┘ │ └─────┬──────┘ │ _ELEMENT   │
+      │              │        │       │        └─────┬──────┘
+      │              │        │       │              │
+      │              │        │       │              │
+      │      ┌──────────────────────────────┐       │
+      │      │ FACT_HOURLY_PERFORMANCE      │       │
+      │      └──────────────┬───────────────┘       │
+      │                     │                       │
+      │                     │                       │
+      │      ┌──────────────┴───────────────┐       │
+      │      │   FACT_PRODUCTION_EVENTS     │◄──────┘
+      │      └──────────────┬───────────────┘
+      │                     │
+      │                     │
+      │      ┌──────────────┴───────────────┐
+      │      │    FACT_QUALITY_EVENTS       │
+      │      └──────────────┬───────────────┘
+      │                     │
+      │             ┌───────▼────────┐
+      │             │DIM_QUALITY_DEFECT│
+      │             └─────────────────┘
 ```
 
 ---
@@ -83,15 +135,41 @@ DIM_MACHINE ─── FACT_HOURLY_PERFORMANCE ─── DIM_TEAM
 
 # 📏 GRAIN DES TABLES (🔥 CRITIQUE)
 
-| Table                   | Grain                          |
-| ----------------------- | ------------------------------ |
-| hourly_production       | 1 heure × 1 ligne × 1 équipe   |
-| production_events       | 1 événement                    |
-| quality_events          | 1 défaut                       |
-| fact_hourly_performance | 1 heure × 1 machine × 1 équipe |
-| fact_production_events  | 1 événement                    |
-| fact_quality_events     | 1 défaut                       |
-| fact_oee_hourly         | 1 heure × 1 machine × 1 équipe |
+| Table                   | Grain                                      |
+|------------------------|--------------------------------------------|
+| hourly_production       | 1 heure × 1 ligne × 1 équipe               |
+| production_events       | 1 événement (downtime / micro-stop)        |
+| quality_events          | 1 défaut unitaire                          |
+| fact_hourly_performance | 1 heure × 1 machine × 1 équipe             |
+| fact_production_events  | 1 événement                                |
+| fact_quality_events     | 1 défaut unitaire                          |
+
+---
+
+### ⚠️ Règles critiques
+
+- Le **grain doit être strictement respecté** dans toute transformation
+- Toute agrégation doit être **explicite et contrôlée**
+- Les faits ne doivent jamais mélanger plusieurs grains
+
+---
+
+### 🚫 Cas particulier : OEE
+
+L’OEE n’est **pas stocké comme une table de faits**.
+
+Il est calculé dynamiquement à partir de :
+
+- `fact_hourly_performance`
+- `fact_production_events`
+- `fact_quality_events`
+
+👉 Cela garantit :
+- cohérence des KPI
+- traçabilité
+- absence de duplication logique
+
+---
 
 👉 ⚠️ Toute erreur de grain = duplication / KPI faux
 
@@ -192,7 +270,19 @@ erDiagram
 
 ---
 
-### ❌ DIM_QUALITY_DEFECT
+
+### ⚙️ DIM_EVENT
+
+* normalisation des événements de production
+* classification des pertes :
+  - failure
+  - micro_stop
+  - quality
+* utilisée par `fact_production_events`
+
+---
+
+### 🧪 DIM_QUALITY_DEFECT
 
 * normalisation des défauts qualité
 * clé composite métier (category + family + type)
@@ -213,12 +303,14 @@ erDiagram
 
 ---
 
+
 ### 🚨 FACT_PRODUCTION_EVENTS
 
 👉 diagnostic des pertes
 
-* granularité fine
+* granularité fine (1 événement)
 * analyse root cause
+* enrichie via `dim_event`
 
 ---
 
@@ -226,13 +318,12 @@ erDiagram
 
 👉 analyse qualité
 
-* défauts
-* scrap
-* rework
+* défauts unitaires
+* scrap / rework
+* correspondance 1:1 avec les événements OPS
 
 👉 ⚠️ **non agrégée (grain événement)**
 
----
 
 ### 🏆 FACT_OEE_HOURLY
 
