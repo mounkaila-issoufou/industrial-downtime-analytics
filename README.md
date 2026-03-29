@@ -64,7 +64,7 @@ It consolidates **raw operational shopfloor data** into a **centralized analytic
 Coming soon...
 
 <p align="center">
-  <img src="assets/demo.png" width="700"/>
+  <img src="assets/overview.gif" width="700"/>
 </p>
 
 # 💡 What this project demonstrates
@@ -309,20 +309,14 @@ flowchart LR
 
 The Power BI dashboard follows a standard industrial monitoring structure:
 
-1. **KPI Overview**
-   - OEE, Availability, Performance, Quality
+### 📊 Overview Dashboard
 
-2. **Trend Analysis**
-   - Hourly reliability evolution
-   - Target vs actual comparison
+Interactive overview of industrial performance:
+- KPI monitoring (OEE, downtime, reliability)
+- Pareto analysis (80/20)
+- Machine impact visualization
 
-3. **Loss Analysis**
-   - Pareto of downtime causes
-   - Downtime by machine
-
-4. **Drilldown**
-   - Event-level root cause analysis
-
+![Overview Dashboard](docs/assets/overview.gif)
 👉 Designed for real-time operational decision-making
 
 ```text
