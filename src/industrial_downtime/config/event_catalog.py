@@ -41,6 +41,7 @@ class EventFamily(str, Enum):
     CHANGEOVER = "changeover"
     BREAK = "break"
     MAINTENANCE = "maintenance"
+    UNKNOWN = "unknown"
 
 
 # ==========================
@@ -311,6 +312,13 @@ EVENT_CATALOG: Dict[str, Event] = {
         "repair failure",
         0.02, 50, 20, False
     ),
+    "unknown_stop": Event(
+        "unknown_stop", EventCategory.TECHNICAL, EventFamily.UNKNOWN,
+        "technical", "unknown",
+        "unknown cause",
+        0.01, 15, 5, False
+    )
+
 }
 
 # ==========================
