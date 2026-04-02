@@ -1,43 +1,27 @@
--- ==========================================================
--- Table de faits : événements de production
--- Grain : 1 ligne = 1 événement
--- ==========================================================
-
 CREATE TABLE IF NOT EXISTS dw.fact_production_events (
 
-    -- =========================
-    -- Clés dimensionnelles
-    -- =========================
+    -- 🔥 IDENTIFIANT UNIQUE (corrigé)
+    event_id VARCHAR(50) NOT NULL,
+
     time_key            INTEGER NOT NULL,
     machine_key         INTEGER NOT NULL,
     team_key            INTEGER NOT NULL,
     organe_element_key  INTEGER NOT NULL,
     event_key           INTEGER NOT NULL,
 
-    -- =========================
-    -- Mesures (facts)
-    -- =========================
     duration_minutes    INTEGER NOT NULL,
     severity_score      INTEGER,
     is_recurrent        BOOLEAN,
 
-    -- =========================
-    -- Drapeaux analytiques
-    -- =========================
     is_failure          BOOLEAN,
     is_micro_stop       BOOLEAN,
     is_quality_loss     BOOLEAN,
 
-    -- =========================
-    -- Métadonnées
-    -- =========================
-    load_timestamp      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    -- =========================
-    -- Contraintes
-    -- =========================
+    -- 🔥 FIX ICI
     CONSTRAINT pk_fact_production_events
-        PRIMARY KEY (time_key, machine_key, team_key, organe_element_key, event_key),
+        PRIMARY KEY (event_id, time_key),
 
     CONSTRAINT fk_fact_event_time
         FOREIGN KEY (time_key)
@@ -58,5 +42,6 @@ CREATE TABLE IF NOT EXISTS dw.fact_production_events (
     CONSTRAINT fk_fact_event_type
         FOREIGN KEY (event_key)
         REFERENCES dw.dim_event(event_key)
+
 )
 PARTITION BY RANGE (time_key);
