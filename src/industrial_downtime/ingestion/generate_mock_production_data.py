@@ -1,5 +1,8 @@
+from collections import defaultdict
 import random
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+
+from sqlalchemy import events
 
 from industrial_downtime.config.event_catalog import (
     EVENT_CATALOG,
@@ -12,34 +15,54 @@ from industrial_downtime.config.workshops import WORKSHOPS
 from industrial_downtime.core.markov_engine import (
     LineState,
     next_state,
-    generate_duration,
+    generate_duration, get_dynamic_matrix
 )
 from industrial_downtime.ingestion.events.production_event_generator import generate_production_events
 from industrial_downtime.ingestion.quality.quality_generator import generate_quality_for_hour
 from industrial_downtime.ingestion.production.kpi_calculator import compute_kpis
 
-
-def simulate_hour(line_config, total_minutes=60):
+def simulate_hour(line_config, hour_index, shift_type, shift_date, rng):
     state = LineState.RUNNING
-    minutes_remaining = total_minutes
+    minutes_remaining = 60
+    stop_budget = 60  # ← budget dédié aux stops
     events = []
 
+    if 5 <= hour_index <= 8:
+        failure_boost = 1.3
+    elif 12 <= hour_index <= 13:
+        failure_boost = 1.1
+    elif 0 <= hour_index <= 4:
+        failure_boost = 1.2
+    else:
+        failure_boost = 1.0
+
     while minutes_remaining > 0:
-        state = next_state(state, line_config.transition_matrix)
+        matrix = get_dynamic_matrix(line_config, hour_index, shift_type)
+        state = next_state(state, matrix)
 
         if state == LineState.RUNNING:
             minutes_remaining -= 1
             continue
 
-        duration = generate_duration(state)
+        # Plus de budget stop → on court-circuite le reste en RUNNING
+        if stop_budget <= 0:
+            minutes_remaining -= 1
+            continue
 
-        duration = min(duration, minutes_remaining)
+        duration = generate_duration(state)
+        duration = max(1, int(duration * rng.uniform(0.8, 1.3) * failure_boost))
+
+        # Double clamp : respecte le temps restant ET le budget stop
+        duration = min(duration, minutes_remaining, stop_budget)
+
         minutes_remaining -= duration
+        stop_budget -= duration  # ← décrémenter le budget
 
         events.append((state, duration))
 
+    # Invariant garanti ici
+    assert sum(d for _, d in events) <= 60, "stop budget violated"
     return events
-
 
 # =========================
 # UTILITAIRE
@@ -57,98 +80,6 @@ def is_break_day(shift_date) -> bool:
     return date_obj.toordinal() % 2 == 0
 
 
-# =========================
-# EVENT GENERATION
-# =========================
-
-
-def generate_events_for_hour(
-    prod_id: str, shift_type: str, is_break_day: bool, total_downtime: int
-) -> list[dict]:
-    events = []
-    remaining = total_downtime
-
-    shift_enum = ShiftName(shift_type)
-    shift_config = SHIFTS[shift_enum]
-
-    # --- Pauses planifiées ---
-    for pause in shift_config.breaks:
-        if remaining <= 0:
-            break
-
-        duration = min(pause.duration_minutes, remaining)
-        remaining -= duration
-
-        events.append(
-            {
-                "event_id": generate_id("EV"),
-                "hourly_prod_id": prod_id,
-                "event_type": "operator_break",
-                "cause_family": "planned",
-                "organ": "human",
-                "element": "break",
-                "operator_action": "break",
-                "duration_minutes": duration,
-                "comment": f"Scheduled pause at {pause.start}",
-            }
-        )
-
-    # --- Pause alternée ---
-    if is_break_day and remaining > 0:
-        duration = min(10, remaining)
-        remaining -= duration
-
-        event_def = EVENT_CATALOG["short_break"]
-
-        events.append(
-            {
-                "event_id": generate_id("EV"),
-                "hourly_prod_id": prod_id,
-                "event_type": "short_break",
-                "duration_minutes": duration,
-                "comment": "Alternating daily break",
-                "cause_family": event_def.category,
-                "organ": event_def.organ,
-                "element": event_def.element,
-                "operator_action": event_def.operator_action,
-            }
-        )
-
-    # --- Autres événements ---
-    event_types = list(EVENT_CATALOG.keys())
-    print(event_types)
-
-    while remaining > 0:
-
-        event_type = random.choices(
-            event_types,
-            weights=[EVENT_CATALOG[e].base_probability for e in event_types],
-            k=1
-        )[0]
-        event_def = EVENT_CATALOG[event_type]
-
-        duration = (
-            remaining if remaining <= 3 else random.randint(3, min(remaining, 20))
-        )
-
-        remaining -= duration
-
-        events.append(
-            {
-                "event_id": generate_id("EV"),
-                "hourly_prod_id": prod_id,
-                "event_type": event_type,
-                "cause_family": event_def.category,
-                "organ": event_def.organ,
-                "element": event_def.element,
-                "operator_action": event_def.operator_action,
-                "duration_minutes": duration,
-                "comment": "Generated production event",
-            }
-        )
-
-    return events
-
 
 # =========================
 # PRODUCTION GENERATION
@@ -162,7 +93,6 @@ def generate_production():
     quality_events = []
 
     for shift in context.shifts:
-        performance_factor = 1.0
 
         shift_id = shift["shift_supervision_id"]
         shift_date = shift["date"]
@@ -170,7 +100,6 @@ def generate_production():
         team_lead_id = shift["team_lead_id"]
         workshop_id = shift["workshop_id"]
         line_id = shift["line_id"]
-
         shift_config = SHIFTS[ShiftName(shift_type)]
         workshop = WORKSHOPS[workshop_id]
         line_config = workshop.lines[line_id]
@@ -178,65 +107,74 @@ def generate_production():
         theoretical_production = line_config.theoretical_capacity_per_hour
         reliability_target = line_config.reliability_target
         units_per_minute = line_config.units_per_minute
+
         assignment = next(
             a for a in context.operator_assignments
             if a["shift_supervision_id"] == shift_id
         )
 
         operator_id = assignment["operator_id"]
-        # 👉 on peut distinguer opérateur / inspecteur si besoin
-        inspector_id = operator_id  # simple pour l’instant
-        for hour_index in range(int(shift_config.hours)):
+        inspector_id = operator_id
+
+        shift_start = datetime.combine(shift_date, shift_config.start)
+
+        performance_factor = random.uniform(0.9, 1.0)  # 🎯 variation initiale
+
+        for h in range(shift_config.hours):
+            rng = random.Random(f"{shift_date}-{h}-{shift_type}-{line_id}")
+
+            hour_timestamp = shift_start + timedelta(hours=h)
+            hour_index = hour_timestamp.hour
 
             prod_id = generate_id("HP")
 
             # ======================
-            # 1. SIMULATION
+            # 🔥 SIMULATION CORRIGÉE
             # ======================
-            if hour_index == 0:
-                events = []
-                
-                # petit bruit réaliste
-                noise = random.uniform(0.85, 1.0)
+            events = simulate_hour(
+                line_config,
+                hour_index,
+                shift_type,
+                shift_date,
+                rng,
+            )
 
-                actual_production = int(theoretical_production * noise)
-                non_production_minutes = int(60 - (60*actual_production/theoretical_production))
-            else:
-                events = simulate_hour(line_config)
-                micro_stop_minutes = sum(
-                    duration for state, duration in events
-                    if state == LineState.MICRO_STOP
-                )
+            micro_stop_minutes = sum(
+                d for state, d in events if state == LineState.MICRO_STOP
+            )
 
-                failure_minutes = sum(
-                    duration for state, duration in events
-                    if state == LineState.FAILURE
-                )
-                performance_factor -= micro_stop_minutes * 0.0015
-                performance_factor -= failure_minutes * 0.004
+            failure_minutes = sum(
+                d for state, d in events if state == LineState.FAILURE
+            )
 
-                # sécurité
-                performance_factor = max(0.75, min(1.0, performance_factor))
-                non_production_minutes = int(sum(d for _, d in events))
-                productive_minutes = max(0, 60 - non_production_minutes)
+            # 🎯 dérive progressive réaliste
+            performance_factor -= micro_stop_minutes * 0.001
+            performance_factor -= failure_minutes * 0.003
 
-                #actual_production = productive_minutes * line_config.units_per_minute
-                actual_production = int(
-                    productive_minutes * units_per_minute * performance_factor
-                )
-  
+            # bruit naturel
+            performance_factor *= rng.uniform(0.97, 1.03)
+            performance_factor = max(0.7, min(1.05, performance_factor))
+
+            non_production_minutes = int(sum(d for _, d in events))
+
+            productive_minutes = max(0, 60 - non_production_minutes)
+
+            actual_production = int(
+                productive_minutes * units_per_minute * performance_factor
+            )
+
             # ======================
-            # 2. KPI
+            # KPI
             # ======================
-
             kpis = compute_kpis(
                 actual_production=actual_production,
                 theoretical_production=theoretical_production,
                 reliability_target=reliability_target,
-                non_production_minutes=int(non_production_minutes),
+                non_production_minutes=non_production_minutes,
             )
+
             # ======================
-            # 3. FACT TABLE
+            # FACT
             # ======================
             hourly_production.append(
                 {
@@ -249,41 +187,37 @@ def generate_production():
                     "workshop_id": workshop_id,
                     "line_id": line_id,
                     "hour_index": hour_index,
-                    # Capacités
+                    #"hour_timestamp": hour_timestamp,
                     "theoretical_production": theoretical_production,
                     "actual_production": actual_production,
-                    # Objectif
                     "reliability_target": reliability_target,
-                    # Pertes
                     "non_production_minutes": non_production_minutes,
-                    # KPI injectés directement
                     **kpis,
                 }
             )
 
             # ======================
-            # 4. EVENTS
+            # EVENTS
             # ======================
-            prod_events = generate_production_events(prod_id, events)
+            prod_events = generate_production_events(prod_id, events, rng)
             production_events.extend(prod_events)
 
+
+
             # ======================
-            # 5. QUALITY
+            # QUALITY
             # ======================
             inspections, defects = generate_quality_for_hour(
                 prod_id,
                 actual_production
             )
 
-            # petit bruit défauts
+            # 🎯 bruit qualité réaliste
             for d in defects:
                 d["defective_units"] = int(
-                    d["defective_units"] * random.uniform(0.8, 1.2)
+                    d["defective_units"] * random.uniform(0.7, 1.3)
                 )
 
-            # ======================
-            # 6. QUALITY ENRICHMENT (🔥 IMPORTANT)
-            # ======================
             for ins in inspections:
                 ins.update({
                     "inspection_date": shift_date,
@@ -295,12 +229,43 @@ def generate_production():
                     "source_file_name": "mock_quality.csv",
                 })
 
-
-
             quality_inspections.extend(inspections)
             quality_events.extend(defects)
 
+            # ======================
+            # VÉRIFICATION FINALE
+            # ======================
 
+            duration_by_hour = defaultdict(int)
+            for e in production_events:
+                duration_by_hour[e["hourly_prod_id"]] += e["duration_minutes"]
+
+
+            violations = {
+                hid: total
+                for hid, total in duration_by_hour.items()
+                if total > 60
+            }
+
+            if violations:
+                raise ValueError(
+                    f"❌ {len(violations)} hourly_prod_id(s) dépassent 60 min :\n"
+                    + "\n".join(f"  {hid}: {total} min" for hid, total in violations.items())
+                )
+            for hid, total in violations.items():
+                print(f"⚠️  {hid}: {total} min > 60")
+
+
+            for e in production_events:
+                assert e["duration_minutes"] == e["end_minute"] - e["start_minute"], (
+                    f"Incohérence start/end sur {e['event_id']}"
+                )
+                assert e["end_minute"] <= 60, (
+                    f"end_minute={e['end_minute']} > 60 sur {e['event_id']}"
+    )
+
+            assert non_production_minutes <= 60
+            assert sum(e["duration_minutes"] for e in prod_events) <= 60
     return (
         hourly_production,
         production_events,
