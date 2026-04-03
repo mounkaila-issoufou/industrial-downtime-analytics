@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS  dw.fact_hourly_performance (
     time_key        INTEGER NOT NULL,
     machine_key     INTEGER NOT NULL,
     team_key        INTEGER NOT NULL,
+    hour_index INTEGER NOT NULL,
 
     -- =========================
     -- KPI Core Production
