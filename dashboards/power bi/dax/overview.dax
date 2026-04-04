@@ -1,0 +1,122 @@
+DEFINE
+    MEASURE 'QUALITY'[Total Defects] = SUM('dw fact_quality_events'[defective_units])
+    MEASURE 'QUALITY'[Good Units] = [Total Production] - [Total Defects]
+    MEASURE 'QUALITY'[Quality %] = DIVIDE(
+        [Good Units],
+        [Total Production],
+        0
+    )
+    MEASURE 'QUALITY'[Quality % Previous Period] = CALCULATE(
+        [Quality %],
+        DATEADD('dw dim_time'[date], -1, MONTH)
+    )
+    MEASURE 'QUALITY'[Quality Delta] = [Quality %] - [Quality % Previous Period]
+    MEASURE 'QUALITY'[Quality Target %] = 0.95
+    MEASURE 'QUALITY'[Quality Delta Label] = VAR Delta = [Quality Delta]
+    VAR TrendIcon =
+        SWITCH(
+            TRUE(),
+            Delta > 0, "↑",
+            Delta < 0, "↓",
+            "→"
+        )
+    RETURN
+    TrendIcon & " " &
+    FORMAT(Delta, "+0.0%;-0.0%;0.0%") &
+    " vs last month"
+    MEASURE 'QUALITY'[Quality Target Label] = "Target " & FORMAT([Quality Target %], "0%")
+    MEASURE 'QUALITY'[Quality Status Color] = SWITCH(
+        TRUE(),
+        [Quality %] >= [Quality Target %], "#16A34A",
+        [Quality Delta] > 0, "#F59E0B",
+        "#DC2626"
+    )
+    MEASURE 'QUALITY'[Total Produced Units] = SUM('dw fact_hourly_performance'[actual_production])
+    MEASURE 'QUALITY'[Total Scrap Units] = SUM('dw fact_quality_events'[scrap_units])
+    MEASURE 'QUALITY'[Scrap Rate %] = DIVIDE(
+    [Total Scrap Units],
+    [Total Produced Units],
+    0
+)
+    MEASURE 'QUALITY'[Scrap Rate % Previous Period] = CALCULATE(
+    [Scrap Rate %],
+    DATEADD('dw dim_time'[date], -1, MONTH)
+)
+    MEASURE 'QUALITY'[Scrap Rate Delta] = [Scrap Rate %] - [Scrap Rate % Previous Period]
+    MEASURE 'QUALITY'[Scrap Rate Delta Color] = VAR Delta = [Scrap Rate Delta]
+RETURN
+SWITCH(
+    TRUE(),
+    ISBLANK(Delta), "#808080",
+    Delta < 0, "#2E7D32",   -- 🟢 amélioration
+    Delta > 0, "#C62828",   -- 🔴 dégradation
+    "#808080"
+)
+    MEASURE 'QUALITY'[Scrap Rate Delta Label] = VAR Delta = [Scrap Rate Delta]
+VAR TrendIcon =
+    SWITCH(
+        TRUE(),
+        Delta < 0, "↓",   -- mieux
+        Delta > 0, "↑",   -- pire
+        "→"
+    )
+RETURN
+TrendIcon & " " &
+FORMAT(Delta, "+0.0%;-0.0%;0.0%") &
+" vs last month"
+    MEASURE 'QUALITY'[Scrap Rate Target %] = 0.03   -- 3%
+    MEASURE 'QUALITY'[Scrap Rate Target Label] = "Target " & FORMAT([Scrap Rate Target %], "0%")
+    MEASURE 'QUALITY'[Scrap Rate Status Color] = SWITCH(
+    TRUE(),
+    [Scrap Rate %] <= [Scrap Rate Target %], "#16A34A",   -- 🟢 OK
+    [Scrap Rate Delta] < 4, "#F59E0B",                    -- 🟡 amélioration mais pas OK
+    "#DC2626"                                            -- 🔴 KO
+)
+    MEASURE 'QUALITY'[Quality Delta Color] = SWITCH(
+    TRUE(),
+    [Quality %] >= [Quality Target %], "#16A34A",   -- vert
+    [Quality Delta] > 0, "#F59E0B",                        -- orange
+    "#DC2626"                                                  -- rouge
+)
+    MEASURE 'QUALITY'[Quality Status] = SWITCH(
+    TRUE(),
+    [Quality %] >= [Quality Target %], "✅ Good",
+    [Quality %] >= 0.9, "⚠ Warning",
+    "❌ Critical"
+)
+    MEASURE 'QUALITY'[Quality Status Label] = "Status: " & [Quality Status]
+    MEASURE 'QUALITY'[Scrap Rate Status] = SWITCH(
+    TRUE(),
+    [Scrap Rate %] <= [Scrap Rate Target %], "✅ Good",
+    [Scrap Rate %] <= 0.4, "⚠ Warning",
+    "❌ Critical"
+)
+    MEASURE 'QUALITY'[Scrap Rate Status Label] = "Status: " & [Scrap Rate Status]
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Total Defects", [Total Defects],
+        "Good Units", [Good Units],
+        "Quality %", [Quality %],
+        "Quality % Previous Period", [Quality % Previous Period],
+        "Quality Delta", [Quality Delta],
+        "Quality Target %", [Quality Target %],
+        "Quality Delta Label", [Quality Delta Label],
+        "Quality Target Label", [Quality Target Label],
+        "Quality Status Color", [Quality Status Color],
+        "Total Produced Units", [Total Produced Units],
+        "Total Scrap Units", [Total Scrap Units],
+        "Scrap Rate %", [Scrap Rate %],
+        "Scrap Rate % Previous Period", [Scrap Rate % Previous Period],
+        "Scrap Rate Delta", [Scrap Rate Delta],
+        "Scrap Rate Delta Color", [Scrap Rate Delta Color],
+        "Scrap Rate Delta Label", [Scrap Rate Delta Label],
+        "Scrap Rate Target %", [Scrap Rate Target %],
+        "Scrap Rate Target Label", [Scrap Rate Target Label],
+        "Scrap Rate Status Color", [Scrap Rate Status Color],
+        "Quality Delta Color", [Quality Delta Color],
+        "Quality Status", [Quality Status],
+        "Quality Status Label", [Quality Status Label],
+        "Scrap Rate Status", [Scrap Rate Status],
+        "Scrap Rate Status Label", [Scrap Rate Status Label]
+    )

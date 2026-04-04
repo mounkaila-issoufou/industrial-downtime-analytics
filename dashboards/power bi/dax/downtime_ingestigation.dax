@@ -1,0 +1,363 @@
+//  MEASURE 'Downtime'[Duration Bucket]
+DEFINE
+    MEASURE 'Downtime'[Total Downtime (Minutes)] = SUM('dw fact_production_events'[duration_minutes])
+    MEASURE 'Downtime'[Runtime Minutes] = [Total Observed Minutes]
+    - [Total Non Production Minutes]
+    MEASURE 'Downtime'[Total Non Production Minutes] = SUM ('dw fact_hourly_performance'[non_production_minutes])
+    MEASURE 'Downtime'[Total Observed Minutes] = COUNTROWS('dw fact_hourly_performance') * 60
+    MEASURE 'Downtime'[Total Events] = COUNT('dw fact_production_events'[event_key])
+    MEASURE 'Downtime'[Avg Duration] = DIVIDE(
+    [Total Downtime (Minutes)],
+    [Total Events],
+    0
+)
+    MEASURE 'Downtime'[Top Cause Contribution %] = VAR TopCause =
+    MAXX(
+        VALUES('dw dim_event'[event_type]),
+        [Total Downtime (Minutes)]
+    )
+
+RETURN
+DIVIDE(
+    TopCause,
+    [Total Downtime (Minutes)],
+    0
+)
+    MEASURE 'Downtime'[Event Frequency] = DIVIDE(
+    [Total Events],
+    DISTINCTCOUNT('dw dim_time'[time_key]),
+    0
+)
+    MEASURE 'Downtime'[Unexplained Downtime (min)] = SUM('dw fact_hourly_performance'[unexplained_minutes])
+    MEASURE 'Downtime'[% Unexplained Downtime] = DIVIDE(
+    [Unexplained Downtime (min)],
+    [Total Downtime (Minutes)],
+    0
+)
+    MEASURE 'Downtime'[Downtime Rate] = DIVIDE(
+    SUM('dw fact_production_events'[duration_minutes]),
+    COUNTROWS('dw fact_hourly_performance') * 60
+)
+    MEASURE 'Downtime'[Top Issue] = TOPN(
+    1,
+    VALUES(dim_event[event_type]),
+    [Total Downtime],
+    DESC
+)
+    MEASURE 'Downtime'[Denominator Check] = COUNTROWS('dw fact_hourly_performance') * 60
+    MEASURE 'Downtime'[Top Cause Contribution (%)] = DIVIDE(
+    MAXX(
+        VALUES('dw dim_event'[event_type]),
+        [Total Downtime (Minutes)]
+    ),
+    [Total Downtime (Minutes)],
+    0
+)
+    MEASURE 'Downtime'[Event Count] = COUNTROWS('dw fact_production_events')
+    MEASURE 'Downtime'[Rank Event] = RANKX(
+    ALL('dw dim_event'[event_type]),
+    [Downtime by Event],
+    ,
+    DESC
+)
+    MEASURE 'Downtime'[Downtime by Event] = [Total Downtime (Minutes)]
+    MEASURE 'Downtime'[Cumulative Downtime Event] = CALCULATE(
+    [Downtime by Event],
+    FILTER(
+        ALL('dw dim_event'[event_type]),
+        [Rank Event] <= MAX([Rank Event])
+    )
+)
+    MEASURE 'Downtime'[Cumulative Event %] = DIVIDE(
+    [Cumulative Downtime],
+    CALCULATE([Total Downtime (Minutes)], ALL('dw dim_event'[event_type])),
+    0
+)
+    MEASURE 'Downtime'[Event Color] = IF(
+    [Cumulative Event %] <= 0.8 + 0.001,
+    "#F77F00",   -- orange (focus)
+    "#B0BEC5"    -- gris
+)
+    MEASURE 'Downtime'[Top Cause Insight] = SWITCH(
+    TRUE(),
+    [Top Cause Contribution (%)] > 0.5,
+        "Highly concentrated issue",
+    [Top Cause Contribution (%)] > 0.3,
+        "Few dominant causes",
+    "Diffuse problem"
+)
+    MEASURE 'Downtime'[Top Cause Color] = SWITCH(
+    TRUE(),
+    [Top Cause Contribution (%)] > 0.5, "#2E7D32",   -- vert
+    [Top Cause Contribution (%)] > 0.3, "#F9A825",   -- orange
+    "#C62828"                                       -- rouge
+)
+    MEASURE 'Downtime'[Top Cause Name] = VAR T =
+    TOPN(
+        1,
+        VALUES('dw dim_event'[event_type]),
+        [Total Downtime (Minutes)],
+        DESC
+    )
+RETURN
+CONCATENATEX(T, 'dw dim_event'[event_type])
+    MEASURE 'Downtime'[Top Cause Narrative] = [Top Cause Name] &
+" drives " &
+FORMAT([Top Cause Contribution (%)], "0%") &
+" of downtime"
+    MEASURE 'Downtime'[Total Downtime (Hours)] = DIVIDE([Total Downtime (Minutes)], 60, 0)
+    MEASURE 'Downtime'[Micro Stop %] = DIVIDE(
+    CALCULATE([Total Events], 'dw fact_production_events'[duration_minutes] <= 3),
+    [Total Events],
+    0
+)
+    MEASURE 'Downtime'[Duration Profile] = SWITCH(
+    TRUE(),
+    [Avg Duration] < 5, "Short Stops",
+    [Avg Duration] < 15, "Medium Stops",
+    "Long Stops"
+)
+    MEASURE 'Downtime'[Events per Hour (Normalized)] = DIVIDE(
+    [Total Events],
+    SUMX(
+        VALUES('dw dim_time'[time_key]),
+        1
+    ),
+    0
+)
+    MEASURE 'Downtime'[System Behavior] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 60, "Highly unstable",
+    [Event Frequency] > 30, "Moderate instability",
+    "Stable"
+)
+    MEASURE 'Downtime'[Downtime Label] = VAR Rate = [Downtime Rate]
+RETURN
+SWITCH(
+    TRUE(),
+    Rate > 0.4, "Critical downtime level",
+    Rate > 0.2, "Elevated downtime",
+    "Under control"
+)
+    MEASURE 'Downtime'[Downtime Color] = SWITCH(
+    TRUE(),
+    [Downtime Rate] > 0.4, "#C62828",   -- rouge
+    [Downtime Rate] > 0.2, "#F9A825",   -- orange
+    "#2E7D32"                           -- vert
+)
+    MEASURE 'Downtime'[Event Label] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 60, "High disturbance rate",
+    [Event Frequency] > 30, "Moderate disturbances",
+    "Stable flow"
+)
+    MEASURE 'Downtime'[Event Color KPI] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 60, "#C62828",
+    [Event Frequency] > 30, "#F9A825",
+    "#2E7D32"
+)
+    MEASURE 'Downtime'[Frequency Label] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 60, "Highly unstable system",
+    [Event Frequency] > 30, "Moderate instability",
+    "Stable system"
+)
+    MEASURE 'Downtime'[Frequency Color] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 60, "#C62828",
+    [Event Frequency] > 30, "#F9A825",
+    "#2E7D32"
+)
+    MEASURE 'Downtime'[Duration Color] = SWITCH(
+    TRUE(),
+    [Avg Duration] < 5, "#F9A825",   -- orange (instable)
+    [Avg Duration] < 15, "#2E7D32",  -- vert
+    "#C62828"                       -- rouge
+)
+    MEASURE 'Downtime'[Duration Label] = SWITCH(
+    TRUE(),
+    [Avg Duration] < 5, "Short stops (instability)",
+    [Avg Duration] < 15, "Medium stops",
+    "Long critical stops"
+)
+    MEASURE 'Downtime'[Downtime Rate Display] = VAR Rate = [Downtime Rate]
+VAR Label =
+    SWITCH(
+        TRUE(),
+        Rate > 0.5, "Severe production loss",
+        Rate > 0.3, "High downtime impact",
+        Rate > 0.15, "Moderate downtime",
+        "Controlled downtime"
+    )
+RETURN
+FORMAT(Rate, "0%") & " • " & Label
+    MEASURE 'Downtime'[Avg Duration Display] = VAR Val = [Avg Duration]
+VAR Label =
+    SWITCH(
+        TRUE(),
+        Val < 3, "Micro-stops dominant",
+        Val < 10, "Short stops dominant",
+        Val < 20, "Balanced stop profile",
+        "Long failures dominant"
+    )
+RETURN
+FORMAT(Val, "0.0") & " min • " & Label
+    MEASURE 'Downtime'[Production Loss Driver] = VAR Downtime = [Downtime Rate]
+VAR Freq = [Event Frequency]
+VAR Dur = [Avg Duration]
+VAR TopCause = [Top Cause Contribution (%)]
+
+RETURN
+SWITCH(
+    TRUE(),
+
+    -- 🔴 CHAOS MICRO-STOPS
+    Downtime > 0.3 && Freq > 50 && Dur < 5,
+        "🔴 Chaotic process driven by micro-stops",
+
+    -- 🔴 PANNES CRITIQUES
+    Downtime > 0.3 && Dur > 15,
+        "🔴 Severe downtime driven by major failures",
+
+    -- 🟠 MULTI-CAUSE
+    TopCause < 0.3 && Downtime > 0.2,
+        "🟠 Distributed losses across multiple causes",
+
+    -- 🟡 INSTABILITÉ MODÉRÉE
+    Freq > 30 && Dur < 10,
+        "🟡 Moderate instability (frequent short stops)",
+
+    -- 🟢 STABLE
+    Downtime < 0.15 && Freq < 30,
+        "🟢 Stable and under control",
+
+    -- fallback
+    "🟡 Mixed performance pattern"
+)
+    MEASURE 'Downtime'[Total Downtime (h)] = DIVIDE(SUM('dw fact_production_events'[duration_minutes]), 60)
+    MEASURE 'Downtime'[Downtime Subtitle] = FORMAT([Downtime Rate], "0%") & " of planned time"
+    MEASURE 'Downtime'[Downtime Status] = SWITCH(
+    TRUE(),
+    [Downtime Rate] > 0.3, "🔴 High",
+    [Downtime Rate] > 0.15, "🟠 Moderate",
+    "🟢 Low"
+)
+    MEASURE 'Downtime'[Frequency Subtitle] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 50, "Frequent interruptions",
+    [Event Frequency] > 30, "Moderate instability",
+    "Stable rhythm"
+)
+    MEASURE 'Downtime'[Event Frequency Status] = SWITCH(
+    TRUE(),
+    [Event Frequency] > 50, "🔴 Very High",
+    [Event Frequency] > 30, "🟠 Elevated",
+    "🟢 Stable"
+)
+    MEASURE 'Downtime'[Avg Duration Status] = SWITCH(
+    TRUE(),
+    [Avg Duration] > 20, "🔴 Long Stops",
+    [Avg Duration] > 10, "🟠 Medium Stops",
+    "🟢 Short Stops"
+)
+    MEASURE 'Downtime'[Downtime Target] = 0.15   -- 15%
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Total Downtime (Minutes)", [Total Downtime (Minutes)],
+        "Runtime Minutes", [Runtime Minutes],
+        "Total Non Production Minutes", [Total Non Production Minutes],
+        "Total Observed Minutes", [Total Observed Minutes],
+        "Total Events", [Total Events],
+        "Avg Duration", [Avg Duration],
+        "Top Cause Contribution %", [Top Cause Contribution %],
+        "Event Frequency", [Event Frequency],
+        "Unexplained Downtime (min)", [Unexplained Downtime (min)],
+        "% Unexplained Downtime", [% Unexplained Downtime],
+        "Downtime Rate", [Downtime Rate],
+        "Top Issue", [Top Issue],
+        "Denominator Check", [Denominator Check],
+        "Top Cause Contribution (%)", [Top Cause Contribution (%)],
+        "Duration Bucket", [Duration Bucket],
+        "Event Count", [Event Count],
+        "Rank Event", [Rank Event],
+        "Downtime by Event", [Downtime by Event],
+        "Cumulative Downtime Event", [Cumulative Downtime Event],
+        "Cumulative Event %", [Cumulative Event %],
+        "Event Color", [Event Color],
+        "Top Cause Insight", [Top Cause Insight],
+        "Top Cause Color", [Top Cause Color],
+        "Top Cause Name", [Top Cause Name],
+        "Top Cause Narrative", [Top Cause Narrative],
+        "Total Downtime (Hours)", [Total Downtime (Hours)],
+        "Micro Stop %", [Micro Stop %],
+        "Duration Profile", [Duration Profile],
+        "Events per Hour (Normalized)", [Events per Hour (Normalized)],
+        "System Behavior", [System Behavior],
+        "Downtime Label", [Downtime Label],
+        "Downtime Color", [Downtime Color],
+        "Event Label", [Event Label],
+        "Event Color KPI", [Event Color KPI],
+        "Frequency Label", [Frequency Label],
+        "Frequency Color", [Frequency Color],
+        "Duration Color", [Duration Color],
+        "Duration Label", [Duration Label],
+        "Downtime Rate Display", [Downtime Rate Display],
+        "Avg Duration Display", [Avg Duration Display],
+        "Production Loss Driver", [Production Loss Driver],
+        "Total Downtime (h)", [Total Downtime (h)],
+        "Downtime Subtitle", [Downtime Subtitle],
+        "Downtime Status", [Downtime Status],
+        "Frequency Subtitle", [Frequency Subtitle],
+        "Event Frequency Status", [Event Frequency Status],
+        "Avg Duration Status", [Avg Duration Status],
+        "Downtime Target", [Downtime Target]
+    )
+
+
+    DEFINE
+    MEASURE 'Tooltip'[Tooltip Downtime] = [Total Downtime (Minutes)]
+    MEASURE 'Tooltip'[Tooltip Events] = [Total Events]
+    MEASURE 'Tooltip'[Tooltip Avg Duration] = [Avg Duration]
+    MEASURE 'Tooltip'[Top Event] = VAR TopEvent =
+    TOPN(
+        1,
+        VALUES('dw dim_event'[event_type]),
+        [Total Downtime (Minutes)],
+        DESC
+    )
+RETURN
+    CONCATENATEX(TopEvent, 'dw dim_event'[event_type], ", ")
+    MEASURE 'Tooltip'[Top Event Downtime] = MAXX(
+    VALUES('dw dim_event'[event_type]),
+    [Total Downtime (Minutes)]
+)
+    MEASURE 'Tooltip'[Tooltip Title] = VAR Machine = SELECTEDVALUE('dw dim_machine'[machine_name], "Unknown")
+VAR Hour = MAX('dw dim_time'[hour_of_day])
+RETURN
+Machine & " - " & FORMAT(TIME(Hour,0,0),"HH:mm")
+    MEASURE 'Tooltip'[Tooltip Insight] = "Main issue: " & [Top Event]
+    MEASURE 'Tooltip'[Tooltip Detail] = [Top Event] & " (" & FORMAT([Top Event Downtime], "#,##0") & " min)"
+    MEASURE 'Tooltip'[Tooltip Insight Advanced] = "Majority of downtime driven by " &
+[Top Event] &
+" with avg duration of " &
+FORMAT([Avg Duration], "0.0") &
+" min"
+    MEASURE 'Tooltip'[Test Machine] = SELECTEDVALUE('dw dim_machine'[machine_name], "NO MACHINE")
+    MEASURE 'Tooltip'[Tooltip Hour] = MAX('dw dim_time'[hour_of_day])
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Tooltip Downtime", [Tooltip Downtime],
+        "Tooltip Events", [Tooltip Events],
+        "Tooltip Avg Duration", [Tooltip Avg Duration],
+        "Top Event", [Top Event],
+        "Top Event Downtime", [Top Event Downtime],
+        "Tooltip Title", [Tooltip Title],
+        "Tooltip Insight", [Tooltip Insight],
+        "Tooltip Detail", [Tooltip Detail],
+        "Tooltip Insight Advanced", [Tooltip Insight Advanced],
+        "Test Machine", [Test Machine],
+        "Tooltip Hour", [Tooltip Hour]
+    )
