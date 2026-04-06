@@ -199,7 +199,13 @@ def generate_production():
             # ======================
             # EVENTS
             # ======================
-            prod_events = generate_production_events(prod_id, events, rng)
+            prod_events = generate_production_events(
+                prod_id,
+                events,
+                rng,
+                line_config,
+                shift_config,
+            )
             production_events.extend(prod_events)
 
 
@@ -236,27 +242,14 @@ def generate_production():
             # VÉRIFICATION FINALE
             # ======================
 
-            duration_by_hour = defaultdict(int)
-            for e in production_events:
-                duration_by_hour[e["hourly_prod_id"]] += e["duration_minutes"]
+            total_duration = sum(e["duration_minutes"] for e in prod_events)
 
-
-            violations = {
-                hid: total
-                for hid, total in duration_by_hour.items()
-                if total > 60
-            }
-
-            if violations:
+            if total_duration > 60:
                 raise ValueError(
-                    f"❌ {len(violations)} hourly_prod_id(s) dépassent 60 min :\n"
-                    + "\n".join(f"  {hid}: {total} min" for hid, total in violations.items())
+                    f"❌ hourly_prod_id {prod_id} dépasse 60 min : {total_duration}"
                 )
-            for hid, total in violations.items():
-                print(f"⚠️  {hid}: {total} min > 60")
 
-
-            for e in production_events:
+            for e in prod_events:
                 assert e["duration_minutes"] == e["end_minute"] - e["start_minute"], (
                     f"Incohérence start/end sur {e['event_id']}"
                 )

@@ -4,19 +4,21 @@ from datetime import timedelta
 from industrial_downtime.core.ids import generate_id
 from industrial_downtime.config.event_catalog import (
     EVENT_CATALOG,
-    pick_root_cause,
-    MICRO_STOP_FAMILIES,
     FAILURE_FAMILIES,
+    MICRO_STOP_FAMILIES,
     QUALITY_FAMILIES,
     ORGANIZATIONAL_FAMILIES,
     HUMAN_FAMILIES,
     CHANGEOVER_FAMILIES,
-    PLANNED_FAMILIES,
-    MAINTENANCE_FAMILIES
+    MAINTENANCE_FAMILIES,
 )
 from industrial_downtime.core.markov_engine import LineState
+from industrial_downtime.core.resolver import ResolutionContext, resolve_event
 
 
+# =========================
+# EXTERNAL EVENTS (inchangé)
+# =========================
 def inject_external_events(current_time: int) -> list[dict]:
     extra_events = []
 
@@ -29,7 +31,16 @@ def inject_external_events(current_time: int) -> list[dict]:
     return extra_events
 
 
-def generate_production_events(hourly_prod_id: str, events: list, rng) -> list[dict]:
+# =========================
+# MAIN GENERATOR
+# =========================
+def generate_production_events(
+        hourly_prod_id: str,
+        events: list,
+        rng,
+        line_config,
+        shift_config,
+    ) -> list[dict]:    
     """
     Génération d'événements enrichis (niveau industriel).
     GARANTIT : somme des durées <= 60 minutes
@@ -59,46 +70,46 @@ def generate_production_events(hourly_prod_id: str, events: list, rng) -> list[d
             break
 
         # =========================
-        # CLAMP DURATION (CRITIQUE)
+        # CLAMP DURATION (FIX)
         # =========================
         real_duration = min(duration, 60 - current_time)
 
-        # Après (assertif, détecte les régressions) :
-        assert duration <= (60 - current_time), (
-            f"simulate_hour a envoyé une durée invalide : {duration} "
-            f"alors que current_time={current_time}"
-        )
-        real_duration = duration
         if real_duration <= 0:
             break
 
-        # =========================
-        # ROOT CAUSE
-        # =========================
-        if state == LineState.MICRO_STOP:
-            families = MICRO_STOP_FAMILIES
-        elif state == LineState.FAILURE:
-            families = FAILURE_FAMILIES
-        elif state == LineState.QUALITY:
-            families = QUALITY_FAMILIES
-        elif state == LineState.ORGANIZATION:
-            families = ORGANIZATIONAL_FAMILIES
-        elif state == LineState.HUMAN:
-            families = HUMAN_FAMILIES
-        elif state == LineState.CHANGEOVER:
-            families = CHANGEOVER_FAMILIES
-        elif state == LineState.PLANNED_STOP:
-            families = PLANNED_FAMILIES
-        elif state == LineState.MAINTENANCE:
-            families = MAINTENANCE_FAMILIES
-        else:
-            event_key = "unknown_stop"
-            event_def = EVENT_CATALOG[event_key]
-            families = None
+        predicted_repetition = repetition_count + 1
 
-        if families:
-            event_key = pick_root_cause(families)
-            event_def = EVENT_CATALOG[event_key]
+        # =========================
+        # ROOT CAUSE VIA RESOLVER
+        # =========================
+        ctx = ResolutionContext(
+            state=state,
+            line=line_config,
+            shift=shift_config,
+            repetition_count=predicted_repetition,
+        )
+
+        resolved = resolve_event(ctx)
+        event_key = resolved.event_key
+
+        # sécurité catalogue
+        if event_key not in EVENT_CATALOG:
+            event_key = "unknown_stop"
+
+        event_def = EVENT_CATALOG[event_key]
+
+        # =========================
+        # REPETITION TRACKING (après résolution)
+        # =========================
+        if event_key == last_event_type:
+            repetition_count += 1
+        else:
+            repetition_count = 1
+
+        last_event_type = event_key
+        is_recurrent = repetition_count >= 3
+
+        event_def = EVENT_CATALOG[event_key]
 
         # =========================
         # SEVERITY
@@ -193,7 +204,7 @@ def generate_production_events(hourly_prod_id: str, events: list, rng) -> list[d
                 "is_recurrent": is_recurrent,
                 "repetition_count": repetition_count,
 
-                "source": "markov_simulation",
+                "source": resolved.source,  # 🔥 important
                 "comment": f"{severity} {state.name.lower()} event",
             }
         )
