@@ -1,0 +1,149 @@
+{
+  "events": {
+    "infeed_conveyor_failure": {
+      "base_probability": 0.04,
+      "mean_duration": 15,
+      "duration_std": 5
+    },
+    "outfeed_conveyor_failure": {
+      "base_probability": 0.05,
+      "mean_duration": 12,
+      "duration_std": 4
+    },
+    "conveyor_output_jam": {
+      "base_probability": 0.06,
+      "mean_duration": 8,
+      "duration_std": 3
+    },
+    "door_safety_fault": {
+      "base_probability": 0.02,
+      "mean_duration": 10,
+      "duration_std": 2
+    },
+    "axis_collision": {
+      "base_probability": 0.01,
+      "mean_duration": 25,
+      "duration_std": 8
+    },
+    "delta_sensor_fault_1": {
+      "base_probability": 0.03,
+      "mean_duration": 5,
+      "duration_std": 1
+    },
+    "delta_sensor_fault_2": {
+      "base_probability": 0.025,
+      "mean_duration": 6,
+      "duration_std": 2
+    },
+    "photoelectric_sensor_fault": {
+      "base_probability": 0.04,
+      "mean_duration": 4,
+      "duration_std": 1
+    },
+    "base_plate_transfer_fault": {
+      "base_probability": 0.05,
+      "mean_duration": 20,
+      "duration_std": 6
+    },
+    "base_plate_position_fault": {
+      "base_probability": 0.04,
+      "mean_duration": 18,
+      "duration_std": 5
+    },
+    "product_detachment_fault": {
+      "base_probability": 0.03,
+      "mean_duration": 10,
+      "duration_std": 3
+    },
+    "stacker_jam": {
+      "base_probability": 0.06,
+      "mean_duration": 14,
+      "duration_std": 4
+    },
+    "destacker_jam": {
+      "base_probability": 0.05,
+      "mean_duration": 13,
+      "duration_std": 4
+    },
+    "tray_blocked_in_stacker": {
+      "base_probability": 0.04,
+      "mean_duration": 12,
+      "duration_std": 3
+    },
+    "empty_tray_before_stacker": {
+      "base_probability": 0.05,
+      "mean_duration": 7,
+      "duration_std": 2
+    },
+    "film_retake": {
+      "base_probability": 0.03,
+      "mean_duration": 6,
+      "duration_std": 2
+    },
+    "cassette_sticker_adjustment": {
+      "base_probability": 0.02,
+      "mean_duration": 10,
+      "duration_std": 3
+    },
+    "missing_film_imprint": {
+      "base_probability": 0.02,
+      "mean_duration": 9,
+      "duration_std": 3
+    },
+    "product_length_out_of_range": {
+      "base_probability": 0.015,
+      "mean_duration": 12,
+      "duration_std": 4
+    },
+    "material_shortage": {
+      "base_probability": 0.03,
+      "mean_duration": 30,
+      "duration_std": 10
+    },
+    "poor_material_supply": {
+      "base_probability": 0.025,
+      "mean_duration": 20,
+      "duration_std": 6
+    },
+    "label_ribbon_replacement": {
+      "base_probability": 0.02,
+      "mean_duration": 8,
+      "duration_std": 2
+    },
+    "ink_ribbon_replacement": {
+      "base_probability": 0.02,
+      "mean_duration": 7,
+      "duration_std": 2
+    },
+    "format_changeover": {
+      "base_probability": 0.015,
+      "mean_duration": 45,
+      "duration_std": 10
+    },
+    "operator_break": {
+      "base_probability": 0.01,
+      "mean_duration": 10,
+      "duration_std": 2
+    },
+    "cleaning": {
+      "base_probability": 0.01,
+      "mean_duration": 20,
+      "duration_std": 5
+    },
+    "planned_maintenance": {
+      "base_probability": 0.01,
+      "mean_duration": 60,
+      "duration_std": 15
+    },
+    "unplanned_maintenance": {
+      "base_probability": 0.02,
+      "mean_duration": 50,
+      "duration_std": 20
+    },
+    "unknown_stop": {
+      "base_probability": 0.01,
+      "mean_duration": 15,
+      "duration_std": 5
+    }
+  }
+}
