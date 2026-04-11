@@ -13,7 +13,7 @@ from industrial_downtime.config.event_catalog import (
     MAINTENANCE_FAMILIES,
 )
 from industrial_downtime.core.markov_engine import LineState
-from industrial_downtime.core.resolver import ResolutionContext, resolve_event
+from industrial_downtime.core.resolver.event_resolver import ResolutionContext, resolve_event
 
 
 # =========================

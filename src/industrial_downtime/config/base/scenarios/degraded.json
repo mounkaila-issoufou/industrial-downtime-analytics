@@ -1,0 +1,7 @@
+{
+  "events": {
+    "stacker_jam": { "base_probability": 0.12 },
+    "base_plate_transfer_fault": { "base_probability": 0.08 },
+    "unplanned_maintenance": { "base_probability": 0.07 }
+  }
+}
