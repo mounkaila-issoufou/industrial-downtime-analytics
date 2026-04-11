@@ -1,0 +1,7 @@
+{
+  "events": {
+    "conveyor_output_jam": { "base_probability": 0.1 },
+    "empty_tray_before_stacker": { "base_probability": 0.08 },
+    "product_detachment_fault": { "base_probability": 0.06 }
+  }
+}

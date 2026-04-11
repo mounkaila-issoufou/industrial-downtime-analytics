@@ -1,10 +1,24 @@
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from typing import List, Dict, Optional
+import random
 
 from industrial_downtime.core.markov_engine import LineState
 from industrial_downtime.config.workshops import LineConfig
 from industrial_downtime.config.shifts import Shift
-from industrial_downtime.config.event_catalog import EVENT_CATALOG
+from industrial_downtime.config.event_catalog import (
+    EVENT_CATALOG,
+    EventFamily,
+    MICRO_STOP_FAMILIES,
+    FAILURE_FAMILIES,
+    QUALITY_FAMILIES,
+    ORGANIZATIONAL_FAMILIES,
+    HUMAN_FAMILIES,
+    CHANGEOVER_FAMILIES,
+    MAINTENANCE_FAMILIES,
+)
+from industrial_downtime.core.resolver.calibration import calibrator
+
+ENABLE_CALIBRATION = True
 
 
 # =========================
@@ -16,6 +30,7 @@ class ResolutionContext:
     line: LineConfig
     shift: Shift
     repetition_count: int = 1
+    scenario: Optional[str] = None  # ✅ NEW
 
 
 # =========================
@@ -25,109 +40,148 @@ class ResolutionContext:
 class ResolvedEvent:
     event_key: str
     source: str
-    confidence: float
+    confidence: float = 0.5
 
 
 # =========================
-# SCORING ENGINE V3
+# RESOLVER V4 (CONTEXTUAL CALIBRATION)
 # =========================
 def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
-    """
-    V3:
-    - système de scoring multi-facteurs
-    - plus de logique if/else métier lourde
-    - extensible (MES-like design)
-    """
 
     r = ctx.line.robustness
     is_night = ctx.shift.name.value == "NUIT"
     rep = ctx.repetition_count
 
     # =========================
-    # SCORE MAP INITIALIZATION
+    # 1. MAP STATE → FAMILIES
+    # =========================
+    if ctx.state == LineState.MICRO_STOP:
+        families = MICRO_STOP_FAMILIES
+    elif ctx.state == LineState.FAILURE:
+        families = FAILURE_FAMILIES
+    elif ctx.state == LineState.QUALITY:
+        families = QUALITY_FAMILIES
+    elif ctx.state == LineState.ORGANIZATION:
+        families = ORGANIZATIONAL_FAMILIES
+    elif ctx.state == LineState.HUMAN:
+        families = HUMAN_FAMILIES
+    elif ctx.state == LineState.CHANGEOVER:
+        families = CHANGEOVER_FAMILIES
+    elif ctx.state == LineState.MAINTENANCE:
+        families = MAINTENANCE_FAMILIES
+    else:
+        families = None
+
+    # =========================
+    # 2. FILTER CANDIDATES
+    # =========================
+    candidates = [
+        e for e in EVENT_CATALOG.values()
+        if families is None or e.family in families
+    ]
+
+    if not candidates:
+        return ResolvedEvent(
+            event_key="unknown_stop",
+            source="resolver_empty",
+            confidence=0.1,
+        )
+
+    # =========================
+    # 3. WEIGHTING ENGINE
     # =========================
     scores: Dict[str, float] = {}
 
-    def add(event: str, value: float):
-        scores[event] = scores.get(event, 0.0) + value
+    for e in candidates:
+        weight = e.base_probability
+
+        # -------------------------
+        # Robustness
+        # -------------------------
+        if r < 0.5 and e.family in (
+            EventFamily.MECHANICAL,
+            EventFamily.CONVEYOR,
+        ):
+            weight *= 1.3
+
+        # -------------------------
+        # Night shift
+        # -------------------------
+        if is_night and e.family == EventFamily.HUMAN_ACTION:
+            weight *= 1.5
+
+        # -------------------------
+        # Repetition
+        # -------------------------
+        if rep >= 3:
+            if e.family == EventFamily.MECHANICAL:
+                weight *= 1.25
+            elif e.family == EventFamily.PROCESS_DRIFT:
+                weight *= 1.15
+
+        # -------------------------
+        # Noise (important)
+        # -------------------------
+        weight *= random.uniform(0.9, 1.1)
+
+        scores[e.event] = weight
 
     # =========================
-    # BASE SCORES BY STATE
+    # 4. CONTEXTUAL CALIBRATION 🔥
     # =========================
-
-
-    if ctx.repetition_count >= 3:
-        # forcer une panne mécanique (exemple simple)
-        return ResolvedEvent(
-            event_key="stacker_jam",
-            source="resolver_rule_repetition_escalation"
+    if ENABLE_CALIBRATION:
+        scores = calibrator.calibrate(
+            scores,
+            line=getattr(ctx.line, "name", None),
+            shift=ctx.shift.name.value,
+            scenario=ctx.scenario,
         )
-    if ctx.state == LineState.FAILURE:
-        add("standard_machine_failure", 0.6)
-        add("critical_machine_failure", 0.4 * (1 - r))
-
-    elif ctx.state == LineState.MICRO_STOP:
-        add("micro_stop_generic", 0.5)
-        add("micro_stop_operator_latency", 0.3 if is_night else 0.1)
-
-    elif ctx.state == LineState.QUALITY:
-        add("quality_check_adjustment", 0.4)
-        add("quality_deviation_process", 0.4 * (1 - r))
-
-    elif ctx.state == LineState.HUMAN:
-        add("human_intervention", 0.4)
-        add("operator_fatigue_error", 0.4 if is_night else 0.1)
-
-    elif ctx.state == LineState.ORGANIZATION:
-        add("planning_delay", 0.7)
-
-    elif ctx.state == LineState.CHANGEOVER:
-        add("standard_changeover", 0.5)
-        add("long_changeover_issue", 0.3 * (1 - r))
-
-    elif ctx.state == LineState.MAINTENANCE:
-        add("standard_maintenance", 0.5)
-        add("preventive_maintenance_delay", 0.3 * (1 - r))
-
-    else:
-        add("unknown_stop", 1.0)
 
     # =========================
-    # CROSS FACTORS
+    # 5. WEIGHTED RANDOM PICK
     # =========================
+    total_weight = sum(scores.values())
 
-    # Robustness penalty (fragile lines = more critical events)
-    if r < 0.5:
-        add("critical_machine_failure", 0.2)
+    if total_weight <= 0:
+        return ResolvedEvent(
+            event_key="unknown_stop",
+            source="resolver_zero_weight",
+            confidence=0.1,
+        )
 
-    # Night shift penalty (fatigue)
-    if is_night:
-        add("operator_fatigue_error", 0.2)
+    pick = random.uniform(0, total_weight)
 
-    # Repetition escalation
-    if rep >= 3:
-        add("recurrent_micro_stop", 0.3)
-        add("systemic_issue_detected", 0.2)
+    cumulative = 0.0
+    selected_event = None
+    selected_weight = 0.0
 
-    # =========================
-    # PICK BEST EVENT
-    # =========================
-    best_event, best_score = max(scores.items(), key=lambda x: x[1])
-
-    # =========================
-    # VALIDATION CATALOG
-    # =========================
-    if best_event not in EVENT_CATALOG:
-        best_event = "unknown_stop"
-        best_score = 0.3
+    for event_key, weight in scores.items():
+        cumulative += weight
+        if pick <= cumulative:
+            selected_event = event_key
+            selected_weight = weight
+            break
 
     # =========================
-    # CONFIDENCE NORMALIZATION
+    # 6. FALLBACK
     # =========================
-    confidence = min(1.0, max(0.1, best_score))
+    if not selected_event:
+        selected_event = list(scores.keys())[-1]
+        selected_weight = scores[selected_event]
+
+    # =========================
+    # 7. UPDATE CALIBRATOR
+    # =========================
+    if ENABLE_CALIBRATION:
+        calibrator.update(selected_event)
+
+    # =========================
+    # 8. CONFIDENCE
+    # =========================
+    confidence = min(1.0, max(0.1, selected_weight / total_weight * 3))
 
     return ResolvedEvent(
-        event_key=best_event,
-        source="resolver_v3_scoring",
+        event_key=selected_event,
+        source="resolver_v4_contextual_calibrated",
         confidence=confidence,
     )

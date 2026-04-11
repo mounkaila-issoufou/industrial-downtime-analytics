@@ -1,0 +1,8 @@
+{
+  "events": {
+    "delta_sensor_fault_1": { "base_probability": 0.05 },
+    "delta_sensor_fault_2": { "base_probability": 0.045 },
+    "photoelectric_sensor_fault": { "base_probability": 0.06 },
+    "stacker_jam": { "base_probability": 0.03 }
+  }
+}

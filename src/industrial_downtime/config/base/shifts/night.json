@@ -1,0 +1,7 @@
+{
+  "events": {
+    "operator_fatigue_error": {
+      "base_probability": 0.08
+    }
+  }
+}
