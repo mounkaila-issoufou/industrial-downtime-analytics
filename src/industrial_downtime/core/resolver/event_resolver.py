@@ -17,6 +17,10 @@ from industrial_downtime.config.event_catalog import (
     MAINTENANCE_FAMILIES,
 )
 from industrial_downtime.core.resolver.calibration import calibrator
+from industrial_downtime.core.mechanisms.mechanism_resolver import (
+    resolve_mechanism,
+    MechanismContext,
+)
 
 ENABLE_CALIBRATION = True
 
@@ -30,7 +34,7 @@ class ResolutionContext:
     line: LineConfig
     shift: Shift
     repetition_count: int = 1
-    scenario: Optional[str] = None  # ✅ NEW
+    scenario: Optional[str] = None
 
 
 # =========================
@@ -44,13 +48,58 @@ class ResolvedEvent:
 
 
 # =========================
-# RESOLVER V4 (CONTEXTUAL CALIBRATION)
+# INTERNAL HELPERS
+# =========================
+def _apply_mechanism_rules(weight: float, e, mechanism) -> float:
+    """
+    Ajuste le poids en fonction du mécanisme causal
+    """
+
+    if not mechanism:
+        return weight
+
+    mech = mechanism.value
+
+    # 🎯 matching direct (ex: micro_jam → "jam")
+    if mech in e.event:
+        weight *= 1.3
+
+    # 🎯 règles métier (propagation causale)
+    if mech == "wear" and e.family == EventFamily.MECHANICAL:
+        weight *= 1.25
+
+    if mech == "micro_jam" and "jam" in e.event:
+        weight *= 1.4
+
+    if mech == "fatigue" and e.family == EventFamily.HUMAN_ACTION:
+        weight *= 1.5
+
+    if mech == "drift" and e.family == EventFamily.PROCESS_DRIFT:
+        weight *= 1.3
+
+    return weight
+
+
+# =========================
+# RESOLVER V4
 # =========================
 def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
 
     r = ctx.line.robustness
     is_night = ctx.shift.name.value == "NUIT"
     rep = ctx.repetition_count
+
+    # =========================
+    # 0. MECHANISM (NEW 🔥)
+    # =========================
+    mech_ctx = MechanismContext(
+        state=ctx.state,
+        line=ctx.line,
+        shift=ctx.shift,
+        repetition_count=rep,
+    )
+
+    mechanism = resolve_mechanism(mech_ctx)
 
     # =========================
     # 1. MAP STATE → FAMILIES
@@ -96,7 +145,7 @@ def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
         weight = e.base_probability
 
         # -------------------------
-        # Robustness
+        # Robustness impact
         # -------------------------
         if r < 0.5 and e.family in (
             EventFamily.MECHANICAL,
@@ -105,13 +154,13 @@ def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
             weight *= 1.3
 
         # -------------------------
-        # Night shift
+        # Night shift impact
         # -------------------------
         if is_night and e.family == EventFamily.HUMAN_ACTION:
             weight *= 1.5
 
         # -------------------------
-        # Repetition
+        # Repetition impact
         # -------------------------
         if rep >= 3:
             if e.family == EventFamily.MECHANICAL:
@@ -120,19 +169,24 @@ def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
                 weight *= 1.15
 
         # -------------------------
-        # Noise (important)
+        # 🔥 MECHANISM IMPACT (FIXED)
+        # -------------------------
+        weight = _apply_mechanism_rules(weight, e, mechanism)
+
+        # -------------------------
+        # Noise (réalisme)
         # -------------------------
         weight *= random.uniform(0.9, 1.1)
 
         scores[e.event] = weight
-
+        print(f"[MECH] {mechanism.value} → {e.event} (fam: {e.family.value}) : weight={weight:.3f}")
     # =========================
-    # 4. CONTEXTUAL CALIBRATION 🔥
+    # 4. CALIBRATION (CONTEXTUAL)
     # =========================
     if ENABLE_CALIBRATION:
         scores = calibrator.calibrate(
             scores,
-            line=getattr(ctx.line, "name", None),
+            line=ctx.line.code,                 # ✅ FIX
             shift=ctx.shift.name.value,
             scenario=ctx.scenario,
         )
@@ -163,7 +217,7 @@ def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
             break
 
     # =========================
-    # 6. FALLBACK
+    # 6. FALLBACK SAFE
     # =========================
     if not selected_event:
         selected_event = list(scores.keys())[-1]
@@ -182,6 +236,6 @@ def resolve_event(ctx: ResolutionContext) -> ResolvedEvent:
 
     return ResolvedEvent(
         event_key=selected_event,
-        source="resolver_v4_contextual_calibrated",
+        source="resolver_v4_mechanism_calibrated",
         confidence=confidence,
     )

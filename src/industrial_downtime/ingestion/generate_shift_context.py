@@ -72,9 +72,9 @@ def generate_shift_context():
             for line_ids in WORKSHOP_MAP.values()
         )
         shifts = list(iter_shifts())
-        print(f"Lignes total      : {total}")          # doit être 10
-        print(f"Shifts iter       : {len(shifts)}")    # doit être ~78
-        print(f"Supervisions      : {total * len(shifts)}")  # doit être ~780
-        print(f"Lignes par workshop:")
-        for wid, lids in WORKSHOP_MAP.items():
-            print(f"  {wid}: {len(lids)} lignes → {lids}")
+        #print(f"Lignes total      : {total}")          # doit être 10
+        #print(f"Shifts iter       : {len(shifts)}")    # doit être ~78
+        #print(f"Supervisions      : {total * len(shifts)}")  # doit être ~780
+        #print(f"Lignes par workshop:")
+        #for wid, lids in WORKSHOP_MAP.items():
+        #    print(f"  {wid}: {len(lids)} lignes → {lids}")
