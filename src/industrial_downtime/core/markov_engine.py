@@ -85,3 +85,30 @@ def get_dynamic_matrix(line_config, hour_index, shift_type):
             transitions[k] /= total
 
     return matrix
+
+
+def next_state(current_state, transition_matrix):
+    """
+    Retourne l'état suivant selon la matrice de transition.
+    """
+    transitions = transition_matrix[current_state]
+
+    if not transitions:
+        return current_state  # fallback safe
+
+    states = list(transitions.keys())
+    probs = list(transitions.values())
+
+    return random.choices(states, weights=probs, k=1)[0]
+
+
+def generate_duration(state):
+    """
+    Génère une durée réaliste pour un état donné
+    """
+    if state not in STATE_DURATION:
+        return 0
+
+    mean, std = STATE_DURATION[state]
+
+    return max(1, int(random.gauss(mean, std)))
